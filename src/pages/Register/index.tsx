@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -6,12 +6,12 @@ import './Register.css';
 import { redirect } from 'next/dist/server/api-utils';
 import { useRouter } from 'next/router';
 
-const SERVER_ROUTER = 'http://localhost:3333'
+const SERVER_ROUTER = 'http://localhost:3333';
 
 function Register() {
-	const router = useRouter()
+	const router = useRouter();
 
-	const [name, setName] = useState('')
+	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [password2, setPassword2] = useState('');
@@ -20,7 +20,7 @@ function Register() {
 		event.preventDefault();
 
 		if (password !== password2) {
-			console.log('wrong password')
+			console.log('wrong password');
 			return;
 		}
 
@@ -31,22 +31,21 @@ function Register() {
 				body: JSON.stringify({
 					name,
 					email,
-					password
-				})
-			})
-				.then(async response => {
-					const data = await response.json()
-					if (data.error) return;
+					password,
+				}),
+			}).then(async (response) => {
+				const data = await response.json();
+				if (data.error) return;
 
-					router.push('/Login')
-				})
+				router.push('/Login');
+			});
 		} catch (error) {
-			console.error(error)
+			console.error(error);
 		}
 
 		console.log({ email, password, password2 });
 		setEmail('');
-		setPassword('')
+		setPassword('');
 		setPassword2('');
 	}
 
@@ -54,19 +53,36 @@ function Register() {
 		<main id='register'>
 			<div className='register-box'>
 				<div className='image-box'>
-					<Image src='/next.svg' alt='login logo' className='img' width={1000} height={1000} layout='responsive' />
+					<Image
+						src='/next.svg'
+						alt='login logo'
+						className='img'
+						width={1000}
+						height={1000}
+						layout='responsive'
+					/>
 				</div>
 				<h1>Cadastro</h1>
-				<form onSubmit={handleSubmit} className='register-form'>
+				<form
+					onSubmit={handleSubmit}
+					className='register-form'
+				>
 					<label htmlFor='name'>Nome</label>
-					<input type="text" name="name" id="name" onChange={e => { setName(e.target.value) }} />
+					<input
+						type='text'
+						name='name'
+						id='name'
+						onChange={(e) => {
+							setName(e.target.value);
+						}}
+					/>
 					<label htmlFor='email'>E-mail</label>
 					<input
 						type='text'
 						name='email'
 						id='email'
 						value={email}
-						onChange={e => {
+						onChange={(e) => {
 							setEmail(e.target.value);
 						}}
 					/>
@@ -76,7 +92,7 @@ function Register() {
 						name='password'
 						id='password'
 						value={password}
-						onChange={e => {
+						onChange={(e) => {
 							setPassword(e.target.value);
 						}}
 					/>
@@ -86,7 +102,7 @@ function Register() {
 						name='password'
 						id='password2'
 						value={password2}
-						onChange={e => {
+						onChange={(e) => {
 							setPassword2(e.target.value);
 						}}
 					/>

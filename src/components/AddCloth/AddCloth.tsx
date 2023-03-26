@@ -13,6 +13,11 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 	const [displayedImage, setDisplayedImage] = useState<string>('');
 	const [category, setCategory] = useState<string>('');
 
+	const user = localStorage.getItem('user');
+	const token = localStorage.getItem('token');
+
+	const SERVER_ROUTER = 'http://localhost:3333';
+
 	useEffect(() => {
 		if (image) {
 			fileReader(image);
@@ -22,7 +27,7 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 	function fileReader(img: File): void {
 		const reader = new FileReader();
 		reader.readAsDataURL(img);
-		reader.addEventListener('load', e => {
+		reader.addEventListener('load', (e) => {
 			const targetReader = e.target;
 			const result = targetReader?.result;
 			if (result && typeof result === 'string') {
@@ -47,7 +52,9 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 		return 'bodyLegs';
 	}
 
-	async function handleSubmit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
+	async function handleSubmit(
+		event: React.FormEvent<HTMLFormElement>
+	): Promise<void> {
 		event.preventDefault();
 		const formData = new FormData();
 
@@ -60,11 +67,14 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 			formData.append('body', setBody());
 			formData.append('image', image);
 
-			const response = await fetch('http://localhost:3333/upload', {
+			const response = await fetch(`${SERVER_ROUTER}/users/${user}/upload`, {
 				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
 				body: formData,
 			});
-			const data = await response.json() as Message;
+			const data = (await response.json()) as Message;
 			if (data.error) {
 				console.log(data.error);
 				return;
@@ -72,7 +82,7 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 		}
 
 		if (urlImage !== '') {
-			const response = await fetch('http://localhost:3333/uploadbg', {
+			const response = await fetch(`${SERVER_ROUTER}/uploadbg`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -81,7 +91,7 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 					image: urlImage,
 				}),
 			});
-			const data = await response.json() as Message;
+			const data = (await response.json()) as Message;
 			if (data.error) {
 				console.log(data.error);
 				return;
@@ -96,7 +106,9 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 		setCategory('');
 	}
 
-	async function backgroundRemove(event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
+	async function backgroundRemove(
+		event: React.MouseEvent<HTMLButtonElement>
+	): Promise<void> {
 		event.preventDefault();
 		const formData = new FormData();
 		if (!image) {
@@ -104,11 +116,11 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 		}
 
 		formData.append('image', image);
-		const response = await fetch('http://localhost:3333/bgrm', {
+		const response = await fetch(`${SERVER_ROUTER}/bgrm`, {
 			method: 'POST',
 			body: formData,
 		});
-		const data = await response.json() as Message;
+		const data = (await response.json()) as Message;
 		if (data.message && data.body) {
 			setDisplayedImage(data.body);
 			setImage(undefined);
@@ -120,28 +132,35 @@ function AddCloth({ modal, updateClothes }: Prop): JSX.Element {
 	}
 
 	return (
-		<div id='addCloth' className={`${modal}`}>
+		<div
+			id='addCloth'
+			className={`${modal}`}
+		>
 			<div className='addCloth-box'>
 				<form
 					className='addCloth-form'
-					onSubmit={async e => {
+					onSubmit={async (e) => {
 						await handleSubmit(e);
-					}}>
-					<label htmlFor='file'>{
-						displayedImage ? (
-							<img src={displayedImage} />
-						) : 'IMAGEM'
-					}</label>
+					}}
+				>
+					<label htmlFor='file'>
+						{displayedImage ? <img src={displayedImage} /> : 'IMAGEM'}
+					</label>
 					<input
 						hidden
 						type='file'
 						id='file'
-						onChange={e => {
+						onChange={(e) => {
 							setImage(e.target.files?.[0]);
-						}} />
-					<select onChange={e => {
-						setCategory(e.target.value);
-					}} name='category' id='category'>
+						}}
+					/>
+					<select
+						onChange={(e) => {
+							setCategory(e.target.value);
+						}}
+						name='category'
+						id='category'
+					>
 						<option defaultChecked>CATEGORIA</option>
 						<option value='CAMISETA'>CAMISETA</option>
 						<option value='BLUSA'>BLUSA</option>

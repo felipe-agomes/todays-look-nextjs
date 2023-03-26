@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/object-curly-spacing */
 import React, { useState } from 'react';
 import { type Clothe, type CategoriesData } from '../../types';
 import Categories from '../Categories/Categories';
@@ -12,7 +11,12 @@ type Prop = {
 	updateClothes: () => void;
 };
 
-function Looks({ modal, clothes, updateClothes, addClothe }: Prop): JSX.Element {
+function Looks({
+	modal,
+	clothes,
+	updateClothes,
+	addClothe,
+}: Prop): JSX.Element {
 	const [categories, setCategories] = useState<CategoriesData[]>([
 		{ category: 'TODOS', active: true },
 		{ category: 'CALÇA', active: false },
@@ -25,7 +29,10 @@ function Looks({ modal, clothes, updateClothes, addClothe }: Prop): JSX.Element 
 	]);
 
 	function handleClickList(index: number): void {
-		const newCategories = categories.map((category, i) => ({ ...category, active: i === index }));
+		const newCategories = categories.map((category, i) => ({
+			...category,
+			active: i === index,
+		}));
 		setCategories(newCategories);
 	}
 
@@ -34,7 +41,8 @@ function Looks({ modal, clothes, updateClothes, addClothe }: Prop): JSX.Element 
 			className={`
 			list-container
 			${modal}
-		`}>
+		`}
+		>
 			<ul className='list'>
 				{categories.map((cat, index) => (
 					<Categories
@@ -45,8 +53,8 @@ function Looks({ modal, clothes, updateClothes, addClothe }: Prop): JSX.Element 
 							cat.category === 'TODOS'
 								? cat
 								: cat.category === 'FAVORITO'
-									? clothe.favorite
-									: clothe.category === cat.category,
+								? clothe.favorite
+								: clothe.category === cat.category
 						)}
 						addClothe={addClothe}
 						handleClickList={() => {

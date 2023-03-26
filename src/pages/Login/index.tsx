@@ -4,8 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+const SERVER_ROUTER = 'http://localhost:3333';
+
 function Login() {
-	const router = useRouter()
+	const router = useRouter();
 
 	const [password, setPassword] = useState('');
 	const [email, setEmail] = useState('');
@@ -14,26 +16,24 @@ function Login() {
 		event.preventDefault();
 
 		try {
-			await fetch('http://localhost:3333/login', {
+			await fetch(`${SERVER_ROUTER}/login`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					email,
 					password,
-				})
-			})
-				.then(async response => {
-					const data = await response.json()
-					if (data.error) return;
+				}),
+			}).then(async (response) => {
+				const data = await response.json();
+				if (data.error) return;
 
-					localStorage.setItem('token', data.token)
-					localStorage.setItem('user', data.userLogged)
+				localStorage.setItem('token', data.token);
+				localStorage.setItem('user', data.userLogged);
+				localStorage.setItem('userName', data.userName);
 
-					router.push('/home')
-				})
-		} catch (error) {
-
-		}
+				router.push('/');
+			});
+		} catch (error) {}
 
 		console.log({ email, password });
 		setEmail('');
@@ -44,19 +44,27 @@ function Login() {
 		<main id='login'>
 			<div className='login-box'>
 				<div className='image-box'>
-					<Image src='/next.svg' alt='login logo' className='img' width={1000} height={1000} layout='responsive' />
+					<Image
+						src='/next.svg'
+						alt='login logo'
+						className='img'
+						width={1000}
+						height={1000}
+						layout='responsive'
+					/>
 				</div>
 				<h1>Login</h1>
 				<form
 					onSubmit={handleSubmit}
-					className='login-form'>
+					className='login-form'
+				>
 					<label htmlFor='email'>E-mail</label>
 					<input
 						type='text'
 						name='email'
 						id='email'
 						value={email}
-						onChange={e => {
+						onChange={(e) => {
 							setEmail(e.target.value);
 						}}
 					/>
@@ -66,12 +74,17 @@ function Login() {
 						name='password'
 						id='password'
 						value={password}
-						onChange={e => {
+						onChange={(e) => {
 							setPassword(e.target.value);
 						}}
 					/>
 					<button type='submit'>ENVIAR</button>
-					<p>Não tem uma conta? <span><Link href='/Register'>Crie sua conta</Link></span></p>
+					<p>
+						Não tem uma conta?{' '}
+						<span>
+							<Link href='/Register'>Crie sua conta</Link>
+						</span>
+					</p>
 				</form>
 			</div>
 		</main>
