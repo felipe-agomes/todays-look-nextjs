@@ -1,0 +1,27 @@
+#clothesSet {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	width: 100%;
+}
+
+#clothesSet .image {
+	position: relative;
+}
+
+#clothesSet .body, .legs {
+	height: 200px;
+}
+
+#clothesSet .bodyLegs {
+	height: 400px;
+}
+
+#clothesSet .shoes {
+	height: 100px;
+}
+
+#clothesSet .image img {
+	height: 100%;
+}

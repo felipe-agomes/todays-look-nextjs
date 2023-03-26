@@ -1,0 +1,22 @@
+.list-container .list li .grid {
+	display: none;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+
+	background: #eee;
+	height: 100%;
+	overflow-Y: scroll;
+	padding: 10px 20px;
+}
+
+.list-container .list li.active .grid {
+	display: grid;
+}
+
+.list-container .list li .grid .image {
+	position: relative;
+}
+
+.list-container .list li .grid .image img {
+	width: 100%;
+}

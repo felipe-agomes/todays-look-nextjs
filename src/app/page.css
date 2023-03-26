@@ -1,0 +1,45 @@
+#home {
+	height: 100vh;
+}
+
+#home header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: var(--primary);
+	color: var(--font-primary);
+	padding: 10px;
+}
+
+#home header nav ul {
+	display: flex;
+	gap: 20px;
+
+	list-style: none;
+}
+
+#home header nav ul li {
+	padding: 10px;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 1.2rem;
+}
+
+#home header nav ul li.active {
+	background: #6b0027;
+}
+
+#home header button {
+	background: #fe5e00;
+	color: #fff;
+	font-size: 1.2rem;
+	font-weight: bold;
+	border: none;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+#home .looks-container {
+	display: flex;
+	align-items: center;
+}

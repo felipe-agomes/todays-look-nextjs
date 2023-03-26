@@ -1,91 +1,125 @@
-import Image from 'next/image'
+'use client'
+
 import { Inter } from '@next/font/google'
 import styles from './page.module.css'
+import Link from 'next/link'
 
-const inter = Inter({ subsets: ['latin'] })
+import React, { useEffect, useState } from 'react';
+import Looks from '../components/Looks/Looks';
+import ClothesSet from '../components/ClothesSet/ClothesSet';
+import './page.css';
+import { type Clothe } from '../types';
+import AddCloth from '../components/AddCloth/AddCloth';
+import Image from 'next/image'
 
-export default function Home() {
+type Modal = {
+  addCloth: 'active' | '';
+  looks: 'active' | '';
+};
+
+function Home(): JSX.Element {
+  const [selectedClothes, setSelectedClothes] = useState<Clothe[]>([]);
+  const [modal, setModal] = useState<Modal>({ addCloth: '', looks: 'active' });
+  const [clothes, setClothes] = useState<Clothe[]>([]);
+
+  const user = localStorage.getItem('user')
+  const token = localStorage.getItem('token')
+
+  useEffect(() => {
+    getAllClothes();
+  }, []);
+
+  const getAllClothes = async (): Promise<void> => {
+    fetch(`http://localhost:3333/users/${user}/clothes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+      .then(async response => {
+        const data = await response.json()
+        if (data.error) return;
+
+        setClothes(data.clothes)
+      })
+  };
+
+  function handleClickChange(clothe: Clothe): void {
+    const filteredClothes = selectedClothes.filter(element => element.body === clothe.body ? element : undefined);
+    if (!filteredClothes.length) {
+      const newSelectedClothes: Clothe[] = [...selectedClothes, clothe];
+      setSelectedClothes(newSelectedClothes);
+    }
+  }
+
+  function removeCloth(id: string): void {
+    const newSelectedClothes: Clothe[] = selectedClothes.filter(clothe => clothe.id !== id);
+    setSelectedClothes(newSelectedClothes);
+  }
+
+  function addClothe(id: string): void {
+    const selectedClothe: Clothe = clothes.filter(clothe => clothe.id === id)[0];
+    const newSelectedClothes = selectedClothes.filter(clothe => clothe.body !== selectedClothe.body);
+    if (selectedClothes.length === 0) {
+      setSelectedClothes([selectedClothe]);
+      return;
+    }
+
+    if (newSelectedClothes.length > 0) {
+      setSelectedClothes([...selectedClothes, selectedClothe]);
+    }
+  }
+
+  function logOut(): void {
+    console.log('Log Out');
+  }
+
+  function activeModal(n: 'addCloth' | 'cloth'): void {
+    if (n === 'addCloth') {
+      setModal({ addCloth: 'active', looks: '' });
+      return;
+    }
+
+    setModal({ addCloth: '', looks: 'active' });
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <main id='home'>
+      <header>
+        <nav>
+          <ul>
+            <li
+              className={`${modal.addCloth}`}
+              onClick={() => {
+                activeModal('addCloth');
+              }}>Adicionar roupa</li>
+            <li
+              className={`${modal.looks}`}
+              onClick={() => {
+                activeModal('cloth');
+              }}>Roupas</li>
+          </ul>
+        </nav>
+        <h1>TODAYS LOOK</h1>
+        <button onClick={() => {
+          logOut();
+        }}>Sign out</button>
+      </header>
+      <div className='looks-container'>
+        <AddCloth updateClothes={getAllClothes} modal={modal.addCloth} />
+        <Looks
+          clothes={clothes}
+          modal={modal.looks}
+          addClothe={addClothe}
+          updateClothes={getAllClothes} />
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
-        </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        <ClothesSet
+          removeCloth={removeCloth}
+          selectedClothes={selectedClothes} />
       </div>
     </main>
-  )
+  );
 }
+
+export default Home;
