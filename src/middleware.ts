@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
 
 	const token = authorization.split(' ')[1];
 
-	const decode = JWT.verify(token, process.env.JWT_SECRETKEY);
+	const decode = JWT.verify(token, process.env.JWT_SECRETKEY!);
 	console.log(process.env.JWT_SECRETKEY);
 
 	NextResponse.next();
