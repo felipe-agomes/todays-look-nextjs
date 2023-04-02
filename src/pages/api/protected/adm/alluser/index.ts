@@ -1,13 +1,14 @@
-import userModels from '../../../models/userModels';
+import userModels from '@/models/userModels';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function register(
+export default async function getAllUsers(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
 	switch (req.method) {
-		case 'POST':
-			const response = await userModels.createUser(req.body);
+		case 'GET':
+			const response = await userModels.getAllUsers();
+
 			if (response.error) {
 				res.status(400).json(response);
 				return;

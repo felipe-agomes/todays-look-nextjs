@@ -73,21 +73,12 @@ async function userLogin(data: UserLoginData) {
 		};
 	}
 
-	const token = JWT.sign(
-		{ id: user.id, email: user.email },
-		JWT_SECRETKEY ?? '',
-		{
-			expiresIn: '7d',
-		}
-	);
-
 	return {
 		error: false,
 		message: 'Logado com sucesso',
 		userLogged: user.id,
 		userEmail: user.email,
 		userName: user.name,
-		token,
 	};
 }
 

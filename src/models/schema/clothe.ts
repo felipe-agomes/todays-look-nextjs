@@ -1,12 +1,25 @@
-const db = require('../services/connectDB');
-const Sequelize = require('sequelize');
-const User = require('./user');
+import { Model } from 'sequelize';
 
-const Clothe = db.define('clothe', {
+import db from '../../services/connectDB';
+import Sequelize from 'sequelize';
+import User from './user';
+
+type ClotheAttributes = {
+	id: number;
+	category: string;
+	body: string;
+	favorite: boolean;
+	key: string;
+	image: string;
+	userId: number;
+} & Model;
+
+const database = {};
+
+const Clothe = db.define<ClotheAttributes>('clothe', {
 	id: {
 		type: Sequelize.INTEGER,
 		primaryKey: true,
-		unique: true,
 		allowNull: false,
 		autoIncrement: true,
 	},
@@ -41,6 +54,6 @@ const Clothe = db.define('clothe', {
 	},
 });
 
-// Clothe.sync();
+Clothe.sync();
 
-module.exports = Clothe;
+export default Clothe;

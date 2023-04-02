@@ -12,7 +12,6 @@ const User = db.define<UsersAttributes>('user', {
 	id: {
 		type: Sequelize.INTEGER,
 		allowNull: false,
-		unique: true,
 		primaryKey: true,
 		autoIncrement: true,
 	},
@@ -31,6 +30,6 @@ const User = db.define<UsersAttributes>('user', {
 	},
 });
 
-// User.sync();
+User.sync();
 
 export default User;
