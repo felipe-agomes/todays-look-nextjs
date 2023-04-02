@@ -24,4 +24,4 @@ export const config = {
 		'/api/protected/user/clothe/favorite',
 		'/api/protected/user/clothe/upload',
 	],
-}
+};
