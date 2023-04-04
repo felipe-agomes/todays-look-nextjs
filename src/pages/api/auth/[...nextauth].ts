@@ -11,9 +11,10 @@ export const authOptions = {
 			clientSecret: process.env.GOOGLE_SECRET!,
 		}),
 		CredentialsProvider({
-			name: 'todaysLooks',
+			name: 'credentials',
 			async authorize(credentials, req) {
 				const user = await User.findOne({
+					attributes: ['email', 'name', 'password'],
 					where: {
 						email: credentials.email,
 					},
@@ -31,7 +32,6 @@ export const authOptions = {
 				) {
 					throw new Error('Email ou senha inválidos');
 				}
-
 				return user;
 			},
 		}),

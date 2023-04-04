@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import style from './register.module.css';
 import { registerValidate } from '../../utils/validate';
 
-export type FormValues = {
+export type FormRegisterValues = {
 	username: string;
 	email: string;
 	password: string;

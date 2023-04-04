@@ -1,20 +1,30 @@
 import style from './login.module.css';
 import { signIn } from 'next-auth/react';
+import { useFormik } from 'formik';
+import { FormLoginValues, loginValidate } from '@/utils/validate';
 
 export default function Login() {
-	function handleGoogleSignin(e: SubmitEvent) {
-		e.preventDefault();
-		signIn('google', {
+	const formik = useFormik({
+		initialValues: {
+			email: '',
+			password: '',
+		},
+		validate: loginValidate,
+		onSubmit,
+	});
+	async function handleGoogleSignin() {
+		const status = await signIn('google', {
 			callbackUrl: 'http://localhost:3000',
 		});
+
 	}
 
-	async function handleTodaysLooksProvider(value: SubmitEvent) {
-		value.preventDefault();
-		await signIn('todaysLooks', {
-			redirect: false,
-			email: value.email,
-			password: value.password,
+	async function onSubmit(values: FormLoginValues) {
+		const status = await signIn('credentials', {
+			redirect: true,
+			email: values.email,
+			password: values.password,
+			callbackUrl: '/',
 		});
 	}
 
@@ -22,18 +32,22 @@ export default function Login() {
 		<main id={style.login}>
 			<div className={style.modal}>
 				<form
-					onSubmit={handleTodaysLooksProvider}
+					onSubmit={formik.handleSubmit}
 					className={style.form}
 				>
 					<input
 						className={style.input}
 						type='text'
+						name='email'
 						placeholder='Email'
+						onChange={formik.handleChange}
 					></input>
 					<input
 						className={style.input}
 						type='text'
+						name='password'
 						placeholder='Senha'
+						onChange={formik.handleChange}
 					></input>
 					<button
 						className={style.button}
