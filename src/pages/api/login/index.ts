@@ -1,7 +1,5 @@
 import userModels from '@/models/userModels';
 import { NextApiRequest, NextApiResponse } from 'next';
-import JWT from 'jsonwebtoken';
-import tokenGenerate from '@/utils/tokenGenerate';
 
 export default async function userLogin(
 	req: NextApiRequest,
@@ -14,9 +12,8 @@ export default async function userLogin(
 				res.status(400).json(response);
 				return;
 			}
-			const token = tokenGenerate(response.userLogged!);
 
-			res.status(200).json({ ...response, token });
+			res.status(200).json({ ...response, isLogged: true });
 			return;
 	}
 }
