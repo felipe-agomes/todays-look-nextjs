@@ -4,17 +4,22 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import User from '@/models/schema/user';
 import bcrypt from 'bcrypt';
 
+type CredentialsType = {
+	email: string;
+	password: string;
+};
+
 export const authOptions = {
 	providers: [
-		GoogleProvider({
-			clientId: process.env.GOOGLE_ID!,
-			clientSecret: process.env.GOOGLE_SECRET!,
-		}),
+		// GoogleProvider({
+		// 	clientId: process.env.GOOGLE_ID!,
+		// 	clientSecret: process.env.GOOGLE_SECRET!,
+		// }),
 		CredentialsProvider({
 			name: 'credentials',
-			async authorize(credentials, req) {
+			async authorize(credentials, _req) {
 				const user = await User.findOne({
-					attributes: ['email', 'name', 'password'],
+					attributes: ['email', 'name', 'password', 'id'],
 					where: {
 						email: credentials.email,
 					},
@@ -36,6 +41,20 @@ export const authOptions = {
 			},
 		}),
 	],
+	callbacks: {
+		async jwt({ token, user }) {
+			if (user) {
+				token.uid = user.id;
+			}
+			return token;
+		},
+		async session({ session, token }) {
+			if (session?.user) {
+				session.user.id = token.uid;
+			}
+			return session;
+		},
+	},
 };
 
 export default NextAuth(authOptions);

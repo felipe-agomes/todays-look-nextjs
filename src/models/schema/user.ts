@@ -30,6 +30,6 @@ const User = db.define<UsersAttributes>('user', {
 	},
 });
 
-User.sync();
+// User.sync({ force: true });
 
 export default User;

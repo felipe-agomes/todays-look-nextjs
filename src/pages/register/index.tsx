@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import style from './register.module.css';
 import { registerValidate } from '../../utils/validate';
+import { useRouter } from 'next/router';
 
 export type FormRegisterValues = {
 	username: string;
@@ -10,6 +11,7 @@ export type FormRegisterValues = {
 };
 
 export default function Register() {
+	const router = useRouter();
 	const formik = useFormik({
 		initialValues: {
 			username: '',
@@ -21,7 +23,7 @@ export default function Register() {
 		onSubmit,
 	});
 
-	async function onSubmit(values: FormValues) {
+	async function onSubmit(values: FormRegisterValues) {
 		const { username: name, email, password } = values;
 		const userData = { name, email, password };
 		const response = await fetch('http://localhost:3000/api/register', {
@@ -31,9 +33,15 @@ export default function Register() {
 			},
 			body: JSON.stringify(userData),
 		});
+
 		const data = await response.json();
 
-		console.log(data);
+		if (data.error) {
+			console.log(data.message);
+			return;
+		}
+
+		router.push('/login');
 	}
 
 	return (
@@ -91,7 +99,12 @@ export default function Register() {
 					) : (
 						<></>
 					)}
-					<button className={style.button}>Enviar</button>
+					<button
+						type='submit'
+						className={style.button}
+					>
+						Enviar
+					</button>
 				</form>
 			</div>
 		</main>

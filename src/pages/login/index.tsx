@@ -16,7 +16,6 @@ export default function Login() {
 		const status = await signIn('google', {
 			callbackUrl: 'http://localhost:3000',
 		});
-
 	}
 
 	async function onSubmit(values: FormLoginValues) {
@@ -26,6 +25,7 @@ export default function Login() {
 			password: values.password,
 			callbackUrl: '/',
 		});
+		console.log(status);
 	}
 
 	return (

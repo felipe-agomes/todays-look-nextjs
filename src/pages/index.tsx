@@ -1,23 +1,38 @@
-import { useSession, getSession, signOut } from 'next-auth/react';
-import { redirect } from 'next/dist/server/api-utils';
+import { getSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
-export default function Home({ session }) {
-	const router = useRouter();
+type UserSession = {
+	session: {
+		user: {
+			email: string;
+			user: string;
+			id: number;
+		};
+	};
+};
 
-	function handleGoogleSignOut() {
-		signOut({ callbackUrl: '/' });
+export default function Home({ session }: UserSession) {
+	const [clothes, setClothes] = useState();
+	console.log(session.user);
+	async function getAllClothes() {
+		const response = await fetch(
+			`http://localhost:3000/api/protected/user/${11}/clothe/all`
+		);
+		const data = await response.json();
+		return data;
 	}
 
+	useEffect(() => {
+		setClothes(getAllClothes());
+	}, []);
+
 	return (
-		<>
-			<ul>
-				<li>{session?.user?.email}</li>
-				<li>{session?.user?.image}</li>
-				<li>{session?.user?.name}</li>
-			</ul>
-			<button onClick={handleGoogleSignOut}>sair</button>
-		</>
+		<ul>
+			{clothes.map((element) => {
+				return <li>element.key</li>;
+			})}
+		</ul>
 	);
 }
 

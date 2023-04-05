@@ -54,6 +54,6 @@ const Clothe = db.define<ClotheAttributes>('clothe', {
 	},
 });
 
-Clothe.sync();
+// Clothe.sync({ force: true});
 
 export default Clothe;

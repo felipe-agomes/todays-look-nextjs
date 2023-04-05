@@ -9,3 +9,5 @@ export default function App({ Component, pageProps }: AppProps) {
 		</SessionProvider>
 	);
 }
+
+// TODO: Não esquecer de fazer a segurança para administradores
