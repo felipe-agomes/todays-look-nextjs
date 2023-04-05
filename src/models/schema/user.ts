@@ -1,8 +1,8 @@
 import db from '../../services/connectDB';
 import Sequelize, { Model } from 'sequelize';
 
-type UsersAttributes = {
-	id: number;
+export type UsersAttributes = {
+	id: string;
 	name: string;
 	email: string;
 	password: string;

@@ -1,15 +1,9 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import User from '@/models/schema/user';
 import bcrypt from 'bcrypt';
 
-type CredentialsType = {
-	email: string;
-	password: string;
-};
-
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
 	providers: [
 		// GoogleProvider({
 		// 	clientId: process.env.GOOGLE_ID!,
@@ -17,11 +11,15 @@ export const authOptions = {
 		// }),
 		CredentialsProvider({
 			name: 'credentials',
-			async authorize(credentials, _req) {
+			credentials: {
+				email: { type: 'text', label: 'Email' },
+				password: { type: 'password', label: 'Password' },
+			},
+			async authorize(credentials) {
 				const user = await User.findOne({
 					attributes: ['email', 'name', 'password', 'id'],
 					where: {
-						email: credentials.email,
+						email: credentials?.email,
 					},
 				});
 
@@ -31,8 +29,8 @@ export const authOptions = {
 
 				if (
 					!(
-						(await bcrypt.compare(credentials.password, user.password)) &&
-						user.email === credentials.email
+						(await bcrypt.compare(credentials?.password ?? '', user.password)) &&
+						user.email === credentials?.email
 					)
 				) {
 					throw new Error('Email ou senha inválidos');
