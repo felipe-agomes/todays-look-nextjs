@@ -1,6 +1,10 @@
+import { uploadWithBackground } from '@/config/multerS3';
 import clotheModels from '@/models/clotheModels';
+import { IncomingMessage } from 'http';
 import { NextApiRequest, NextApiResponse, PageConfig } from 'next';
 import { getSession } from 'next-auth/react';
+import { createRouter, expressWrapper } from 'next-connect';
+import cors from 'cors';
 
 export default async function setNewClothe(
 	req: NextApiRequest,
