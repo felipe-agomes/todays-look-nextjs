@@ -1,5 +1,5 @@
 import clotheModels from '@/models/clotheModels';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse, PageConfig } from 'next';
 import { getSession } from 'next-auth/react';
 
 export default async function setNewClothe(
@@ -19,24 +19,26 @@ export default async function setNewClothe(
 			image,
 			userId,
 		};
-
 		switch (req.method) {
 			case 'POST':
 				const response = await clotheModels.setNewClothe(data);
-
 				if (response.error) {
 					res.status(400).json(response);
 					return;
 				}
-
 				res.status(200).json(response);
 				return;
 		}
 		return;
 	}
-
 	res.status(400).json({
 		error: true,
 		message: 'Usuario precisa estar logado',
 	});
 }
+
+// export const config: PageConfig = {
+// 	api: {
+// 		bodyParser: false,
+// 	},
+// };

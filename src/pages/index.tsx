@@ -1,6 +1,6 @@
 import { getSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type UserSession = {
 	session: {
@@ -13,25 +13,26 @@ type UserSession = {
 };
 
 export default function Home({ session }: UserSession) {
-	const [clothes, setClothes] = useState();
+	const [clothes, setClothes] = useState(null);
 	console.log(session.user);
 	async function getAllClothes() {
 		const response = await fetch(
 			`http://localhost:3000/api/protected/user/${11}/clothe/all`
 		);
 		const data = await response.json();
+		console.log(data);
 		return data;
 	}
 
 	useEffect(() => {
 		setClothes(getAllClothes());
 	}, []);
-
 	return (
 		<ul>
-			{clothes.map((element) => {
-				return <li>element.key</li>;
-			})}
+			{clothes && clothes.length > 1 &&
+				clothes.map((element) => {
+					return <li>element.key</li>;
+				})}
 		</ul>
 	);
 }
