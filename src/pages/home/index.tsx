@@ -1,11 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
+'use client';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
 
-import { GetServerSideProps, NextApiRequest } from 'next';
-import { getSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import style from './home.module.css';
-import Image from 'next/image';
 
 type UserSession = {
 	session: {
@@ -35,27 +34,47 @@ type Response = {
 };
 
 export default function Home({ session, clothes }: UserSession) {
-	const categories: string[] | null =
-		clothes &&
-		clothes.map((clothe) => {
-			return clothe.category;
-		});
-	const uniqueCategories =
-		categories &&
-		categories.filter((category, index) => {
-			return categories.indexOf(category) === index;
-		});
+	const [currentPage, setCurrentPage] = useState<string>('Todos');
+	const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
+	// const { getEditButtonProps } = useEditableControls();
 
-	function handleEditClothes() {
-		console.log('Editar roupas');
+	let categories: string[] = ['Todos'];
+	let clothesCategories: string[] = [];
+
+	if (clothes) {
+		clothesCategories =
+			clothes &&
+			clothes.map((clothe) => {
+				return clothe.category;
+			});
+	}
+	categories = [...categories, ...clothesCategories];
+
+	const uniqueCategories = categories.filter((category, index) => {
+		return categories.indexOf(category) === index;
+	});
+
+	function handleClickCategory(category: string) {
+		setCurrentPage(category);
 	}
 
-	function handleWardobe() {
-		console.log('Guarda roupas');
-	}
-
-	function handleAddClothes() {
-		console.log('Adicionar roupas');
+	function filteredClothes(category: string) {
+		const clothesByCategory: string[] =
+			clothes &&
+			clothes.map((clothe) => {
+				if (clothe.category === category || category === 'Todos') {
+					return (
+						<img // TODO: Alterar para a tag imagem do next
+							key={clothe.id}
+							alt={clothe.key}
+							// width={200}
+							// height={300}
+							src={clothe.image}
+						></img>
+					);
+				}
+			});
+		return clothesByCategory;
 	}
 
 	return (
@@ -63,46 +82,65 @@ export default function Home({ session, clothes }: UserSession) {
 			<header className={style.headerPage}>
 				<div className={style.topHeader}>
 					<h1>Roupas</h1>
-					<button onClick={handleEditClothes}>Editar roupas</button>
 				</div>
 				<nav className={style.navegation}>
-					<ul className={style.categoryes}>
+					<ul className={style.categories}>
 						{uniqueCategories &&
 							uniqueCategories.map((category) => {
-								return <li key={category}>{category}</li>;
+								return (
+									<li
+										key={category}
+										className={selectedCategory === category ? style.categoryActive : ''}
+										onClick={() => {
+											setSelectedCategory(category);
+											handleClickCategory(category);
+										}}
+									>
+										{category}
+									</li>
+								);
 							})}
 					</ul>
 				</nav>
 			</header>
+
 			<Tabs align='center'>
-				<TabPanels>
-					<TabPanel className={style.mainPage}>
-						{clothes &&
-							clothes.map((clothe) => {
-								console.log(clothe.image);
-								return (
-									<img
-										key={clothe.id}
-										alt={clothe.key}
-										// width={200}
-										// height={300}
-										src={clothe.image}
-									></img>
-								);
-							})}
-					</TabPanel>
-					<TabPanel>
-						<p>Adicionar roupa</p>
-					</TabPanel>
-					<TabPanel>
-						<p>Perfil</p>
-					</TabPanel>
-				</TabPanels>
+				<main>
+					<TabPanels>
+							<TabPanel className={style.mainPage}>
+								{currentPage === 'Todos'
+									? filteredClothes('Todos')
+									: filteredClothes(currentPage)}
+							</TabPanel>
+							<TabPanel>
+								<main className={style.MainAddClothe}>
+									<form>
+										<input type='file' />
+									</form>
+								</main>
+							</TabPanel>
+							<TabPanel>
+								<p>Perfil</p>
+							</TabPanel>
+					</TabPanels>
+				</main>
 
 				<TabList className={style.footerPage}>
-					<Tab width={70}>Roupas</Tab>
-					<Tab width={70}>+</Tab>
-					<Tab width={70}>Perfil</Tab>
+					<Tab width={100}>Roupas</Tab>
+					<Tab>
+						<div className={style.boxAddIcon}>
+							<div className={style.addIcon}>
+								<AddIcon
+									borderRadius={'full'}
+									width={5}
+									height={5}
+									color={'white'}
+								></AddIcon>
+							</div>
+							<p>Adicionar</p>
+						</div>
+					</Tab>
+					<Tab width={100}>Perfil</Tab>
 				</TabList>
 			</Tabs>
 		</div>

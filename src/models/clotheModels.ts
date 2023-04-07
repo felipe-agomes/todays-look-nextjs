@@ -72,9 +72,6 @@ async function deleteClothe(userId: number, clotheId: number) {
 	}
 
 	const copyClothe = { ...clothe };
-	console.log(clothe);
-	console.log('==============================================');
-	console.log(copyClothe);
 
 	await clothe.destroy();
 	return {

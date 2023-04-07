@@ -25,7 +25,6 @@ export default function Login() {
 			password: values.password,
 			callbackUrl: '/home',
 		});
-		console.log(status);
 	}
 
 	return (

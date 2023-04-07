@@ -1,20 +1,23 @@
 .homePage {
 	height: 100vh;
-	/* overflow: hidden; */
 }
 
 .headerPage {
 	position: fixed;
 	height: 80px;
 	width: 100vw;
-	background: cyan;
+	background: #8db066;
 	padding: 10px;
+	color: #fff;
 }
 
 .topHeader {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	font-weight: bold;
+	font-size: 1.2rem;
+	letter-spacing: 0.1rem;
 }
 
 .navegation {
@@ -27,7 +30,7 @@
 	padding: 10px;
 }
 
-.categoryes {
+.categories {
 	display: flex;
 	align-items: center;
 	gap: 10px;
@@ -36,14 +39,27 @@
 	overflow-x: scroll;
 }
 
-.categoryes > li {
+.categories::-webkit-scrollbar {
+	display: none;
+}
+
+.categories > li {
 	list-style: none;
+}
+
+.categories li.categoryActive {
+	border-bottom: 7px solid #fff;
+}
+
+.mainPage::-webkit-scrollbar {
+	display: none;
 }
 
 .mainPage {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(auto-fit, 150px);
 	gap: 5px;
+	justify-content: center;
 
 	position: relative;
 	top: 80px;
@@ -62,6 +78,37 @@
 	left: 0;
 	height: 50px;
 	width: 100vw;
-	background: cyan;
+	background: #ddd;
 	padding: 10px;
+}
+
+.addIcon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	height: 60px;
+	width: 60px;
+	background-color: green;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.boxAddIcon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	transform: translateY(-16px);
+}
+
+.boxAddIcon > p {
+	font-size: 0.8rem;
+}
+
+.MainAddClothe {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
