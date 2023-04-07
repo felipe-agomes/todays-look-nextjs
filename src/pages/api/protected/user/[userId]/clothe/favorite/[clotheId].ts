@@ -6,7 +6,8 @@ export default async function toggleFavorite(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const session = await getSession({ req });
+	// const session = await getSession({ req });
+	const session = true;
 
 	if (session) {
 		const clotheId = Number(req.query.clotheId);
@@ -22,7 +23,12 @@ export default async function toggleFavorite(
 				}
 
 				res.status(200).json(response);
-				return;
+				break;
+			default:
+				res.status(400).json({
+					error: true,
+					message: 'Metodo não permitido',
+				});
 		}
 		return;
 	}

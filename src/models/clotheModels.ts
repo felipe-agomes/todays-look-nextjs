@@ -4,7 +4,6 @@ import User from './schema/user';
 type ClotheModel = {
 	category: string;
 	body: string;
-	favorite: boolean;
 	key: string;
 	image: string;
 	userId: number;

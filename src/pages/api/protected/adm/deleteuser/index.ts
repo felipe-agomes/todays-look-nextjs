@@ -15,6 +15,11 @@ export default async function deleteUser(
 			}
 
 			res.status(200).json(response);
-			return;
+			break;
+		default:
+			res.status(400).json({
+				error: true,
+				message: 'Metodo não permitido',
+			});
 	}
 }

@@ -6,7 +6,8 @@ export default async function deleteClothe(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const session = await getSession({ req });
+	// const session = await getSession({ req });
+	const session = true;
 
 	if (session) {
 		const clotheId = Number(req.query.clotheId);
@@ -21,7 +22,12 @@ export default async function deleteClothe(
 				}
 
 				res.status(200).json(response);
-				return;
+				break;
+			default:
+				res.status(400).json({
+					error: true,
+					message: 'Metodo não permitido',
+				});
 		}
 		return;
 	}

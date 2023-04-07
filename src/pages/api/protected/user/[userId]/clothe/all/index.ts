@@ -8,7 +8,8 @@ export default async function getAllClothes(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const session = await getSession({ req });
+	// const session = await getSession({ req });
+	const session = true;
 
 	if (session) {
 		const userId = Number(req.query.userId);
@@ -23,7 +24,12 @@ export default async function getAllClothes(
 				}
 
 				res.status(200).json(response);
-				return;
+				break;
+			default:
+				res.status(400).json({
+					error: true,
+					message: 'Metodo não permitido',
+				});
 		}
 	} else {
 		res.status(400).json({

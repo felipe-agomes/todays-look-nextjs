@@ -13,7 +13,7 @@ export default async function userLogin(
 				return;
 			}
 
-			res.status(200).json({ ...response, isLogged: true });
+			res.status(200).json({ ...response });
 			return;
 	}
 }

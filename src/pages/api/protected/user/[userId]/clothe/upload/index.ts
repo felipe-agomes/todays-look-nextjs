@@ -1,25 +1,24 @@
 import { uploadWithBackground } from '@/config/multerS3';
 import clotheModels from '@/models/clotheModels';
-import { IncomingMessage } from 'http';
 import { NextApiRequest, NextApiResponse, PageConfig } from 'next';
-import { getSession } from 'next-auth/react';
 import { createRouter, expressWrapper } from 'next-connect';
-import cors from 'cors';
 
-export default async function setNewClothe(
-	req: NextApiRequest,
-	res: NextApiResponse
-) {
-	const session = await getSession({ req });
+const router = createRouter<NextApiRequest, NextApiResponse>();
+
+router.use(expressWrapper(uploadWithBackground.single('image')));
+
+router.post(async (req, res, next) => {
+	// const session = await getSession({ req });
+	const session = true;
 
 	if (session) {
 		const userId = Number(req.query.userId);
-		const { key, category, body, favorite, image } = req.body;
+		const { originalname: key, location: image } = req.file;
+		const { category, body } = req.body;
 		const data = {
 			key,
 			category,
 			body,
-			favorite,
 			image,
 			userId,
 		};
@@ -31,7 +30,12 @@ export default async function setNewClothe(
 					return;
 				}
 				res.status(200).json(response);
-				return;
+				break;
+			default:
+				res.status(400).json({
+					error: true,
+					message: 'Metodo não permitido',
+				});
 		}
 		return;
 	}
@@ -39,10 +43,18 @@ export default async function setNewClothe(
 		error: true,
 		message: 'Usuario precisa estar logado',
 	});
-}
+});
 
-// export const config: PageConfig = {
-// 	api: {
-// 		bodyParser: false,
-// 	},
-// };
+export default router.handler({
+	onError(err, req, res) {
+		res.status(500).json({
+			error: (err as Error).message,
+		});
+	},
+});
+
+export const config: PageConfig = {
+	api: {
+		bodyParser: false,
+	},
+};
