@@ -23,7 +23,7 @@ export default function Login() {
 			redirect: true,
 			email: values.email,
 			password: values.password,
-			callbackUrl: '/',
+			callbackUrl: '/home',
 		});
 		console.log(status);
 	}

@@ -1,10 +1,12 @@
 .homePage {
 	height: 100vh;
+	/* overflow: hidden; */
 }
 
 .headerPage {
-	position: relative;
+	position: fixed;
 	height: 80px;
+	width: 100vw;
 	background: cyan;
 	padding: 10px;
 }
@@ -17,7 +19,7 @@
 
 .navegation {
 	position: absolute;
-	bottom: 0;
+	bottom: 10px;
 	left: 0;
 
 	width: 100%;
@@ -40,9 +42,14 @@
 
 .mainPage {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(2, 1fr);
+	gap: 5px;
 
+	position: relative;
+	top: 80px;
 	padding: 10px;
+	height: calc(100vh - 80px - 50px);
+	overflow-y: scroll;
 }
 
 .footerPage {
@@ -50,7 +57,7 @@
 	align-items: center;
 	justify-content: center;
 
-	position: absolute;
+	position: fixed;
 	bottom: 0;
 	left: 0;
 	height: 50px;

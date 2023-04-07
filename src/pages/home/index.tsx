@@ -1,4 +1,6 @@
-import { NextApiRequest } from 'next';
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+
+import { GetServerSideProps, NextApiRequest } from 'next';
 import { getSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -13,33 +15,36 @@ type UserSession = {
 			id: number;
 		};
 	};
+	clothes: Clothes[] | null;
 };
 
-export default function Home({ session }: UserSession) {
-	const categoryes = [
-		'Camiseta',
-		'blusa',
-		'shorts',
-		'tenis',
-		'sapato',
-		'bermuda',
-		'CALÇA',
-		'LUVA',
-	];
+type Clothes = {
+	id: number;
+	body: string;
+	category: string;
+	favorite: false;
+	image: string;
+	key: string;
+	userId: number;
+};
 
-	const clothes = [
-		'roupa1',
-		'roupa2',
-		'roupa3',
-		'roupa4',
-		'roupa5',
-		'roupa6',
-		'roupa7',
-		'roupa8',
-		'roupa9',
-		'roupa10',
-		'roupa11',
-	];
+type Response = {
+	error: boolean;
+	message: string;
+	clothe: Clothes[] | null;
+};
+
+export default function Home({ session, clothes }: UserSession) {
+	const categories: string[] | null =
+		clothes &&
+		clothes.map((clothe) => {
+			return clothe.category;
+		});
+	const uniqueCategories =
+		categories &&
+		categories.filter((category, index) => {
+			return categories.indexOf(category) === index;
+		});
 
 	function handleEditClothes() {
 		console.log('Editar roupas');
@@ -62,45 +67,59 @@ export default function Home({ session }: UserSession) {
 				</div>
 				<nav className={style.navegation}>
 					<ul className={style.categoryes}>
-						{categoryes.map((category) => {
-							return <li key={category}>{category}</li>;
-						})}
+						{uniqueCategories &&
+							uniqueCategories.map((category) => {
+								return <li key={category}>{category}</li>;
+							})}
 					</ul>
 				</nav>
 			</header>
+			<Tabs align='center'>
+				<TabPanels>
+					<TabPanel className={style.mainPage}>
+						{clothes &&
+							clothes.map((clothe) => {
+								console.log(clothe.image);
+								return (
+									<img
+										key={clothe.id}
+										alt={clothe.key}
+										// width={200}
+										// height={300}
+										src={clothe.image}
+									></img>
+								);
+							})}
+					</TabPanel>
+					<TabPanel>
+						<p>Adicionar roupa</p>
+					</TabPanel>
+					<TabPanel>
+						<p>Perfil</p>
+					</TabPanel>
+				</TabPanels>
 
-			<main className={style.mainPage}>
-				{clothes.map((clothe) => {
-					return (
-						<h1
-							key={clothe}
-							style={{ height: '128px' }}
-						>
-							{clothe}
-						</h1>
-					);
-				})}
-			</main>
-			<footer className={style.footerPage}>
-				<button
-					onClick={handleWardobe}
-					className={style.buttonWardobe}
-				>
-					Roupas
-				</button>
-				<button
-					onClick={handleAddClothes}
-					className={style.buttonAddClothes}
-				>
-					Adicionar
-				</button>
-			</footer>
+				<TabList className={style.footerPage}>
+					<Tab width={70}>Roupas</Tab>
+					<Tab width={70}>+</Tab>
+					<Tab width={70}>Perfil</Tab>
+				</TabList>
+			</Tabs>
 		</div>
 	);
 }
 
+async function getAllClothes() {
+	const response = await fetch(
+		`http://localhost:3000/api/protected/user/14/clothe/all`
+	);
+	const data: Response = await response.json();
+	const { clothe } = data;
+	return clothe;
+}
+
 export async function getServerSideProps({ req }) {
-	// const session = await getSession({ req }); ABILITAR EM PRODUÇÃO
+	// const session = await getSession({ req });
 	const session = true;
 
 	if (!session) {
@@ -112,7 +131,9 @@ export async function getServerSideProps({ req }) {
 		};
 	}
 
+	const clothes = await getAllClothes();
+
 	return {
-		props: { session },
+		props: { session, clothes },
 	};
 }
