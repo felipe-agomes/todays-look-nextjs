@@ -1,7 +1,8 @@
 import style from './login.module.css';
 import { signIn } from 'next-auth/react';
 import { useFormik } from 'formik';
-import { FormLoginValues, loginValidate } from '@/utils/validate';
+import { loginValidate } from '@/utils/validate';
+import { FormLoginValues } from '@/@types';
 
 export default function Login() {
 	const formik = useFormik({

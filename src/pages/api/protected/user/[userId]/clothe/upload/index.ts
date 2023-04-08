@@ -1,20 +1,33 @@
-import { uploadWithBackground } from '@/config/multerS3';
 import clotheModels from '@/models/clotheModels';
+import { uploadWithBackground } from '@/utils/middleware';
 import { NextApiRequest, NextApiResponse, PageConfig } from 'next';
 import { createRouter, expressWrapper } from 'next-connect';
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
-router.use(expressWrapper(uploadWithBackground.single('image')));
+export type ExtendedRequest = {
+	file?: {
+		originalname: string;
+		location: string;
+	};
+} & NextApiRequest;
 
-router.post(async (req, res, next) => {
+router.use(
+	expressWrapper<NextApiRequest, NextApiResponse>(
+		uploadWithBackground.single('image')
+	)
+);
+
+router.post(async (req: ExtendedRequest, res, next) => {
 	// const session = await getSession({ req });
 	const session = true;
 
 	if (session) {
-		const userId = Number(req.query.userId);
-		const { originalname: key, location: image } = req.file;
-		const { category, body } = req.body;
+		const userId = Number(req.query?.userId);
+		const { originalname: key, location: image } = req.file
+			? req.file
+			: { originalname: '', location: '' };
+		const { category, body } = req.body ? req.body : { body: '', category: '' };
 		const data = {
 			key,
 			category,
@@ -47,7 +60,7 @@ router.post(async (req, res, next) => {
 
 export default router.handler({
 	onError(err, req, res) {
-		res.status(500).json({
+		res.json({
 			error: (err as Error).message,
 		});
 	},

@@ -2,13 +2,7 @@ import { useFormik } from 'formik';
 import style from './register.module.css';
 import { registerValidate } from '../../utils/validate';
 import { useRouter } from 'next/router';
-
-export type FormRegisterValues = {
-	username: string;
-	email: string;
-	password: string;
-	cpassword: string;
-};
+import { FormRegisterValues } from '@/@types';
 
 export default function Register() {
 	const router = useRouter();

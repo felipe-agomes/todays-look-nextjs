@@ -18,33 +18,7 @@ import HeaderClothesPage from '@/components/HeaderClothesPage';
 import HeaderAddClothe from '@/components/HeaderAddClothePage';
 import HeaderAddClothePage from '@/components/HeaderAddClothePage';
 import { GetServerSidePropsContext } from 'next';
-
-type UserSession = {
-	session: {
-		user: {
-			email: string;
-			user: string;
-			id: number;
-		};
-	};
-	clothes: Clothes[] | null;
-};
-
-type Clothes = {
-	id: number;
-	body: string;
-	category: string;
-	favorite: false;
-	image: string;
-	key: string;
-	userId: number;
-};
-
-type Response = {
-	error: boolean;
-	message: string;
-	clothe: Clothes[] | null;
-};
+import { Response, UserSession } from '@/@types';
 
 export default function Home({ session, clothes }: UserSession) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');

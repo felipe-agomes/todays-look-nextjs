@@ -1,26 +1,8 @@
-import { Model } from 'sequelize';
-import User from './schema/user';
+import User, { UsersAttributes } from './schema/user';
 import bcrypt from 'bcrypt';
-import JWT from 'jsonwebtoken';
+import { UserLoginData, UserRegisterData } from '@/@types';
 
 const { JWT_SECRETKEY } = process.env;
-
-type UserRegisterData = {
-	name: string;
-	email: string;
-	password: string;
-};
-
-type UserLoginData = {
-	email: string;
-	password: string;
-};
-
-type UserData = {
-	id: number;
-	email: string;
-	name: string;
-};
 
 async function createUser(data: UserRegisterData) {
 	data.password = await bcrypt.hash(data.password, 8);
@@ -114,7 +96,7 @@ async function deleteUser(id: number) {
 async function getAllUsers(): Promise<{
 	error: boolean;
 	message: string;
-	users?: UserData[];
+	users?: UsersAttributes[];
 }> {
 	const users = await User.findAll({
 		attributes: ['id', 'name', 'email'],

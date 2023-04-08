@@ -14,8 +14,6 @@ type ClotheAttributes = {
 	userId: number;
 } & Model;
 
-const database = {};
-
 const Clothe = db.define<ClotheAttributes>('clothe', {
 	id: {
 		type: Sequelize.INTEGER,

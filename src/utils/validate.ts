@@ -1,23 +1,9 @@
-// import User from '@/models/schema/user';
-
-import { FormRegisterValues } from '@/pages/register';
-
-type FormRegisterErrorValues = {
-	username?: string;
-	email?: string;
-	password?: string;
-	cpassword?: string;
-};
-
-export type FormLoginValues = {
-	email?: string;
-	password?: string;
-};
-
-type FormLoginErrorValues = {
-	email?: string;
-	password?: string;
-};
+import {
+	FormLoginErrorValues,
+	FormLoginValues,
+	FormRegisterErrorValues,
+	FormRegisterValues,
+} from '@/@types';
 
 export function registerValidate(value: FormRegisterValues) {
 	const error: FormRegisterErrorValues = {};

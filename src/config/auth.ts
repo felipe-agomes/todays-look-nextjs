@@ -2,13 +2,10 @@ import { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import User from '@/models/schema/user';
 import bcrypt from 'bcrypt';
+import { ExtendedJWT, ExtendedSession } from '@/@types';
 
 export const authOptions: AuthOptions = {
 	providers: [
-		// GoogleProvider({
-		// 	clientId: process.env.GOOGLE_ID!,
-		// 	clientSecret: process.env.GOOGLE_SECRET!,
-		// }),
 		CredentialsProvider({
 			name: 'credentials',
 			credentials: {
@@ -40,13 +37,19 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	callbacks: {
-		async jwt({ token, user }) {
+		async jwt({ token, user }: { token: ExtendedJWT; user: { id: string } }) {
 			if (user) {
 				token.uid = user.id;
 			}
 			return token;
 		},
-		async session({ session, token }) {
+		async session({
+			session,
+			token,
+		}: {
+			session: ExtendedSession;
+			token: ExtendedJWT;
+		}) {
 			if (session?.user) {
 				session.user.id = token.uid;
 			}

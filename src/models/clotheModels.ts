@@ -1,13 +1,6 @@
+import { ClotheModel } from '@/@types';
 import Clothe from './schema/clothe';
 import User from './schema/user';
-
-type ClotheModel = {
-	category: string;
-	body: string;
-	key: string;
-	image: string;
-	userId: number;
-};
 
 async function setNewClothe(data: ClotheModel) {
 	const user = await User.findByPk(data.userId);
