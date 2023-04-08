@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import style from './FormSendClothe.module.css';
 import { useState } from 'react';
