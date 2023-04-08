@@ -1,20 +1,22 @@
+import { ClotheModel } from '@/@types';
 import clotheModels from '@/models/clotheModels';
 import { uploadWithBackground } from '@/utils/middleware';
+import { Request, Response } from 'express';
 import { NextApiRequest, NextApiResponse, PageConfig } from 'next';
 import { createRouter, expressWrapper } from 'next-connect';
 
-const router = createRouter<NextApiRequest, NextApiResponse>();
+const router = createRouter<Request, Response>();
 
 export type ExtendedRequest = {
 	file?: {
-		originalname: string;
-		location: string;
+		originalname?: string;
+		location?: string;
 	};
-} & NextApiRequest;
+} & Request;
 
-router.use(uploadWithBackground.single('image'));
+router.use(expressWrapper(uploadWithBackground.single('image')));
 
-router.post(async (req: ExtendedRequest, res, next) => {
+router.post(async (req: ExtendedRequest, res) => {
 	// const session = await getSession({ req });
 	const session = true;
 
@@ -24,15 +26,14 @@ router.post(async (req: ExtendedRequest, res, next) => {
 			? req.file
 			: { originalname: '', location: '' };
 		const { category } = req.body ? req.body : { category: '' };
-		const data = {
+		const data: ClotheModel = {
 			key,
 			category,
-			image,
+			image: image ?? '',
 			userId,
 		};
 		switch (req.method) {
 			case 'POST':
-				console.log('============ ', data, ' ===============');
 				const response = await clotheModels.setNewClothe(data);
 				if (response.error) {
 					res.status(400).json(response);
