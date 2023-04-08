@@ -7,7 +7,6 @@ import User from './user';
 type ClotheAttributes = {
 	id: number;
 	category: string;
-	body: string;
 	favorite: boolean;
 	key: string;
 	image: string;
@@ -22,10 +21,6 @@ const Clothe = db.define<ClotheAttributes>('clothe', {
 		autoIncrement: true,
 	},
 	category: {
-		type: Sequelize.STRING,
-		allowNull: false,
-	},
-	body: {
 		type: Sequelize.STRING,
 		allowNull: false,
 	},

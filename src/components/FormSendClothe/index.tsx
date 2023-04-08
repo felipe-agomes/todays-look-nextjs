@@ -1,7 +1,8 @@
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import style from './FormSendClothe.module.css';
 import { useState } from 'react';
-import { FormikHelpers, useFormik } from 'formik';
+import { Formik, FormikHelpers, useFormik } from 'formik';
+import { sendImageValidate } from '@/utils/validate';
 
 type FormSendClothe = {
 	category: string;
@@ -9,6 +10,7 @@ type FormSendClothe = {
 };
 
 export default function FormSendClothe() {
+	const [formImage, setFormImage] = useState<File | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [displayImage, setDisplayImage] = useState<string | ArrayBuffer | null>(
 		null
@@ -20,19 +22,43 @@ export default function FormSendClothe() {
 
 	const formik = useFormik({
 		initialValues,
-		validate,
+		validate: sendImageValidate,
 		onSubmit: handleSubmit,
 	});
 
-	function validate(value: FormSendClothe) {
-		console.log(value);
-	}
-
-	function handleSubmit(
-		event: FormSendClothe,
-		formikHelper: FormikHelpers<FormSendClothe>
-	) {
+	async function handleSubmit(value: FormSendClothe) {
 		setLoading(true);
+		const form = new FormData();
+
+		if (formImage) {
+			form.append('image', formImage);
+			console.log(value.category);
+			form.append('category', value.category);
+		}
+
+		console.log(value.file);
+
+		try {
+			const response = await fetch(
+				'http://localhost:3000/api/protected/user/14/clothe/upload',
+				{
+					method: 'POST',
+					body: form,
+				}
+			);
+
+			const data = await response.json();
+			console.log(data);
+		} catch (error) {
+			throw new Error('Error: ' + error);
+		}
+
+		setDisplayImage(null);
+		setFormImage(null);
+		formik.resetForm({
+			values: initialValues,
+		});
+		setLoading(false);
 	}
 
 	function handleDisplayImage(
@@ -85,6 +111,11 @@ export default function FormSendClothe() {
 					alt='Imagem'
 				/>
 			</label>
+			{formik.errors.file && formik.touched.file ? (
+				<span style={{ color: 'red' }}>{formik.errors.file}</span>
+			) : (
+				<></>
+			)}
 			<input
 				type='file'
 				id='file'
@@ -92,6 +123,7 @@ export default function FormSendClothe() {
 				onChange={(e) => {
 					formik.handleChange(e);
 					handleDisplayImage(e.target.files && e.target.files[0]);
+					setFormImage(e.target.files && e.target.files[0]);
 				}}
 				hidden
 			/>
@@ -106,8 +138,16 @@ export default function FormSendClothe() {
 				type='text'
 				id='category'
 				name='category'
+				value={formik.values.category}
 				onChange={formik.handleChange}
 			/>
+			{formik.errors.category && formik.touched.category ? (
+				<span style={{ color: 'red' }}>
+					<p>{formik.errors.category}</p>
+				</span>
+			) : (
+				<></>
+			)}
 			<Button
 				type='submit'
 				isLoading={loading}

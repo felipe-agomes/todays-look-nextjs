@@ -3,6 +3,8 @@ import {
 	FormLoginValues,
 	FormRegisterErrorValues,
 	FormRegisterValues,
+	FormSendImageValues,
+	FormSendImageErrorValues,
 } from '@/@types';
 
 export function registerValidate(value: FormRegisterValues) {
@@ -51,6 +53,24 @@ export function loginValidate(value: FormLoginValues) {
 		error.password = 'Senha é necessária';
 	} else if (value.password.includes(' ')) {
 		error.password = 'Senha inválida';
+	}
+
+	return error;
+}
+
+export function sendImageValidate(values: FormSendImageValues) {
+	const error: FormSendImageErrorValues = {};
+	if (!values.category) {
+		error.category = 'Categoria deve ser informada';
+	} else if (values.category.length < 2) {
+		error.category =
+			'Categoria não pode ser menor que 2 caracteres';
+	} else if (values.category.length > 10) {
+		error.category = 'Categoria deve ter menos que 10 caracteres'
+	}
+
+	if (!values.file) {
+		error.file = 'Uma imagem precisa ser selecionada';
 	}
 
 	return error;

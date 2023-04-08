@@ -32,7 +32,7 @@
 	display: flex;
 	align-items: center;
 	gap: 10px;
-
+	
 	width: 100%;
 	overflow-x: scroll;
 }
@@ -43,6 +43,7 @@
 
 .categories > li {
 	list-style: none;
+	white-space: nowrap;
 }
 
 .categories li.categoryActive {

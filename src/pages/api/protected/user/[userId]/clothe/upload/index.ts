@@ -12,11 +12,7 @@ export type ExtendedRequest = {
 	};
 } & NextApiRequest;
 
-router.use(
-	expressWrapper<NextApiRequest, NextApiResponse>(
-		uploadWithBackground.single('image')
-	)
-);
+router.use(uploadWithBackground.single('image'));
 
 router.post(async (req: ExtendedRequest, res, next) => {
 	// const session = await getSession({ req });
@@ -27,16 +23,16 @@ router.post(async (req: ExtendedRequest, res, next) => {
 		const { originalname: key, location: image } = req.file
 			? req.file
 			: { originalname: '', location: '' };
-		const { category, body } = req.body ? req.body : { body: '', category: '' };
+		const { category } = req.body ? req.body : { category: '' };
 		const data = {
 			key,
 			category,
-			body,
 			image,
 			userId,
 		};
 		switch (req.method) {
 			case 'POST':
+				console.log('============ ', data, ' ===============');
 				const response = await clotheModels.setNewClothe(data);
 				if (response.error) {
 					res.status(400).json(response);

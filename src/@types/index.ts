@@ -49,7 +49,6 @@ export type UserSession = {
 
 export type Clothes = {
 	id: number;
-	body: string;
 	category: string;
 	favorite: false;
 	image: string;
@@ -65,7 +64,6 @@ export type Response = {
 
 export type ClotheModel = {
 	category: string;
-	body: string;
 	key: string;
 	image: string;
 	userId: number;
@@ -86,4 +84,14 @@ export type UserData = {
 	id: number;
 	email: string;
 	name: string;
+};
+
+export type FormSendImageValues = {
+	category?: string;
+	file?: string;
+};
+
+export type FormSendImageErrorValues = {
+	category?: string;
+	file?: string;
 };

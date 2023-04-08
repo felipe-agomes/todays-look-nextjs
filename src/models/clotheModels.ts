@@ -21,14 +21,15 @@ async function setNewClothe(data: ClotheModel) {
 	} catch (error) {
 		return {
 			error: true,
-			message: 'Erro ao cadastrar, dados insuficientes passados ' + error,
+			message: `Categoria: ${data.category}, Image: ${data.image}, Key: ${data.key}, UserId: ${data.userId}`,
+			// 'Erro ao cadastrar, dados insuficientes passados ' + error,
 		};
 	}
 }
 
 async function getAllClothes(userId: number) {
 	const clothe = await Clothe.findAll({
-		attributes: ['id', 'body', 'category', 'favorite', 'image', 'key', 'userId'],
+		attributes: ['id', 'category', 'favorite', 'image', 'key', 'userId'],
 		where: {
 			userId,
 		},
@@ -50,7 +51,7 @@ async function getAllClothes(userId: number) {
 
 async function deleteClothe(userId: number, clotheId: number) {
 	const clothe = await Clothe.findOne({
-		attributes: ['id', 'body', 'category', 'favorite', 'image', 'key', 'userId'],
+		attributes: ['id', 'category', 'favorite', 'image', 'key', 'userId'],
 		where: {
 			id: clotheId,
 			userId,
@@ -75,7 +76,7 @@ async function deleteClothe(userId: number, clotheId: number) {
 
 async function toggleFavorite(userId: number, clotheId: number) {
 	const clothe = await Clothe.findOne({
-		attributes: ['id', 'body', 'category', 'favorite', 'image', 'key', 'userId'],
+		attributes: ['id', 'category', 'favorite', 'image', 'key', 'userId'],
 		where: {
 			id: clotheId,
 			userId,
