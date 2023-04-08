@@ -1,10 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import {
+	Tabs,
+	TabList,
+	TabPanels,
+	Tab,
+	TabPanel,
+	Center,
+} from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
 import { useState } from 'react';
 import style from './home.module.css';
+import { useFormik } from 'formik';
+import FormSendClothe from '@/components/FormSendClothe';
+import HeaderClothesPage from '@/components/HeaderClothesPage';
+import HeaderAddClothe from '@/components/HeaderAddClothePage';
+import HeaderAddClothePage from '@/components/HeaderAddClothePage';
 
 type UserSession = {
 	session: {
@@ -35,7 +47,6 @@ type Response = {
 
 export default function Home({ session, clothes }: UserSession) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
-	const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
 	// const { getEditButtonProps } = useEditableControls();
 
 	let categories: string[] = ['Todos'];
@@ -53,10 +64,6 @@ export default function Home({ session, clothes }: UserSession) {
 	const uniqueCategories = categories.filter((category, index) => {
 		return categories.indexOf(category) === index;
 	});
-
-	function handleClickCategory(category: string) {
-		setCurrentPage(category);
-	}
 
 	function filteredClothes(category: string) {
 		const clothesByCategory: string[] =
@@ -79,49 +86,25 @@ export default function Home({ session, clothes }: UserSession) {
 
 	return (
 		<div className={style.homePage}>
-			<header className={style.headerPage}>
-				<div className={style.topHeader}>
-					<h1>Roupas</h1>
-				</div>
-				<nav className={style.navegation}>
-					<ul className={style.categories}>
-						{uniqueCategories &&
-							uniqueCategories.map((category) => {
-								return (
-									<li
-										key={category}
-										className={selectedCategory === category ? style.categoryActive : ''}
-										onClick={() => {
-											setSelectedCategory(category);
-											handleClickCategory(category);
-										}}
-									>
-										{category}
-									</li>
-								);
-							})}
-					</ul>
-				</nav>
-			</header>
-
 			<Tabs align='center'>
 				<main>
 					<TabPanels>
-							<TabPanel className={style.mainPage}>
-								{currentPage === 'Todos'
-									? filteredClothes('Todos')
-									: filteredClothes(currentPage)}
-							</TabPanel>
-							<TabPanel>
-								<main className={style.MainAddClothe}>
-									<form>
-										<input type='file' />
-									</form>
-								</main>
-							</TabPanel>
-							<TabPanel>
-								<p>Perfil</p>
-							</TabPanel>
+						<TabPanel className={style.mainPage}>
+							<HeaderClothesPage
+								setCurrentPage={setCurrentPage}
+								uniqueCategories={uniqueCategories}
+							/>
+							{currentPage === 'Todos'
+								? filteredClothes('Todos')
+								: filteredClothes(currentPage)}
+						</TabPanel>
+						<TabPanel className={style.MainAddClothe}>
+							<HeaderAddClothePage />
+							<FormSendClothe />
+						</TabPanel>
+						<TabPanel>
+							<p>Perfil</p>
+						</TabPanel>
 					</TabPanels>
 				</main>
 

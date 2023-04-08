@@ -12,11 +12,6 @@ export default function Login() {
 		validate: loginValidate,
 		onSubmit,
 	});
-	async function handleGoogleSignin() {
-		const status = await signIn('google', {
-			callbackUrl: 'http://localhost:3000',
-		});
-	}
 
 	async function onSubmit(values: FormLoginValues) {
 		const status = await signIn('credentials', {
