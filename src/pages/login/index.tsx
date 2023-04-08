@@ -49,7 +49,6 @@ export default function Login() {
 					>
 						Enviar
 					</button>
-					<button onClick={handleGoogleSignin}>Google</button>
 				</form>
 			</div>
 		</main>

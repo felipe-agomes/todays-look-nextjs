@@ -17,6 +17,7 @@ import FormSendClothe from '@/components/FormSendClothe';
 import HeaderClothesPage from '@/components/HeaderClothesPage';
 import HeaderAddClothe from '@/components/HeaderAddClothePage';
 import HeaderAddClothePage from '@/components/HeaderAddClothePage';
+import { GetServerSidePropsContext } from 'next';
 
 type UserSession = {
 	session: {
@@ -66,7 +67,7 @@ export default function Home({ session, clothes }: UserSession) {
 	});
 
 	function filteredClothes(category: string) {
-		const clothesByCategory: string[] =
+		const clothesByCategory: (JSX.Element | undefined)[] | null =
 			clothes &&
 			clothes.map((clothe) => {
 				if (clothe.category === category || category === 'Todos') {
@@ -139,7 +140,8 @@ async function getAllClothes() {
 	return clothe;
 }
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+	const { req } = context;
 	// const session = await getSession({ req });
 	const session = true;
 
