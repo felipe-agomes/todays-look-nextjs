@@ -1,128 +1,116 @@
-// import User, { UsersAttributes } from './schema/user';
-// import bcrypt from 'bcrypt';
-// import { UserLoginData, UserRegisterData } from '@/@types';
+import bcrypt from 'bcrypt';
+import { UserLoginData, UserModel, UserRegisterData } from '@/@types';
+import { FilterQuery } from 'mongoose';
+import User from '../colections/user';
 
-// const { JWT_SECRETKEY } = process.env;
+const { JWT_SECRETKEY } = process.env;
 
-// async function createUser(data: UserRegisterData) {
-// 	data.password = await bcrypt.hash(data.password, 8);
-// 	const user = await User.findOne({
-// 		where: {
-// 			email: data.email,
-// 		},
-// 	});
+async function createUser(data: UserRegisterData) {
+	data.password = await bcrypt.hash(data.password, 8);
+	const user = await User.findOne({
+		email: data.email,
+	});
 
-// 	if (user) {
-// 		return {
-// 			error: true,
-// 			message: 'Email já cadastrado',
-// 		};
-// 	}
+	if (user) {
+		return {
+			error: true,
+			message: 'Email já cadastrado',
+		};
+	}
 
-// 	try {
-// 		await User.create(data);
-// 		return {
-// 			error: false,
-// 			message: 'Usuario cadastrado com sucesso!',
-// 		};
-// 	} catch (error) {
-// 		return {
-// 			error: true,
-// 			message: error,
-// 		};
-// 	}
-// }
+	try {
+		await User.create(data);
+		return {
+			error: false,
+			message: 'Usuario cadastrado com sucesso!',
+		};
+	} catch (error) {
+		return {
+			error: true,
+			message: error,
+		};
+	}
+}
 
-// async function userLogin(data: UserLoginData) {
-// 	const user = await User.findOne({
-// 		attributes: ['id', 'name', 'email', 'password'],
-// 		where: {
-// 			email: data.email,
-// 		},
-// 	});
+async function userLogin(data: UserLoginData) {
+	const user = await User.findOne({
+		email: data.email,
+	});
 
-// 	if (!user) {
-// 		return {
-// 			error: true,
-// 			message: 'Email ou senha inválidos: email inválido',
-// 		};
-// 	}
+	if (!user) {
+		return {
+			error: true,
+			message: 'Email ou senha inválidos',
+		};
+	}
 
-// 	if (!(await bcrypt.compare(data.password, user.password))) {
-// 		return {
-// 			error: true,
-// 			message: 'Email ou senha inválidos: Senha errada',
-// 		};
-// 	}
+	if (!user.password) {
+		return {
+			error: true,
+			message: 'Usuario sem password',
+		};
+	}
 
-// 	return {
-// 		error: false,
-// 		message: 'Logado com sucesso',
-// 		userLogged: user.id,
-// 		userEmail: user.email,
-// 		userName: user.name,
-// 	};
-// }
+	if (!(await bcrypt.compare(data.password, user.password))) {
+		return {
+			error: true,
+			message: 'Email ou senha inválidos',
+		};
+	}
 
-// async function deleteUser(id: number) {
-// 	const user = await User.findOne({
-// 		attributes: ['id', 'name', 'email'],
-// 		where: {
-// 			id,
-// 		},
-// 	});
+	return {
+		error: false,
+		message: 'Logado com sucesso',
+		userLogged: user.id,
+		userEmail: user.email,
+		userName: user.name,
+	};
+}
 
-// 	if (!user) {
-// 		return {
-// 			error: true,
-// 			message: 'Usuário não encontrado',
-// 		};
-// 	}
+async function deleteUser(id: number) {
+	const user = await User.findById(id);
 
-// 	const response = {
-// 		error: false,
-// 		message: `Usuario ${user.name} com o id ${user.id} deletado com sucesso `,
-// 	};
+	if (!user) {
+		return {
+			error: true,
+			message: 'Usuário não encontrado',
+		};
+	}
 
-// 	await User.destroy({
-// 		where: {
-// 			id,
-// 		},
-// 	});
+	const response = {
+		error: false,
+		message: `Usuario ${user.name} com o id ${user.id} deletado com sucesso `,
+	};
 
-// 	return response;
-// }
+	await User.findByIdAndDelete(id);
 
-// async function getAllUsers(): Promise<{
-// 	error: boolean;
-// 	message: string;
-// 	users?: UsersAttributes[];
-// }> {
-// 	const users = await User.findAll({
-// 		attributes: ['id', 'name', 'email'],
-// 	});
+	return response;
+}
 
-// 	if (users.length === 0) {
-// 		return {
-// 			error: true,
-// 			message: 'Nenhum usuario cadastrado',
-// 		};
-// 	}
+async function getAllUsers(): Promise<{
+	error: boolean;
+	message: string;
+	users?: UserModel[];
+}> {
+	const users: UserModel[] = await User.find();
 
-// 	return {
-// 		error: false,
-// 		message: 'Requisição de todos os usuarios com sucesso',
-// 		users,
-// 	};
-// }
+	if (users.length === 0) {
+		return {
+			error: true,
+			message: 'Nenhum usuario cadastrado',
+		};
+	}
 
-// const userModels = {
-// 	createUser,
-// 	userLogin,
-// 	deleteUser,
-// 	getAllUsers,
-// };
+	return {
+		error: false,
+		message: 'Requisição de todos os usuarios com sucesso',
+		users,
+	};
+}
 
-// export const userModels = {
-// 	createUser,
-// };
+export const userModels = {
+	createUser,
+	userLogin,
+	deleteUser,
+	getAllUsers,
+};

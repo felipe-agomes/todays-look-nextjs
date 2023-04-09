@@ -1,4 +1,4 @@
-import { clotheModels } from '@/models/modelMong/clotheModels';
+import { clotheModels } from '@/models/clotheModels';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 

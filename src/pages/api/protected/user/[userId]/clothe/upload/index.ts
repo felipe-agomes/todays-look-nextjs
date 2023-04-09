@@ -1,5 +1,5 @@
 import { ClotheData, ClotheModel } from '@/@types';
-import { clotheModels } from '@/models/modelMong/clotheModels';
+import { clotheModels } from '@/models/clotheModels';
 import { uploadWithBackground } from '@/utils/middleware';
 import { Request, Response } from 'express';
 import { PageConfig } from 'next';

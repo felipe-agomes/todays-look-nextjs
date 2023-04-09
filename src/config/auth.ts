@@ -2,7 +2,7 @@ import { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import { ExtendedJWT, ExtendedSession } from '@/@types';
-import User from '@/models/modelMong/colections/user';
+import User from '@/models/colections/user';
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -24,13 +24,20 @@ export const authOptions: AuthOptions = {
 
 				if (
 					!(
-						(await bcrypt.compare(credentials?.password ?? '', user.password)) &&
-						user.email === credentials?.email
+						(await bcrypt.compare(
+							credentials?.password ?? '',
+							user.password ?? ''
+						)) && user.email === credentials?.email
 					)
 				) {
 					throw new Error('Email ou senha inválidos');
 				}
-				return user;
+
+				const newUser = {
+					email: user.email,
+					password: user.password,
+				};
+				return newUser;
 			},
 		}),
 	],

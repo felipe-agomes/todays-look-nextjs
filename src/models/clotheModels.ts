@@ -1,100 +1,88 @@
-// import { ClotheModel } from '@/@types';
-// import Clothe from './schema/clothe';
-// import User from './schema/user';
+import { ClotheData, ClotheModel } from '@/@types';
+import User from './colections/user';
+import Clothe from './colections/clothe';
 
-// async function setNewClothe(data: ClotheModel) {
-// 	const user = await User.findByPk(data.userId);
+async function setNewClothe(data: ClotheData) {
+	const user = await User.findById(data.userId);
 
-// 	if (!user) {
-// 		return {
-// 			error: true,
-// 			message: 'Usuario não existe',
-// 		};
-// 	}
+	if (!user) {
+		return {
+			error: true,
+			message: 'Usuario não existe',
+		};
+	}
 
-// 	try {
-// 		await Clothe.create(data);
-// 		return {
-// 			error: false,
-// 			message: 'Roupa cadastrada com sucesso',
-// 		};
-// 	} catch (error) {
-// 		return {
-// 			error: true,
-// 			message: `Categoria: ${data.category}, Image: ${data.image}, Key: ${data.key}, UserId: ${data.userId}`,
-// 			// 'Erro ao cadastrar, dados insuficientes passados ' + error,
-// 		};
-// 	}
-// }
+	try {
+		await Clothe.create(data);
+		return {
+			error: false,
+			message: 'Roupa cadastrada com sucesso',
+		};
+	} catch (error) {
+		return {
+			error: true,
+			message: 'Erro ao cadastrar, dados insuficientes passados ' + error,
+		};
+	}
+}
 
-// async function getAllClothes(userId: number) {
-// 	const clothe = await Clothe.findAll({
-// 		attributes: ['id', 'category', 'favorite', 'image', 'key', 'userId'],
-// 		where: {
-// 			userId,
-// 		},
-// 	});
+async function getAllClothes(userId: string) {
+	const clothe = await Clothe.find({
+		userId,
+	});
 
-// 	if (!clothe) {
-// 		return {
-// 			error: true,
-// 			message: 'Nenhuma roupa desse usuario encontrada',
-// 		};
-// 	}
+	if (!clothe) {
+		return {
+			error: true,
+			message: 'Nenhuma roupa desse usuario encontrada',
+		};
+	}
 
-// 	return {
-// 		error: false,
-// 		message: 'Roupas encontrada com sucesso',
-// 		clothe,
-// 	};
-// }
+	return {
+		error: false,
+		message: 'Roupas encontrada com sucesso',
+		clothe,
+	};
+}
 
-// async function deleteClothe(userId: number, clotheId: number) {
-// 	const clothe = await Clothe.findOne({
-// 		attributes: ['id', 'category', 'favorite', 'image', 'key', 'userId'],
-// 		where: {
-// 			id: clotheId,
-// 			userId,
-// 		},
-// 	});
+async function deleteClothe(_userId: string, clotheId: string) {
+	const clothe = await Clothe.findById(clotheId);
 
-// 	if (!clothe) {
-// 		return {
-// 			error: true,
-// 			message: 'Nenhuma roupa encontrada',
-// 		};
-// 	}
+	if (!clothe) {
+		return {
+			error: true,
+			message: 'Nenhuma roupa encontrada',
+		};
+	}
 
-// 	const copyClothe = { ...clothe };
+	await Clothe.findByIdAndDelete(clotheId);
+	return {
+		error: false,
+		message: `Roupa id: ${clothe.id} do usuario id: ${clothe.userId} deletada com sucesso`,
+	};
+}
 
-// 	await clothe.destroy();
-// 	return {
-// 		error: false,
-// 		message: `Roupa id: ${copyClothe.dataValues.id} do usuario id: ${copyClothe.dataValues.userId} deletada com sucesso`,
-// 	};
-// }
+async function toggleFavorite(_userId: string, clotheId: string) {
+	const clothe = await Clothe.findById(clotheId);
 
-// async function toggleFavorite(userId: number, clotheId: number) {
-// 	const clothe = await Clothe.findOne({
-// 		attributes: ['id', 'category', 'favorite', 'image', 'key', 'userId'],
-// 		where: {
-// 			id: clotheId,
-// 			userId,
-// 		},
-// 	});
+	if (!clothe) {
+		return {
+			error: true,
+			message: 'Nenhuma roupa encontrada',
+		};
+	}
 
-// 	if (!clothe) {
-// 		return {
-// 			error: true,
-// 			message: 'Nenhuma roupa encontrada',
-// 		};
-// 	}
+	await clothe.updateOne({ favorite: !clothe.favorite });
 
-// 	await clothe.update({ favorite: !clothe.favorite });
+	return {
+		error: false,
+		message: 'Favorito alterado com sucesso',
+	};
+}
 
-// 	return {
-// 		error: false,
-// 		message: 'Favorito alterado com sucesso',
-// 	};
-// }
-
+export const clotheModels = {
+	setNewClothe,
+	getAllClothes,
+	deleteClothe,
+	toggleFavorite,
+};

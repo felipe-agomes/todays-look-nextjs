@@ -41,7 +41,7 @@ export type UserSession = {
 		user: {
 			email: string;
 			user: string;
-			id: number;
+			id: string;
 		};
 	};
 	clothes: Clothes[] | null;
@@ -97,7 +97,7 @@ export type ClotheData = {
 	userId: string;
 	image: string;
 	key: string;
-};	
+};
 
 export type FormSendImageValues = {
 	category?: string;

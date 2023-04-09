@@ -136,9 +136,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		};
 	}
 
-	const clothes = await getAllClothes(session.user?.id);
+	type t = {
+		name: string;
+		id: string;
+		email: string;
+		image: string;
+	};
+
+	const { id } = session.user as t;
+
+	const clothes = await getAllClothes(id);
 
 	return {
-		props: { session, clothes },
+		props: { session, clothes, id },
 	};
 }
