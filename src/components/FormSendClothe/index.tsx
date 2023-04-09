@@ -10,7 +10,11 @@ type FormSendClothe = {
 	file: string;
 };
 
-export default function FormSendClothe() {
+type Props = {
+	userId: string;
+};
+
+export default function FormSendClothe({ userId }: Props) {
 	const [formImage, setFormImage] = useState<File | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [displayImage, setDisplayImage] = useState<string | ArrayBuffer | null>(
@@ -41,7 +45,7 @@ export default function FormSendClothe() {
 
 		try {
 			const response = await fetch(
-				'http://localhost:3000/api/protected/user/14/clothe/upload',
+				`http://localhost:3000/api/protected/user/${userId}/clothe/upload`,
 				{
 					method: 'POST',
 					body: form,

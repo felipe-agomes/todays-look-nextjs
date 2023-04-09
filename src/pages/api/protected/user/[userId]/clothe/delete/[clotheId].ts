@@ -1,4 +1,4 @@
-import clotheModels from '@/models/clotheModels';
+import { clotheModels } from '@/models/modelMong/clotheModels';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
@@ -10,8 +10,16 @@ export default async function deleteClothe(
 	const session = true;
 
 	if (session) {
-		const clotheId = Number(req.query.clotheId);
-		const userId = Number(req.query.userId);
+		const clotheId = req.query.clotheId;
+		const userId = req.query.userId;
+
+		if (!(typeof clotheId === 'string' && typeof userId === 'string')) {
+			res.status(400).json({
+				error: true,
+				message: 'clotheId ou userId passados de forma incorreta',
+			});
+			return;
+		}
 
 		switch (req.method) {
 			case 'DELETE':

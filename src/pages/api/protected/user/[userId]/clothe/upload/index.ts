@@ -1,8 +1,8 @@
-import { ClotheModel } from '@/@types';
-import clotheModels from '@/models/clotheModels';
+import { ClotheData, ClotheModel } from '@/@types';
+import { clotheModels } from '@/models/modelMong/clotheModels';
 import { uploadWithBackground } from '@/utils/middleware';
 import { Request, Response } from 'express';
-import { NextApiRequest, NextApiResponse, PageConfig } from 'next';
+import { PageConfig } from 'next';
 import { createRouter, expressWrapper } from 'next-connect';
 
 const router = createRouter<Request, Response>();
@@ -21,12 +21,20 @@ router.post(async (req: ExtendedRequest, res) => {
 	const session = true;
 
 	if (session) {
-		const userId = Number(req.query?.userId);
+		const userId = req.query?.userId;
 		const { originalname: key, location: image } = req.file
 			? req.file
 			: { originalname: '', location: '' };
 		const { category } = req.body ? req.body : { category: '' };
-		const data: ClotheModel = {
+
+		if (!(typeof userId === 'string')) {
+			res.status(400).json({
+				error: true,
+				message: 'userId não inserido',
+			});
+			return;
+		}
+		const data: ClotheData = {
 			key,
 			category,
 			image: image ?? '',

@@ -62,13 +62,6 @@ export type Response = {
 	clothe: Clothes[] | null;
 };
 
-export type ClotheModel = {
-	category: string;
-	key: string;
-	image: string;
-	userId: number;
-};
-
 export type UserRegisterData = {
 	name: string;
 	email: string;
@@ -80,11 +73,31 @@ export type UserLoginData = {
 	password: string;
 };
 
-export type UserData = {
-	id: number;
-	email: string;
-	name: string;
+export type UserModel = {
+	name?: string;
+	email?: string;
+	password?: string;
+	createdAt?: string;
+	updatedAt?: string;
+	_id?: string;
 };
+
+export type ClotheModel = {
+	category?: string;
+	key?: string;
+	image?: string;
+	userId?: string;
+	createdAt?: string;
+	updatedAt?: string;
+	_id?: string;
+};
+
+export type ClotheData = {
+	category: string;
+	userId: string;
+	image: string;
+	key: string;
+};	
 
 export type FormSendImageValues = {
 	category?: string;

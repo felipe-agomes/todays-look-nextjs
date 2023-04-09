@@ -1,8 +1,8 @@
 import { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import User from '@/models/schema/user';
 import bcrypt from 'bcrypt';
 import { ExtendedJWT, ExtendedSession } from '@/@types';
+import User from '@/models/modelMong/colections/user';
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -14,11 +14,9 @@ export const authOptions: AuthOptions = {
 			},
 			async authorize(credentials) {
 				const user = await User.findOne({
-					attributes: ['email', 'name', 'password', 'id'],
-					where: {
-						email: credentials?.email,
-					},
+					email: credentials?.email,
 				});
+				console.log(credentials);
 
 				if (!user) {
 					throw new Error('Nenhum usuario encontrado');

@@ -19,6 +19,8 @@ import HeaderAddClothe from '@/components/HeaderAddClothePage';
 import HeaderAddClothePage from '@/components/HeaderAddClothePage';
 import { GetServerSidePropsContext } from 'next';
 import { Response, UserSession } from '@/@types';
+import { getSession } from 'next-auth/react';
+import connectDb from '@/services/connectDBMong';
 
 export default function Home({ session, clothes }: UserSession) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
@@ -75,7 +77,7 @@ export default function Home({ session, clothes }: UserSession) {
 						</TabPanel>
 						<TabPanel className={style.MainAddClothe}>
 							<HeaderAddClothePage />
-							<FormSendClothe />
+							<FormSendClothe userId={session.user.id} />
 						</TabPanel>
 						<TabPanel>
 							<p>Perfil</p>
@@ -105,20 +107,26 @@ export default function Home({ session, clothes }: UserSession) {
 	);
 }
 
-async function getAllClothes() {
-	const response = await fetch(
-		`http://localhost:3000/api/protected/user/14/clothe/all`
-	);
-	const data: Response = await response.json();
-	const { clothe } = data;
-	return clothe;
+async function getAllClothes(id: string) {
+	console.log(id);
+	try {
+		const response = await fetch(
+			`http://localhost:3000/api/protected/user/${id}/clothe/all`
+		);
+		const data: Response = await response.json();
+		const { clothe } = data;
+		return clothe;
+	} catch (error) {
+		console.error('Error: ' + error);
+	}
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+	await connectDb();
 	const { req } = context;
-	// const session = await getSession({ req });
-	const session = true;
-
+	const session = await getSession({ req });
+	// const session = true;
+	console.log(session);
 	if (!session) {
 		return {
 			redirect: {
@@ -128,7 +136,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		};
 	}
 
-	const clothes = await getAllClothes();
+	const clothes = await getAllClothes(session.user?.id);
 
 	return {
 		props: { session, clothes },

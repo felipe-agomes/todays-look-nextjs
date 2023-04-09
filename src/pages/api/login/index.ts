@@ -1,4 +1,4 @@
-import userModels from '@/models/userModels';
+import { userModels } from '@/models/modelMong/userModels';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function userLogin(

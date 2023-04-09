@@ -1,8 +1,10 @@
 import style from './login.module.css';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { useFormik } from 'formik';
 import { loginValidate } from '@/utils/validate';
 import { FormLoginValues } from '@/@types';
+import connectDb from '@/services/connectDBMong';
+import { GetServerSidePropsContext } from 'next';
 
 export default function Login() {
 	const formik = useFormik({
@@ -15,7 +17,7 @@ export default function Login() {
 	});
 
 	async function onSubmit(values: FormLoginValues) {
-		const status = await signIn('credentials', {
+		await signIn('credentials', {
 			redirect: true,
 			email: values.email,
 			password: values.password,
@@ -54,4 +56,15 @@ export default function Login() {
 			</div>
 		</main>
 	);
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+	await connectDb();
+	const session = await getSession({ req: context.req });
+
+	console.log(session);
+
+	return {
+		props: { session },
+	};
 }

@@ -1,4 +1,4 @@
-import clotheModels from '@/models/clotheModels';
+import { clotheModels } from '@/models/modelMong/clotheModels';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
@@ -10,8 +10,15 @@ export default async function getAllClothes(
 	const session = true;
 
 	if (session) {
-		const userId = Number(req.query.userId);
+		const userId = req.query.userId;
 
+		if (!(typeof userId === 'string')) {
+			res.status(400).json({
+				error: true,
+				message: 'UserId inválido',
+			});
+			return;
+		}
 		switch (req.method) {
 			case 'GET':
 				const response = await clotheModels.getAllClothes(userId);
