@@ -35,7 +35,8 @@ export const authOptions: AuthOptions = {
 
 				const newUser = {
 					email: user.email,
-					password: user.password,
+					name: user.name,
+					id: user.id,
 				};
 				return newUser;
 			},

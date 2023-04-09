@@ -3,7 +3,7 @@ import { getSession, signIn } from 'next-auth/react';
 import { useFormik } from 'formik';
 import { loginValidate } from '@/utils/validate';
 import { FormLoginValues } from '@/@types';
-import connectDb from '@/services/connectDBMong';
+import connectDb from '@/services/connectDb';
 import { GetServerSidePropsContext } from 'next';
 
 export default function Login() {
@@ -60,11 +60,7 @@ export default function Login() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 	await connectDb();
-	const session = await getSession({ req: context.req });
-
-	console.log(session);
-
 	return {
-		props: { session },
+		props: {},
 	};
 }

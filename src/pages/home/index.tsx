@@ -18,9 +18,9 @@ import HeaderClothesPage from '@/components/HeaderClothesPage';
 import HeaderAddClothe from '@/components/HeaderAddClothePage';
 import HeaderAddClothePage from '@/components/HeaderAddClothePage';
 import { GetServerSidePropsContext } from 'next';
-import { Response, UserSession } from '@/@types';
+import { ExtendedSession, Response, UserSession } from '@/@types';
 import { getSession } from 'next-auth/react';
-import connectDb from '@/services/connectDBMong';
+import connectDb from '@/services/connectDb';
 
 export default function Home({ session, clothes }: UserSession) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
@@ -108,13 +108,13 @@ export default function Home({ session, clothes }: UserSession) {
 }
 
 async function getAllClothes(id: string) {
-	console.log(id);
 	try {
 		const response = await fetch(
 			`http://localhost:3000/api/protected/user/${id}/clothe/all`
 		);
 		const data: Response = await response.json();
 		const { clothe } = data;
+		console.log(data, '===================clothe==========================');
 		return clothe;
 	} catch (error) {
 		console.error('Error: ' + error);
@@ -122,11 +122,14 @@ async function getAllClothes(id: string) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-	await connectDb();
 	const { req } = context;
-	const session = await getSession({ req });
+	const session: ExtendedSession | null = await getSession({ req });
+	console.log(
+		session,
+		'=============================SESSION========================'
+	);
+
 	// const session = true;
-	console.log(session);
 	if (!session) {
 		return {
 			redirect: {
@@ -136,18 +139,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		};
 	}
 
-	type t = {
-		name: string;
-		id: string;
-		email: string;
-		image: string;
-	};
-
-	const { id } = session.user as t;
+	const id = session.user?.id ?? '';
 
 	const clothes = await getAllClothes(id);
 
 	return {
-		props: { session, clothes, id },
+		props: { session, clothes },
 	};
 }

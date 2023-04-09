@@ -3,7 +3,6 @@ import { JWT } from 'next-auth/jwt';
 
 export type ExtendedSession = {
 	user?: {
-		email?: string | null;
 		id?: string | null;
 	};
 } & Session;

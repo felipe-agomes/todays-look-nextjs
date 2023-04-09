@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { UserLoginData, UserModel, UserRegisterData } from '@/@types';
-import { FilterQuery } from 'mongoose';
-import User from '../colections/user';
+import User from './colections/user';
+import connectDb from '@/services/connectDb';
 
 const { JWT_SECRETKEY } = process.env;
 
@@ -33,6 +33,7 @@ async function createUser(data: UserRegisterData) {
 }
 
 async function userLogin(data: UserLoginData) {
+	await connectDb();
 	const user = await User.findOne({
 		email: data.email,
 	});
@@ -68,8 +69,9 @@ async function userLogin(data: UserLoginData) {
 }
 
 async function deleteUser(id: number) {
+	await connectDb();
 	const user = await User.findById(id);
-
+	
 	if (!user) {
 		return {
 			error: true,
@@ -83,7 +85,7 @@ async function deleteUser(id: number) {
 	};
 
 	await User.findByIdAndDelete(id);
-
+	
 	return response;
 }
 
@@ -92,8 +94,9 @@ async function getAllUsers(): Promise<{
 	message: string;
 	users?: UserModel[];
 }> {
+	await connectDb();
 	const users: UserModel[] = await User.find();
-
+	
 	if (users.length === 0) {
 		return {
 			error: true,

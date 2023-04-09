@@ -3,6 +3,7 @@ import { clotheModels } from '@/models/clotheModels';
 import { uploadWithBackground } from '@/utils/middleware';
 import { Request, Response } from 'express';
 import { PageConfig } from 'next';
+import { getSession } from 'next-auth/react';
 import { createRouter, expressWrapper } from 'next-connect';
 
 const router = createRouter<Request, Response>();

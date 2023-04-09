@@ -1,5 +1,6 @@
 import { clotheModels } from '@/models/clotheModels';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth';
 import { getSession } from 'next-auth/react';
 
 export default async function getAllClothes(
