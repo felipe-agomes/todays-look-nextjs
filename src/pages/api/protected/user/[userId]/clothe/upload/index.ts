@@ -1,9 +1,8 @@
-import { ClotheData, ClotheModel } from '@/@types';
+import { ClotheData } from '@/@types';
 import { clotheModels } from '@/models/clotheModels';
 import { uploadWithBackground } from '@/utils/middleware';
 import { Request, Response } from 'express';
 import { PageConfig } from 'next';
-import { getSession } from 'next-auth/react';
 import { createRouter, expressWrapper } from 'next-connect';
 
 const router = createRouter<Request, Response>();
@@ -18,7 +17,6 @@ export type ExtendedRequest = {
 router.use(expressWrapper(uploadWithBackground.single('image')));
 
 router.post(async (req: ExtendedRequest, res) => {
-	// const session = await getSession({ req });
 	const session = true;
 
 	if (session) {

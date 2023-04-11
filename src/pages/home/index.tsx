@@ -6,25 +6,19 @@ import {
 	TabPanels,
 	Tab,
 	TabPanel,
-	Center,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
 import { useState } from 'react';
 import style from './home.module.css';
-import { useFormik } from 'formik';
 import FormSendClothe from '@/components/FormSendClothe';
 import HeaderClothesPage from '@/components/HeaderClothesPage';
-import HeaderAddClothe from '@/components/HeaderAddClothePage';
 import HeaderAddClothePage from '@/components/HeaderAddClothePage';
-import { GetServerSidePropsContext } from 'next';
-import { ExtendedSession, Response, UserSession } from '@/@types';
-import { getSession } from 'next-auth/react';
+import { UserSession } from '@/@types';
 import connectDb from '@/services/connectDb';
 
 export default function Home({ session, clothes }: UserSession) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
-	// const { getEditButtonProps } = useEditableControls();
 
 	let categories: string[] = ['Todos'];
 	let clothesCategories: string[] = [];
@@ -61,6 +55,11 @@ export default function Home({ session, clothes }: UserSession) {
 		return clothesByCategory;
 	}
 
+	console.log(
+		session,
+		'=====================================SESSION DENTRO=============================='
+	);
+
 	return (
 		<div className={style.homePage}>
 			<Tabs align='center'>
@@ -77,7 +76,7 @@ export default function Home({ session, clothes }: UserSession) {
 						</TabPanel>
 						<TabPanel className={style.MainAddClothe}>
 							<HeaderAddClothePage />
-							<FormSendClothe userId={session.user.id} />
+							<FormSendClothe userId={null} />
 						</TabPanel>
 						<TabPanel>
 							<p>Perfil</p>
@@ -105,45 +104,4 @@ export default function Home({ session, clothes }: UserSession) {
 			</Tabs>
 		</div>
 	);
-}
-
-async function getAllClothes(id: string) {
-	try {
-		const response = await fetch(
-			`http://localhost:3000/api/protected/user/${id}/clothe/all`
-		);
-		const data: Response = await response.json();
-		const { clothe } = data;
-		console.log(data, '===================clothe==========================');
-		return clothe;
-	} catch (error) {
-		console.error('Error: ' + error);
-	}
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-	const { req } = context;
-	const session: ExtendedSession | null = await getSession({ req });
-	console.log(
-		session,
-		'=============================SESSION========================'
-	);
-
-	// const session = true;
-	if (!session) {
-		return {
-			redirect: {
-				destination: '/login',
-				permanent: false,
-			},
-		};
-	}
-
-	const id = session.user?.id ?? '';
-
-	const clothes = await getAllClothes(id);
-
-	return {
-		props: { session, clothes },
-	};
 }

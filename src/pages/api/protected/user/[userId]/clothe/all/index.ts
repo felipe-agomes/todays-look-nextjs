@@ -1,13 +1,11 @@
+import { authOptions } from '@/config/auth';
 import { clotheModels } from '@/models/clotheModels';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth';
-import { getSession } from 'next-auth/react';
 
 export default async function getAllClothes(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	// const session = await getSession({ req });
 	const session = true;
 
 	if (session) {

@@ -1,10 +1,9 @@
 import style from './login.module.css';
-import { getSession, signIn } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useFormik } from 'formik';
 import { loginValidate } from '@/utils/validate';
 import { FormLoginValues } from '@/@types';
 import connectDb from '@/services/connectDb';
-import { GetServerSidePropsContext } from 'next';
 
 export default function Login() {
 	const formik = useFormik({
@@ -56,11 +55,4 @@ export default function Login() {
 			</div>
 		</main>
 	);
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-	await connectDb();
-	return {
-		props: {},
-	};
 }

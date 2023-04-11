@@ -11,7 +11,7 @@ type FormSendClothe = {
 };
 
 type Props = {
-	userId: string;
+	userId: string | null;
 };
 
 export default function FormSendClothe({ userId }: Props) {
