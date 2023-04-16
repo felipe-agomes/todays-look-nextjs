@@ -1,24 +1,44 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import {
-	Tabs,
-	TabList,
-	TabPanels,
-	Tab,
-	TabPanel,
-} from '@chakra-ui/react';
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import style from './home.module.css';
 import FormSendClothe from '@/components/FormSendClothe';
 import HeaderClothesPage from '@/components/HeaderClothesPage';
 import HeaderAddClothePage from '@/components/HeaderAddClothePage';
-import { UserSession } from '@/@types';
+import { Clothes, ExtendedSession, SessionProps, UserSession } from '@/@types';
 import connectDb from '@/services/connectDb';
+import { getSession, useSession } from 'next-auth/react';
+import { NextApiRequest } from 'next';
 
-export default function Home({ session, clothes }: UserSession) {
+export default function Home({
+	serverSession,
+}: // clothes,
+{
+	serverSession: SessionProps;
+	clothes: Clothes[];
+}) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
+	const [clothes, setClothes] = useState<Clothes[] | []>([]);
+
+	async function getAllClothes(id: string) {
+		const response = await fetch(
+			`http://localhost:3000/api/protected/user/${id}/clothe/all`
+		);
+
+		const data: { error: string; message: string; clothe: Clothes[] } =
+			await response.json();
+
+		return data.clothe;
+	}
+
+	useEffect(() => {
+		getAllClothes(serverSession.user.id).then((clothesData) =>
+			setClothes(clothesData)
+		);
+	}, [serverSession]);
 
 	let categories: string[] = ['Todos'];
 	let clothesCategories: string[] = [];
@@ -55,11 +75,6 @@ export default function Home({ session, clothes }: UserSession) {
 		return clothesByCategory;
 	}
 
-	console.log(
-		session,
-		'=====================================SESSION DENTRO=============================='
-	);
-
 	return (
 		<div className={style.homePage}>
 			<Tabs align='center'>
@@ -76,7 +91,7 @@ export default function Home({ session, clothes }: UserSession) {
 						</TabPanel>
 						<TabPanel className={style.MainAddClothe}>
 							<HeaderAddClothePage />
-							<FormSendClothe userId={null} />
+							<FormSendClothe userId={serverSession.user.id} />
 						</TabPanel>
 						<TabPanel>
 							<p>Perfil</p>
@@ -104,4 +119,23 @@ export default function Home({ session, clothes }: UserSession) {
 			</Tabs>
 		</div>
 	);
+}
+
+export async function getServerSideProps({ req }: { req: NextApiRequest }) {
+	const serverSession = (await getSession({ req })) as ExtendedSession | null;
+
+	if (!serverSession) {
+		return {
+			redirect: {
+				destination: '/login',
+				permanent: false,
+			},
+		};
+	}
+
+	return {
+		props: {
+			serverSession,
+		},
+	};
 }

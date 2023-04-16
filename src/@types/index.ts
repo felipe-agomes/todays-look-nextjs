@@ -1,11 +1,19 @@
+import { Request } from 'express';
 import { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 
 export type ExtendedSession = {
 	user?: {
-		id?: string | null;
+		id: string;
 	};
 } & Session;
+
+export type ExtendedRequest = {
+	file?: {
+		originalname?: string;
+		location?: string;
+	};
+} & Request;
 
 export type ExtendedJWT = {
 	uid?: string;
@@ -106,4 +114,12 @@ export type FormSendImageValues = {
 export type FormSendImageErrorValues = {
 	category?: string;
 	file?: string;
+};
+
+export type SessionProps = {
+	user: {
+		name: string;
+		email: string;
+		id: string;
+	};
 };

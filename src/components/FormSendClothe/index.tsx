@@ -37,13 +37,11 @@ export default function FormSendClothe({ userId }: Props) {
 
 		if (formImage) {
 			form.append('image', formImage);
-			console.log(value.category);
 			form.append('category', value.category);
 		}
 
-		console.log(value.file);
-
 		try {
+			console.log(userId);
 			const response = await fetch(
 				`http://localhost:3000/api/protected/user/${userId}/clothe/upload`,
 				{
@@ -53,7 +51,6 @@ export default function FormSendClothe({ userId }: Props) {
 			);
 
 			const data = await response.json();
-			console.log(data);
 		} catch (error) {
 			throw new Error('Error: ' + error);
 		}

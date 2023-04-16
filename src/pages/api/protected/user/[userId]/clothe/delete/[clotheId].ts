@@ -1,11 +1,12 @@
 import { clotheModels } from '@/models/clotheModels';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from 'next-auth/react';
 
 export default async function deleteClothe(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const session = true;
+	const session = await getSession({ req });
 
 	if (session) {
 		const clotheId = req.query.clotheId;

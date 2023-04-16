@@ -1,34 +1,14 @@
-import style from './login.module.css';
 import { signIn } from 'next-auth/react';
-import { useFormik } from 'formik';
-import { loginValidate } from '@/utils/validate';
-import { FormLoginValues } from '@/@types';
-import connectDb from '@/services/connectDb';
+import style from './login.module.css';
+import { useRouter } from 'next/router';
 
 export default function Login() {
-	const formik = useFormik({
-		initialValues: {
-			email: '',
-			password: '',
-		},
-		validate: loginValidate,
-		onSubmit,
-	});
-
-	async function onSubmit(values: FormLoginValues) {
-		await signIn('credentials', {
-			redirect: true,
-			email: values.email,
-			password: values.password,
-			callbackUrl: '/home',
-		});
-	}
+	const router = useRouter();
 
 	return (
 		<main id={style.login}>
 			<div className={style.modal}>
 				<form
-					onSubmit={formik.handleSubmit}
 					className={style.form}
 				>
 					<input
@@ -36,21 +16,23 @@ export default function Login() {
 						type='text'
 						name='email'
 						placeholder='Email'
-						onChange={formik.handleChange}
 					></input>
 					<input
 						className={style.input}
 						type='text'
 						name='password'
 						placeholder='Senha'
-						onChange={formik.handleChange}
 					></input>
-					<button
+					<a
 						className={style.button}
-						type='submit'
+						onClick={async (e) => {
+							e.preventDefault();
+							await signIn();
+							router.push('/home');
+						}}
 					>
 						Enviar
-					</button>
+					</a>
 				</form>
 			</div>
 		</main>
