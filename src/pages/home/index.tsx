@@ -29,7 +29,6 @@ export default function Home({
 		modal: '',
 		clothe: null,
 	});
-	const url = process.env.PROJECT_URL;
 	let categories: string[] = ['Todos'];
 	let clothesCategories: string[] = [];
 
@@ -43,9 +42,7 @@ export default function Home({
 	categories = [...categories, ...clothesCategories];
 
 	async function getAllClothes(id: string) {
-		const response = await fetch(
-			`${url}/api/protected/user/${id}/clothe/all`
-		);
+		const response = await fetch(`/api/protected/user/${id}/clothe/all`);
 
 		const data: { error: string; message: string; clothe: Clothes[] } =
 			await response.json();

@@ -19,12 +19,10 @@ export default function Register() {
 		onSubmit,
 	});
 
-	const url = process.env.PROJECT_URL;
-
 	async function onSubmit(values: FormRegisterValues) {
 		const { username: name, email, password } = values;
 		const userData = { name, email, password };
-		const response = await fetch(`${url}/api/register`, {
+		const response = await fetch(`/api/register`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
