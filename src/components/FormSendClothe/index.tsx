@@ -25,6 +25,7 @@ export default function FormSendClothe({ userId, updateClothes }: Props) {
 		category: '',
 		file: '',
 	};
+	const url = process.env.PROJECT_URL;
 
 	const formik = useFormik({
 		initialValues,
@@ -44,7 +45,7 @@ export default function FormSendClothe({ userId, updateClothes }: Props) {
 		try {
 			console.log(userId);
 			const response = await fetch(
-				`http://localhost:3000/api/protected/user/${userId}/clothe/upload`,
+				`${url}/api/protected/user/${userId}/clothe/upload`,
 				{
 					method: 'POST',
 					body: form,

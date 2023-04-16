@@ -29,6 +29,7 @@ export default function Home({
 		modal: '',
 		clothe: null,
 	});
+	const url = process.env.PROJECT_URL;
 	let categories: string[] = ['Todos'];
 	let clothesCategories: string[] = [];
 
@@ -43,7 +44,7 @@ export default function Home({
 
 	async function getAllClothes(id: string) {
 		const response = await fetch(
-			`http://localhost:3000/api/protected/user/${id}/clothe/all`
+			`${url}/api/protected/user/${id}/clothe/all`
 		);
 
 		const data: { error: string; message: string; clothe: Clothes[] } =
