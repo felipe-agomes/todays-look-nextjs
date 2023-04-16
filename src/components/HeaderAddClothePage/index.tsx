@@ -1,4 +1,8 @@
-export default function HeaderAddClothePage() {
+type Props = {
+	headerTitle: string;
+};
+
+export default function HeaderAddClothePage({ headerTitle }: Props) {
 	return (
 		<header
 			style={{
@@ -14,7 +18,7 @@ export default function HeaderAddClothePage() {
 			}}
 		>
 			<h1 style={{ color: '#fff', fontWeight: 'bold', fontSize: '1.2rem' }}>
-				Adicionar Roupa
+				{headerTitle}
 			</h1>
 		</header>
 	);

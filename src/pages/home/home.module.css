@@ -2,23 +2,6 @@
 	height: 100vh;
 }
 
-.mainPage::-webkit-scrollbar {
-	display: none;
-}
-
-.mainPage {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, 150px);
-	gap: 5px;
-	justify-content: center;
-
-	position: relative;
-	top: 80px;
-	padding: 10px;
-	height: calc(100vh - 80px - 50px);
-	overflow-y: scroll;
-}
-
 .footerPage {
 	display: flex;
 	align-items: center;
@@ -58,7 +41,7 @@
 	font-size: 0.8rem;
 }
 
-.MainAddClothe {
+.pageAddClothe {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -67,3 +50,11 @@
 	width: 100vw;
 }
 
+.pageProfile {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	height: 100vh;
+	width: 100vw;
+}

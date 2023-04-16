@@ -8,20 +8,38 @@ import style from './home.module.css';
 import FormSendClothe from '@/components/FormSendClothe';
 import HeaderClothesPage from '@/components/HeaderClothesPage';
 import HeaderAddClothePage from '@/components/HeaderAddClothePage';
-import { Clothes, ExtendedSession, SessionProps, UserSession } from '@/@types';
-import connectDb from '@/services/connectDb';
-import { getSession, useSession } from 'next-auth/react';
+import { Clothes, ExtendedSession, SessionProps } from '@/@types';
+import { getSession, signOut } from 'next-auth/react';
 import { NextApiRequest } from 'next';
+import ProfilePage from '@/components/ProfilePage';
+import GridClothes from '@/components/GridClothes';
+import ClotheModal from '@/components/ClotheModal';
 
 export default function Home({
 	serverSession,
-}: // clothes,
-{
+}: {
 	serverSession: SessionProps;
-	clothes: Clothes[];
 }) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
 	const [clothes, setClothes] = useState<Clothes[] | []>([]);
+	const [modal, setModal] = useState<{
+		modal: 'active' | '';
+		clothe: Clothes | null;
+	}>({
+		modal: '',
+		clothe: null,
+	});
+	let categories: string[] = ['Todos'];
+	let clothesCategories: string[] = [];
+
+	if (clothes) {
+		clothesCategories =
+			clothes &&
+			clothes.map((clothe) => {
+				return clothe.category;
+			});
+	}
+	categories = [...categories, ...clothesCategories];
 
 	async function getAllClothes(id: string) {
 		const response = await fetch(
@@ -40,39 +58,30 @@ export default function Home({
 		);
 	}, [serverSession]);
 
-	let categories: string[] = ['Todos'];
-	let clothesCategories: string[] = [];
-
-	if (clothes) {
-		clothesCategories =
-			clothes &&
-			clothes.map((clothe) => {
-				return clothe.category;
-			});
-	}
-	categories = [...categories, ...clothesCategories];
-
 	const uniqueCategories = categories.filter((category, index) => {
 		return categories.indexOf(category) === index;
 	});
 
+	function openModal(clotheId: string) {
+		const newClothe = clothes.filter((clothe) => clothe.id === clotheId)[0];
+		setModal({ clothe: newClothe, modal: 'active' });
+	}
+
 	function filteredClothes(category: string) {
-		const clothesByCategory: (JSX.Element | undefined)[] | null =
-			clothes &&
-			clothes.map((clothe) => {
-				if (clothe.category === category || category === 'Todos') {
-					return (
-						<img // TODO: Alterar para a tag imagem do next
-							key={clothe.id}
-							alt={clothe.key}
-							// width={200}
-							// height={300}
-							src={clothe.image}
-						></img>
-					);
-				}
-			});
-		return clothesByCategory;
+		const newClothes = clothes.filter(
+			(clothe) => clothe.category === category || category === 'Todos'
+		);
+		return newClothes;
+	}
+
+	async function updateClothes() {
+		getAllClothes(serverSession.user.id).then((clothesData) =>
+			setClothes(clothesData)
+		);
+	}
+
+	function closeModal() {
+		setModal({ clothe: null, modal: '' });
 	}
 
 	return (
@@ -80,21 +89,35 @@ export default function Home({
 			<Tabs align='center'>
 				<main>
 					<TabPanels>
-						<TabPanel className={style.mainPage}>
+						<TabPanel className={style.pageClothes}>
 							<HeaderClothesPage
 								setCurrentPage={setCurrentPage}
 								uniqueCategories={uniqueCategories}
 							/>
-							{currentPage === 'Todos'
-								? filteredClothes('Todos')
-								: filteredClothes(currentPage)}
+							<GridClothes
+								clothes={
+									currentPage === 'Todos'
+										? filteredClothes('Todos')
+										: filteredClothes(currentPage)
+								}
+								openModal={openModal}
+							>
+								<ClotheModal
+									modal={modal}
+									closeModal={closeModal}
+								/>
+							</GridClothes>
 						</TabPanel>
-						<TabPanel className={style.MainAddClothe}>
-							<HeaderAddClothePage />
-							<FormSendClothe userId={serverSession.user.id} />
+						<TabPanel className={style.pageAddClothe}>
+							<HeaderAddClothePage headerTitle='Adicionar Roupa' />
+							<FormSendClothe
+								userId={serverSession.user.id}
+								updateClothes={updateClothes}
+							/>
 						</TabPanel>
-						<TabPanel>
-							<p>Perfil</p>
+						<TabPanel className={style.pageProfile}>
+							<HeaderAddClothePage headerTitle='Perfil' />
+							<ProfilePage userName={serverSession.user.name} />
 						</TabPanel>
 					</TabPanels>
 				</main>

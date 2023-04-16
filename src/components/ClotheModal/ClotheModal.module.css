@@ -1,0 +1,16 @@
+.modalContainer {
+	display: none;
+	position: absolute;
+
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 80%;
+	border-radius: 5px;
+	background: red;
+	padding: 20px;
+}
+
+.modalContainer.active {
+	display: block;
+}

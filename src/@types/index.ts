@@ -55,12 +55,12 @@ export type UserSession = {
 };
 
 export type Clothes = {
-	id: number;
+	id: string;
 	category: string;
 	favorite: false;
 	image: string;
 	key: string;
-	userId: number;
+	userId: string;
 };
 
 export type Response = {

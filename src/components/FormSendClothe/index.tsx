@@ -12,9 +12,10 @@ type FormSendClothe = {
 
 type Props = {
 	userId: string | null;
+	updateClothes: () => void;
 };
 
-export default function FormSendClothe({ userId }: Props) {
+export default function FormSendClothe({ userId, updateClothes }: Props) {
 	const [formImage, setFormImage] = useState<File | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [displayImage, setDisplayImage] = useState<string | ArrayBuffer | null>(
@@ -61,6 +62,7 @@ export default function FormSendClothe({ userId }: Props) {
 			values: initialValues,
 		});
 		setLoading(false);
+		updateClothes();
 	}
 
 	function handleDisplayImage(

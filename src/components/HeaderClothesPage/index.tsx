@@ -28,6 +28,7 @@ export default function HeaderClothesPage({
 							return (
 								<li
 									key={category}
+									style={{ cursor: 'pointer' }}
 									className={selectedCategory === category ? style.categoryActive : ''}
 									onClick={() => {
 										setSelectedCategory(category);

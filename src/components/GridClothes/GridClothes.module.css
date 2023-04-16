@@ -1,0 +1,29 @@
+.boxList {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 130px);
+	grid-template-rows: repeat(auto-fit, 130px);
+	gap: 10px;
+	justify-content: center;
+
+	position: relative;
+	top: 80px;
+	padding: 10px;
+	height: calc(100vh - 80px - 50px);
+	overflow-y: scroll;
+}
+
+.boxList::-webkit-scrollbar {
+	display: none;
+}
+
+.list {
+	width: 130px;
+	height: 130px;
+	list-style: none;
+}
+
+.list > img {
+	max-width: 100%;
+	max-height: 100%;
+	cursor: pointer;
+}

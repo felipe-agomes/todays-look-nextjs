@@ -5,6 +5,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 import User from '@/models/colections/user';
 import connectDb from '@/services/connectDb';
+import { userModels } from '@/models/userModels';
+import { Profiler } from 'react';
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -49,9 +51,33 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	callbacks: {
-		jwt({ token, user }) {
+		async signIn({ account, profile }) {
+			if (account?.provider === 'google') {
+				await connectDb();
+				let user = await User.findOne({
+					email: profile?.email,
+				});
+
+				if (!user) {
+					await userModels.createUser({
+						email: profile?.email!,
+						name: profile?.name!,
+						password: '',
+					});
+				}
+				user = await User.findOne({
+					email: profile?.email,
+				});
+			}
+			return true;
+		},
+		async jwt({ token, user, profile }) {
 			if (user) {
-				token.id = user.id;
+				await connectDb();
+				const userBd = await User.findOne({
+					email: user.email,
+				});
+				token.id = userBd?.id;
 			}
 			return token;
 		},
@@ -65,5 +91,4 @@ export const authOptions: AuthOptions = {
 			};
 		},
 	},
-	// secret: process.env.NEXTAUTH_SECRET,
 };

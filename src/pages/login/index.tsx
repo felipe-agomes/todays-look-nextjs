@@ -8,32 +8,7 @@ export default function Login() {
 	return (
 		<main id={style.login}>
 			<div className={style.modal}>
-				<form
-					className={style.form}
-				>
-					<input
-						className={style.input}
-						type='text'
-						name='email'
-						placeholder='Email'
-					></input>
-					<input
-						className={style.input}
-						type='text'
-						name='password'
-						placeholder='Senha'
-					></input>
-					<a
-						className={style.button}
-						onClick={async (e) => {
-							e.preventDefault();
-							await signIn();
-							router.push('/home');
-						}}
-					>
-						Enviar
-					</a>
-				</form>
+				<button onClick={() => signIn('', { callbackUrl: '/home' })}>Login</button>
 			</div>
 		</main>
 	);
