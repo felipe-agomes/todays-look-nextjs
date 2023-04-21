@@ -127,5 +127,17 @@ export type SessionProps = {
 export type ClotheResponse = {
 	error: string;
 	message: string;
-	clothe: Clothes;
+	clothe: Clothes | Clothes[];
+};
+
+export type FetcherOptions = {
+	method?: string;
+	body?: string;
+	update?: boolean;
+};
+
+export type ModalState = {
+	deleteModal: boolean;
+	clotheModal: boolean;
+	clothe: Clothes | null;
 };

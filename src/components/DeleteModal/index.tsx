@@ -2,17 +2,28 @@ import Style from './DeleteModal.module.css';
 import { Button, ButtonGroup } from '@chakra-ui/react';
 
 type Props = {
-	closeDeleteModal: () => void;
+	openOrCloseModal: (
+		{
+			whichModal,
+			operation,
+		}: {
+			whichModal: 'clotheModal' | 'deleteModal';
+			operation: 'open' | 'close';
+		},
+		clotheId?: string
+	) => void;
 	deleteClothe: () => void;
 };
 
-export default function DeleteModal({ closeDeleteModal, deleteClothe }: Props) {
+export default function DeleteModal({ openOrCloseModal, deleteClothe }: Props) {
 	return (
 		<div className={Style.modalContainer}>
 			<h1>Deseja realmente remover a roupa?</h1>
 			<ButtonGroup gap={4}>
 				<Button
-					onClick={closeDeleteModal}
+					onClick={() =>
+						openOrCloseModal({ whichModal: 'deleteModal', operation: 'close' })
+					}
 					colorScheme={'gray'}
 				>
 					Não

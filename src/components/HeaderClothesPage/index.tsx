@@ -4,13 +4,22 @@ import style from './HeaderClothesPage.module.css';
 type Props = {
 	uniqueCategories: string[];
 	setCurrentPage: (category: string) => void;
-	closeModal: () => void;
+	openOrCloseModal: (
+		{
+			whichModal,
+			operation,
+		}: {
+			whichModal: 'clotheModal' | 'deleteModal';
+			operation: 'open' | 'close';
+		},
+		clotheId?: string
+	) => void;
 };
 
 export default function HeaderClothesPage({
 	uniqueCategories,
 	setCurrentPage,
-	closeModal,
+	openOrCloseModal,
 }: Props) {
 	const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
 
@@ -35,7 +44,7 @@ export default function HeaderClothesPage({
 									onClick={() => {
 										setSelectedCategory(category);
 										handleClickCategory(category);
-										closeModal();
+										openOrCloseModal({ whichModal: 'clotheModal', operation: 'close' });
 									}}
 								>
 									{category}

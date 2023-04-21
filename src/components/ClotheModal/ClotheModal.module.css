@@ -1,5 +1,5 @@
 .modalContainer {
-	display: none;
+	display: flex;
 	flex-direction: column;
 	align-items: center;
 
@@ -7,14 +7,9 @@
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	/* width: 80%; */
 	border-radius: 5px;
 	background: #ccc;
 	padding: 20px 100px;
-}
-
-.modalContainer.active {
-	display: flex;
 }
 
 .modalContainer h1 {

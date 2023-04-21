@@ -1,130 +1,82 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
-'use client';
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
-
 import { useEffect, useState } from 'react';
-import style from './home.module.css';
-import FormSendClothe from '@/components/FormSendClothe';
-import HeaderClothesPage from '@/components/HeaderClothesPage';
-import HeaderAddClothePage from '@/components/HeaderAddClothePage';
+import { getSession } from 'next-auth/react';
+import { NextApiRequest } from 'next';
+
+import { AddIcon } from '@chakra-ui/icons';
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+
 import {
 	ClotheResponse,
 	Clothes,
 	ExtendedSession,
+	FetcherOptions,
+	ModalState,
 	SessionProps,
 } from '@/@types';
-import { getSession } from 'next-auth/react';
-import { NextApiRequest } from 'next';
-import ProfilePage from '@/components/ProfilePage';
-import GridClothes from '@/components/GridClothes';
 import ClotheModal from '@/components/ClotheModal';
+import FormSendClothe from '@/components/FormSendClothe';
+import GridClothes from '@/components/GridClothes';
+import HeaderAddClothePage from '@/components/HeaderAddClothePage';
+import HeaderClothesPage from '@/components/HeaderClothesPage';
+import ProfilePage from '@/components/ProfilePage';
 
-export default function Home({
-	serverSession,
-}: {
+import style from './home.module.css';
+
+type Props = {
 	serverSession: SessionProps;
-}) {
+};
+
+export default function Home({ serverSession }: Props) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
 	const [clothes, setClothes] = useState<Clothes[] | []>([]);
-	const [modal, setModal] = useState<{
-		modal: 'active' | '';
-		clothe: Clothes | null;
-	}>({
-		modal: '',
+	const [modal, setModal] = useState<ModalState>({
+		deleteModal: false,
+		clotheModal: false,
 		clothe: null,
 	});
-	const [deleteModal, setDeleteModal] = useState<boolean>(false);
-	let categories: string[] = ['Favoritos', 'Todos'];
-	let clothesCategories: string[] = [];
 
-	if (clothes) {
-		clothesCategories =
-			clothes &&
-			clothes.map((clothe) => {
-				return clothe.category;
-			});
-	}
-	categories = [...categories, ...clothesCategories];
+	const clothesCategories = clothes.map((clothe) => clothe.category);
+	const categories = ['Favoritos', 'Todos', ...clothesCategories];
+	const uniqueCategories = categories.filter(
+		(category, index) => categories.indexOf(category) === index
+	);
 
-	async function getAllClothes(id: string) {
-		const response = await fetch(`/api/protected/user/${id}/clothe/all`);
-
-		const data: { error: string; message: string; clothe: Clothes[] } =
-			await response.json();
-
-		return data.clothe;
+	async function updateClothes() {
+		const data = await fetcher(
+			`/api/protected/user/${serverSession.user.id}/clothe/all`
+		);
+		if (Array.isArray(data)) {
+			setClothes(data);
+		}
 	}
 
 	useEffect(() => {
-		getAllClothes(serverSession.user.id).then((clothesData) =>
-			setClothes(clothesData)
-		);
+		updateClothes();
 	}, [serverSession]);
-
-	const uniqueCategories = categories.filter((category, index) => {
-		return categories.indexOf(category) === index;
-	});
-
-	function openModal(clotheId: string) {
-		const newClothe = clothes.filter((clothe) => clothe.id === clotheId)[0];
-		setModal({ clothe: newClothe, modal: 'active' });
-	}
 
 	function filteredClothes(category: string) {
 		if (category === 'Favoritos') {
-			const newClothes = clothes.filter((clothe) => clothe.favorite);
-			return newClothes;
+			return clothes.filter((clothe) => clothe.favorite);
 		} else {
-			const newClothes = clothes.filter(
+			return clothes.filter(
 				(clothe) => clothe.category === category || category === 'Todos'
 			);
-			return newClothes;
 		}
 	}
 
-	function updateClothes() {
-		getAllClothes(serverSession.user.id).then((clothesData) =>
-			setClothes(clothesData)
-		);
-	}
-
-	function closeModal() {
-		setModal({ clothe: null, modal: '' });
-		setDeleteModal(false);
-	}
-
-	function closeDeleteModal() {
-		setDeleteModal(false);
-	}
-
-	function openDeleteModal() {
-		setDeleteModal(true);
-	}
-
-	async function toggleFavorite(clotheId: string, userId: string) {
-		const response = await fetch(
-			`/api/protected/user/${userId}/clothe/favorite/${clotheId}`,
-			{
-				method: 'PUT',
-			}
-		);
-		const data: ClotheResponse = await response.json();
-		if (data.error) {
-			console.error('Erro: ', data.message);
-			return;
+	async function fetcher(
+		url: string,
+		options?: FetcherOptions
+	): Promise<Clothes | Clothes[] | undefined> {
+		let response;
+		if (options?.method) {
+			response = await fetch(url, { method: options.method, body: options.body });
+		} else {
+			response = await fetch(url);
 		}
-		updateClothes();
-		return data.clothe;
-	}
 
-	async function deleteClothe(clotheId: string, userId: string) {
-		const response = await fetch(
-			`/api/protected/user/${userId}/clothe/delete/${clotheId}`,
-			{
-				method: 'DELETE',
-			}
-		);
 		const data: ClotheResponse = await response.json();
 
 		if (data.error) {
@@ -132,8 +84,33 @@ export default function Home({
 			return;
 		}
 
-		updateClothes();
+		if (options?.update) {
+			await updateClothes();
+		}
+
 		return data.clothe;
+	}
+
+	function openOrCloseModal(
+		{
+			whichModal,
+			operation,
+		}: {
+			whichModal: 'clotheModal' | 'deleteModal';
+			operation: 'open' | 'close';
+		},
+		clotheId?: string
+	) {
+		if (whichModal === 'clotheModal') {
+			const newClothe = clothes.filter((clothe) => clothe.id === clotheId)[0];
+			operation === 'open'
+				? setModal({ ...modal, clothe: newClothe, clotheModal: true })
+				: setModal({ clothe: null, clotheModal: false, deleteModal: false });
+		} else if (whichModal === 'deleteModal') {
+			operation === 'open'
+				? setModal({ ...modal, deleteModal: true })
+				: setModal({ ...modal, deleteModal: false });
+		}
 	}
 
 	return (
@@ -143,7 +120,7 @@ export default function Home({
 					<TabPanels>
 						<TabPanel className={style.pageClothes}>
 							<HeaderClothesPage
-								closeModal={closeModal}
+								openOrCloseModal={openOrCloseModal}
 								setCurrentPage={setCurrentPage}
 								uniqueCategories={uniqueCategories}
 							/>
@@ -153,16 +130,12 @@ export default function Home({
 										? filteredClothes('Todos')
 										: filteredClothes(currentPage)
 								}
-								openModal={openModal}
+								openOrCloseModal={openOrCloseModal}
 							>
 								<ClotheModal
-									deleteModal={deleteModal}
-									closeDeleteModal={closeDeleteModal}
-									openDeleteModal={openDeleteModal}
-									deleteClothe={deleteClothe}
-									toggleFavorite={toggleFavorite}
+									openOrCloseModal={openOrCloseModal}
+									fetcher={fetcher}
 									modal={modal}
-									closeModal={closeModal}
 								/>
 							</GridClothes>
 						</TabPanel>

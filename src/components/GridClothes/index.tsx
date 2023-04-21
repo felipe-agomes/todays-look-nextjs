@@ -4,11 +4,24 @@ import { Clothes } from '@/@types';
 
 type Props = {
 	clothes?: Clothes[];
-	openModal: (id: string) => void;
+	openOrCloseModal: (
+		{
+			whichModal,
+			operation,
+		}: {
+			whichModal: 'clotheModal' | 'deleteModal';
+			operation: 'open' | 'close';
+		},
+		clotheId?: string
+	) => void;
 	children: JSX.Element;
 };
 
-export default function GridClothes({ children, clothes, openModal }: Props) {
+export default function GridClothes({
+	children,
+	clothes,
+	openOrCloseModal,
+}: Props) {
 	return (
 		<ul className={Style.boxList}>
 			{children}
@@ -22,7 +35,12 @@ export default function GridClothes({ children, clothes, openModal }: Props) {
 							<img
 								src={clothe.image}
 								alt='Roupa'
-								onClick={() => openModal(clothe.id)}
+								onClick={() =>
+									openOrCloseModal(
+										{ whichModal: 'clotheModal', operation: 'open' },
+										clothe.id
+									)
+								}
 							/>
 						</li>
 					);
