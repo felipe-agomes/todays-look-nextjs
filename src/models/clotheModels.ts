@@ -58,6 +58,7 @@ async function deleteClothe(_userId: string, clotheId: string) {
 	return {
 		error: false,
 		message: `Roupa id: ${clothe.id} do usuario id: ${clothe.userId} deletada com sucesso`,
+		clothe,
 	};
 }
 
@@ -71,11 +72,14 @@ async function toggleFavorite(_userId: string, clotheId: string) {
 		};
 	}
 
-	await clothe.updateOne({ favorite: !clothe.favorite });
+	const newClothe = { favorite: !clothe.favorite };
+
+	await clothe.updateOne(newClothe);
 
 	return {
 		error: false,
 		message: 'Favorito alterado com sucesso',
+		clothe: newClothe,
 	};
 }
 

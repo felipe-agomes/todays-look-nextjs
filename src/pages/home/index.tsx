@@ -8,8 +8,13 @@ import style from './home.module.css';
 import FormSendClothe from '@/components/FormSendClothe';
 import HeaderClothesPage from '@/components/HeaderClothesPage';
 import HeaderAddClothePage from '@/components/HeaderAddClothePage';
-import { Clothes, ExtendedSession, SessionProps } from '@/@types';
-import { getSession, signOut } from 'next-auth/react';
+import {
+	ClotheResponse,
+	Clothes,
+	ExtendedSession,
+	SessionProps,
+} from '@/@types';
+import { getSession } from 'next-auth/react';
 import { NextApiRequest } from 'next';
 import ProfilePage from '@/components/ProfilePage';
 import GridClothes from '@/components/GridClothes';
@@ -29,7 +34,8 @@ export default function Home({
 		modal: '',
 		clothe: null,
 	});
-	let categories: string[] = ['Todos'];
+	const [deleteModal, setDeleteModal] = useState<boolean>(false);
+	let categories: string[] = ['Favoritos', 'Todos'];
 	let clothesCategories: string[] = [];
 
 	if (clothes) {
@@ -61,20 +67,23 @@ export default function Home({
 	});
 
 	function openModal(clotheId: string) {
-		console.log(clotheId);
-
 		const newClothe = clothes.filter((clothe) => clothe.id === clotheId)[0];
 		setModal({ clothe: newClothe, modal: 'active' });
 	}
 
 	function filteredClothes(category: string) {
-		const newClothes = clothes.filter(
-			(clothe) => clothe.category === category || category === 'Todos'
-		);
-		return newClothes;
+		if (category === 'Favoritos') {
+			const newClothes = clothes.filter((clothe) => clothe.favorite);
+			return newClothes;
+		} else {
+			const newClothes = clothes.filter(
+				(clothe) => clothe.category === category || category === 'Todos'
+			);
+			return newClothes;
+		}
 	}
 
-	async function updateClothes() {
+	function updateClothes() {
 		getAllClothes(serverSession.user.id).then((clothesData) =>
 			setClothes(clothesData)
 		);
@@ -82,6 +91,49 @@ export default function Home({
 
 	function closeModal() {
 		setModal({ clothe: null, modal: '' });
+		setDeleteModal(false);
+	}
+
+	function closeDeleteModal() {
+		setDeleteModal(false);
+	}
+
+	function openDeleteModal() {
+		setDeleteModal(true);
+	}
+
+	async function toggleFavorite(clotheId: string, userId: string) {
+		const response = await fetch(
+			`/api/protected/user/${userId}/clothe/favorite/${clotheId}`,
+			{
+				method: 'PUT',
+			}
+		);
+		const data: ClotheResponse = await response.json();
+		if (data.error) {
+			console.error('Erro: ', data.message);
+			return;
+		}
+		updateClothes();
+		return data.clothe;
+	}
+
+	async function deleteClothe(clotheId: string, userId: string) {
+		const response = await fetch(
+			`/api/protected/user/${userId}/clothe/delete/${clotheId}`,
+			{
+				method: 'DELETE',
+			}
+		);
+		const data: ClotheResponse = await response.json();
+
+		if (data.error) {
+			console.error('Erro: ', data.message);
+			return;
+		}
+
+		updateClothes();
+		return data.clothe;
 	}
 
 	return (
@@ -91,6 +143,7 @@ export default function Home({
 					<TabPanels>
 						<TabPanel className={style.pageClothes}>
 							<HeaderClothesPage
+								closeModal={closeModal}
 								setCurrentPage={setCurrentPage}
 								uniqueCategories={uniqueCategories}
 							/>
@@ -103,6 +156,11 @@ export default function Home({
 								openModal={openModal}
 							>
 								<ClotheModal
+									deleteModal={deleteModal}
+									closeDeleteModal={closeDeleteModal}
+									openDeleteModal={openDeleteModal}
+									deleteClothe={deleteClothe}
+									toggleFavorite={toggleFavorite}
 									modal={modal}
 									closeModal={closeModal}
 								/>

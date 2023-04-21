@@ -123,3 +123,9 @@ export type SessionProps = {
 		id: string;
 	};
 };
+
+export type ClotheResponse = {
+	error: string;
+	message: string;
+	clothe: Clothes;
+};

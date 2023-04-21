@@ -27,7 +27,7 @@ export default async function toggleFavorite(
 					res.status(400).json(response);
 					return;
 				}
-
+				console.log(response.clothe, 'toggleFavorite');
 				res.status(200).json(response);
 				break;
 			default:

@@ -4,11 +4,13 @@ import style from './HeaderClothesPage.module.css';
 type Props = {
 	uniqueCategories: string[];
 	setCurrentPage: (category: string) => void;
+	closeModal: () => void;
 };
 
 export default function HeaderClothesPage({
 	uniqueCategories,
 	setCurrentPage,
+	closeModal,
 }: Props) {
 	const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
 
@@ -33,6 +35,7 @@ export default function HeaderClothesPage({
 									onClick={() => {
 										setSelectedCategory(category);
 										handleClickCategory(category);
+										closeModal();
 									}}
 								>
 									{category}
