@@ -4,7 +4,6 @@ import Clothe from './colections/clothe';
 import connectDb from '@/services/connectDb';
 
 async function setNewClothe(data: ClotheData) {
-	await connectDb();
 	const user = await User.findById(data.userId);
 
 	if (!user) {
@@ -29,10 +28,7 @@ async function setNewClothe(data: ClotheData) {
 }
 
 async function getAllClothes(userId: string) {
-	await connectDb();
-	const clothe = await Clothe.find({
-		userId,
-	});
+	const clothe = await Clothe.find({ userId });
 
 	if (!clothe) {
 		return {
@@ -49,7 +45,6 @@ async function getAllClothes(userId: string) {
 }
 
 async function deleteClothe(_userId: string, clotheId: string) {
-	await connectDb();
 	const clothe = await Clothe.findById(clotheId);
 
 	if (!clothe) {
@@ -67,7 +62,6 @@ async function deleteClothe(_userId: string, clotheId: string) {
 }
 
 async function toggleFavorite(_userId: string, clotheId: string) {
-	await connectDb();
 	const clothe = await Clothe.findById(clotheId);
 
 	if (!clothe) {

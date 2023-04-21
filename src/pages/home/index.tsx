@@ -61,6 +61,8 @@ export default function Home({
 	});
 
 	function openModal(clotheId: string) {
+		console.log(clotheId);
+
 		const newClothe = clothes.filter((clothe) => clothe.id === clotheId)[0];
 		setModal({ clothe: newClothe, modal: 'active' });
 	}

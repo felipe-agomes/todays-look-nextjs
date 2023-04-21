@@ -11,6 +11,8 @@ type Props = {
 };
 
 export default function ClotheModal({ modal, closeModal }: Props) {
+	console.log(modal);
+
 	return (
 		<div className={`${Style.modalContainer} ${Style[modal.modal]}`}>
 			<CloseIcon

@@ -41,6 +41,12 @@ let Clothe: mongoose.Model<
 	}
 >;
 
+clotheSchema.method('toJSON', function () {
+	const { __v, _id, ...object } = this.toObject();
+	object.id = _id;
+	return object;
+});
+
 if (mongoose.modelNames().includes('Clothes')) {
 	Clothe = mongoose.model('Clothes');
 } else {
