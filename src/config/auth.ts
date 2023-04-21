@@ -71,7 +71,7 @@ export const authOptions: AuthOptions = {
 			}
 			return true;
 		},
-		async jwt({ token, user, profile }) {
+		async jwt({ token, user }) {
 			if (user) {
 				await connectDb();
 				const userBd = await User.findOne({

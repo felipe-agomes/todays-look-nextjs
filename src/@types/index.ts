@@ -15,10 +15,6 @@ export type ExtendedRequest = {
 	};
 } & Request;
 
-export type ExtendedJWT = {
-	uid?: string;
-} & JWT;
-
 export type FormRegisterErrorValues = {
 	username?: string;
 	email?: string;
