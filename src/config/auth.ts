@@ -1,4 +1,3 @@
-import { ExtendedJWT, ExtendedSession } from '@/@types';
 import { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -6,7 +5,6 @@ import bcrypt from 'bcrypt';
 import User from '@/models/colections/user';
 import connectDb from '@/services/connectDb';
 import { userModels } from '@/models/userModels';
-import { Profiler } from 'react';
 
 export const authOptions: AuthOptions = {
 	providers: [
