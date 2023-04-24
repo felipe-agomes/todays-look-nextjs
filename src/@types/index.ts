@@ -69,6 +69,7 @@ export type UserRegisterData = {
 	name: string;
 	email: string;
 	password: string;
+	image: string;
 };
 
 export type UserLoginData = {
@@ -117,6 +118,7 @@ export type SessionProps = {
 		name: string;
 		email: string;
 		id: string;
+		image: string;
 	};
 };
 
@@ -133,6 +135,7 @@ export type FetcherOptions = {
 };
 
 export type ModalState = {
+	changeCategoryModal: boolean;
 	deleteModal: boolean;
 	clotheModal: boolean;
 	clothe: Clothes | null;

@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button, ButtonGroup } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import style from './FormSendClothe.module.css';
 import { useState } from 'react';
-import { Formik, FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { sendImageValidate } from '@/utils/validate';
 
 type FormSendClothe = {
@@ -42,13 +42,10 @@ export default function FormSendClothe({ userId, updateClothes }: Props) {
 		}
 
 		try {
-			console.log(userId);
-			const response = await fetch(`/api/protected/user/${userId}/clothe/upload`, {
+			await fetch(`/api/protected/user/${userId}/clothe/upload`, {
 				method: 'POST',
 				body: form,
 			});
-
-			const data = await response.json();
 		} catch (error) {
 			throw new Error('Error: ' + error);
 		}

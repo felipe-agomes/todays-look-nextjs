@@ -41,7 +41,7 @@
 	font-size: 0.8rem;
 }
 
-.pageAddClothe {
+.page {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -50,7 +50,7 @@
 	width: 100vw;
 }
 
-.pageProfile {
+.page {
 	display: flex;
 	align-items: center;
 	justify-content: center;

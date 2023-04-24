@@ -3,8 +3,6 @@ import style from './register.module.css';
 import { registerValidate } from '../../utils/validate';
 import { useRouter } from 'next/router';
 import { FormRegisterValues } from '@/@types';
-import connectDb from '@/services/connectDb';
-import { GetServerSidePropsContext } from 'next';
 
 export default function Register() {
 	const router = useRouter();
@@ -33,7 +31,7 @@ export default function Register() {
 		const data = await response.json();
 
 		if (data.error) {
-			console.log(data.message);
+			console.error(data.message);
 			return;
 		}
 

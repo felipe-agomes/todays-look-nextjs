@@ -3,8 +3,6 @@ import style from './login.module.css';
 import { useRouter } from 'next/router';
 
 export default function Login() {
-	const router = useRouter();
-
 	return (
 		<main id={style.login}>
 			<div className={style.modal}>

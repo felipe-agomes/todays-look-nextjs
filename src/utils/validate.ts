@@ -63,14 +63,35 @@ export function sendImageValidate(values: FormSendImageValues) {
 	if (!values.category) {
 		error.category = 'Categoria deve ser informada';
 	} else if (values.category.length < 2) {
-		error.category =
-			'Categoria não pode ser menor que 2 caracteres';
+		error.category = 'Categoria não pode ser menor que 2 caracteres';
 	} else if (values.category.length > 10) {
-		error.category = 'Categoria deve ter menos que 10 caracteres'
+		error.category = 'Categoria deve ter menos que 10 caracteres';
 	}
 
 	if (!values.file) {
 		error.file = 'Uma imagem precisa ser selecionada';
+	}
+
+	return error;
+}
+
+export function validateNewCategory(value: { newCategory: string }) {
+	const error: { newCategory?: String } = {};
+	if (!value.newCategory) {
+		error.newCategory = 'Categoria deve ser informada';
+	} else if (value.newCategory.length < 2) {
+		error.newCategory = 'Categoria não pode ser menor que 2 caracteres';
+	} else if (value.newCategory.length > 10) {
+		error.newCategory = 'Categoria deve ter menos que 10 caracteres';
+	}
+
+	return error;
+}
+
+export function validateExistingCategory(value: { existingCategory: String }) {
+	const error: { existingCategory?: String } = {};
+	if (!value.existingCategory) {
+		error.existingCategory = 'Uma categoria deve ser selecionada';
 	}
 
 	return error;

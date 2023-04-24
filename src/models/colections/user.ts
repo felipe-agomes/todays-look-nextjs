@@ -14,6 +14,10 @@ const UserSchema = new Schema(
 			type: String,
 			require: true,
 		},
+		image: {
+			type: String,
+			require: true,
+		},
 	},
 	{ timestamps: true }
 );
@@ -23,9 +27,10 @@ let User: mongoose.Model<
 		createdAt: NativeDate;
 		updatedAt: NativeDate;
 	} & {
-		name?: string | undefined;
-		email?: string | undefined;
-		password?: string | undefined;
+		name?: string;
+		email?: string;
+		password?: string;
+		image?: string;
 	}
 >;
 

@@ -1,15 +1,17 @@
 .modalContainer {
 	display: flex;
-	flex-direction: column;
 	align-items: center;
+	gap: 10px;
 
 	position: absolute;
+	width: 100%;
+	max-width: 500px;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	border-radius: 5px;
 	background: #ccc;
-	padding: 20px 100px;
+	padding: 20px;
 }
 
 .modalContainer h1 {
@@ -23,6 +25,7 @@
 	align-items: center;
 	gap: 10px;
 
+	margin-bottom: 15px;
 	text-align: left;
 	list-style: none;
 }
@@ -37,4 +40,12 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
+}
+
+.rowBox {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	width: 100%;
 }

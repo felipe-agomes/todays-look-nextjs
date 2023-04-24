@@ -6,13 +6,13 @@ export default async function deleteClothe(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const session = await getSession({ req });
+	// const session = await getSession({ req });
+	const session = true;
 
 	if (session) {
 		const clotheId = req.query.clotheId;
-		const userId = req.query.userId;
 
-		if (!(typeof clotheId === 'string' && typeof userId === 'string')) {
+		if (!(typeof clotheId === 'string')) {
 			res.status(400).json({
 				error: true,
 				message: 'clotheId ou userId passados de forma incorreta',
@@ -22,7 +22,7 @@ export default async function deleteClothe(
 
 		switch (req.method) {
 			case 'DELETE':
-				const response = await clotheModels.deleteClothe(userId, clotheId);
+				const response = await clotheModels.deleteClothe(clotheId);
 				if (response.error) {
 					res.status(400).json(response);
 					return;

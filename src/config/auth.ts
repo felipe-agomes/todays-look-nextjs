@@ -12,41 +12,41 @@ export const authOptions: AuthOptions = {
 			clientSecret: process.env.CLIENT_SECRET!,
 			clientId: process.env.CLIENT_ID!,
 		}),
-		CredentialsProvider({
-			name: 'credentials',
-			credentials: {
-				email: { type: 'text', label: 'Email' },
-				password: { type: 'password', label: 'Password' },
-			},
-			async authorize(credentials) {
-				await connectDb();
-				const user = await User.findOne({
-					email: credentials?.email,
-				});
+		// CredentialsProvider({
+		// 	name: 'credentials',
+		// 	credentials: {
+		// 		email: { type: 'text', label: 'Email' },
+		// 		password: { type: 'password', label: 'Password' },
+		// 	},
+		// 	async authorize(credentials) {
+		// 		await connectDb();
+		// 		const user = await User.findOne({
+		// 			email: credentials?.email,
+		// 		});
 
-				if (!user) {
-					throw new Error('Nenhum usuario encontrado');
-				}
+		// 		if (!user) {
+		// 			throw new Error('Nenhum usuario encontrado');
+		// 		}
 
-				if (
-					!(
-						(await bcrypt.compare(
-							credentials?.password ?? '',
-							user.password ?? ''
-						)) && user.email === credentials?.email
-					)
-				) {
-					throw new Error('Email ou senha inválidos');
-				}
+		// 		if (
+		// 			!(
+		// 				(await bcrypt.compare(
+		// 					credentials?.password ?? '',
+		// 					user.password ?? ''
+		// 				)) && user.email === credentials?.email
+		// 			)
+		// 		) {
+		// 			throw new Error('Email ou senha inválidos');
+		// 		}
 
-				const newUser = {
-					email: user.email,
-					name: user.name,
-					id: user.id,
-				};
-				return newUser;
-			},
-		}),
+		// 		const newUser = {
+		// 			email: user.email,
+		// 			name: user.name,
+		// 			id: user.id,
+		// 		};
+		// 		return newUser;
+		// 	},
+		// }),
 	],
 	callbacks: {
 		async signIn({ account, profile }) {
@@ -61,6 +61,7 @@ export const authOptions: AuthOptions = {
 						email: profile?.email!,
 						name: profile?.name!,
 						password: '',
+						image: profile?.picture!,
 					});
 				}
 				user = await User.findOne({

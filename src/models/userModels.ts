@@ -3,13 +3,13 @@ import { UserLoginData, UserModel, UserRegisterData } from '@/@types';
 import User from './colections/user';
 import connectDb from '@/services/connectDb';
 
-const { JWT_SECRETKEY } = process.env;
-
 async function createUser(data: UserRegisterData) {
+	await connectDb();
 	data.password = await bcrypt.hash(data.password, 8);
 	const user = await User.findOne({
 		email: data.email,
 	});
+	console.log(data);
 
 	if (user) {
 		return {
@@ -33,6 +33,7 @@ async function createUser(data: UserRegisterData) {
 }
 
 async function userLogin(data: UserLoginData) {
+	await connectDb();
 	const user = await User.findOne({
 		email: data.email,
 	});

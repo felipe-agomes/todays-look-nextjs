@@ -46,7 +46,7 @@ async function getAllClothes(userId: string) {
 	};
 }
 
-async function deleteClothe(_userId: string, clotheId: string) {
+async function deleteClothe(clotheId: string) {
 	await connectDb();
 	const clothe = await Clothe.findById(clotheId);
 
@@ -65,7 +65,7 @@ async function deleteClothe(_userId: string, clotheId: string) {
 	};
 }
 
-async function toggleFavorite(_userId: string, clotheId: string) {
+async function toggleFavorite(clotheId: string) {
 	await connectDb();
 	const clothe = await Clothe.findById(clotheId);
 
@@ -87,9 +87,29 @@ async function toggleFavorite(_userId: string, clotheId: string) {
 	};
 }
 
+async function updateCategory(clotheId: String, toUpdate: String) {
+	const clothe = await Clothe.findById(clotheId);
+
+	if (!clothe) {
+		return {
+			error: true,
+			message: 'Nenhuma roupa encontrada',
+		};
+	}
+
+	const newClothe = { category: toUpdate };
+	await clothe.updateOne(newClothe);
+	return {
+		error: false,
+		message: 'Categoria alterada com sucesso',
+		clothe: newClothe,
+	};
+}
+
 export const clotheModels = {
 	setNewClothe,
 	getAllClothes,
 	deleteClothe,
 	toggleFavorite,
+	updateCategory,
 };

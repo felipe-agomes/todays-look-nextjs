@@ -2,7 +2,7 @@ type Props = {
 	headerTitle: string;
 };
 
-export default function HeaderAddClothePage({ headerTitle }: Props) {
+export default function HeaderPage({ headerTitle }: Props) {
 	return (
 		<header
 			style={{

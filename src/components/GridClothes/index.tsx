@@ -9,7 +9,7 @@ type Props = {
 			whichModal,
 			operation,
 		}: {
-			whichModal: 'clotheModal' | 'deleteModal';
+			whichModal: 'clotheModal' | 'deleteModal' | 'changeCategoryModal';
 			operation: 'open' | 'close';
 		},
 		clotheId?: string
@@ -35,12 +35,12 @@ export default function GridClothes({
 							<img
 								src={clothe.image}
 								alt='Roupa'
-								onClick={() =>
+								onClick={() => {
 									openOrCloseModal(
 										{ whichModal: 'clotheModal', operation: 'open' },
 										clothe.id
-									)
-								}
+									);
+								}}
 							/>
 						</li>
 					);

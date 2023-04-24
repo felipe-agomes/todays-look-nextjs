@@ -1,6 +1,4 @@
-import { authOptions } from '@/config/auth';
 import { clotheModels } from '@/models/clotheModels';
-import connectDb from '@/services/connectDb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
@@ -8,7 +6,7 @@ export default async function getAllClothes(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const session = await getSession({ req });
+	const session = await getSession({ req });	
 
 	if (session) {
 		const userId = req.query.userId;
@@ -28,7 +26,6 @@ export default async function getAllClothes(
 					res.status(400).json(response);
 					return;
 				}
-				console.log(response.clothe, 'getAllClothes');
 				res.status(200).json(response);
 				break;
 			default:

@@ -7,7 +7,7 @@ type Props = {
 			whichModal,
 			operation,
 		}: {
-			whichModal: 'clotheModal' | 'deleteModal';
+			whichModal: 'clotheModal' | 'deleteModal' | 'changeCategoryModal';
 			operation: 'open' | 'close';
 		},
 		clotheId?: string
