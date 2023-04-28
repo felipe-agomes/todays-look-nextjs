@@ -139,7 +139,6 @@ export default function Home({ serverSession }: Props) {
 		setworkbench(newworkbench);
 	}
 
-
 	return (
 		<div className={style.homePage}>
 			<Tabs align='center'>
@@ -180,7 +179,10 @@ export default function Home({ serverSession }: Props) {
 						</TabPanel>
 						<TabPanel className={style.page}>
 							<HeaderPage headerTitle='Criar Conjunto' />
-							<WorkbenchSet workbench={workbench} />
+							<WorkbenchSet
+								fetcher={fetcher}
+								workbench={workbench}
+							/>
 						</TabPanel>
 						<TabPanel className={style.page}>
 							<HeaderPage headerTitle='Perfil' />

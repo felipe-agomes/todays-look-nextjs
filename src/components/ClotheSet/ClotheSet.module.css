@@ -1,0 +1,7 @@
+.draggable {
+	top: calc(50% - 60px);
+	left: calc(50% - 60px);
+	position: absolute;
+	width: 128px;
+	height: 128px;
+}

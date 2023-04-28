@@ -1,34 +1,38 @@
 import { useEffect, useState } from 'react';
 import Style from './workbenchClotheSet.module.css';
 import ClotheSet from '../ClotheSet';
-import { Clothes } from '@/@types';
+import { Clothes, FetcherOptions } from '@/@types';
 
 export type ClothePosition = {
-	left: number;
-	top: number;
+	x: number;
+	y: number;
 } & Clothes;
 
 type Props = {
 	workbench: Clothes[] | [];
+	fetcher: (
+		url: string,
+		options?: FetcherOptions
+	) => Promise<Clothes | Clothes[] | undefined>;
 };
 
-export default function WorkbenchSet({ workbench }: Props) {
+export default function WorkbenchSet({ workbench, fetcher }: Props) {
 	const [clothesPosition, setClothesPosition] = useState<ClothePosition[] | []>(
 		[]
 	);
 
 	useEffect(() => {
 		const initialClothesPosition = workbench.map((clothe) => {
-			return { ...clothe, left: 0, top: 0 };
+			return { ...clothe, x: 0, y: 0 };
 		});
 		setClothesPosition(initialClothesPosition);
 	}, [workbench]);
 
-	function updateClothePosition(id: string, top: number, left: number) {
+	function updateClothePosition(id: string, y: number, x: number) {
 		const newClothesPosition = clothesPosition.map((clothe) => {
 			if (clothe.id === id) {
-				clothe.top = top;
-				clothe.left = left;
+				clothe.y = y;
+				clothe.x = x;
 			}
 			return clothe;
 		});
@@ -46,11 +50,31 @@ export default function WorkbenchSet({ workbench }: Props) {
 				return (
 					<ClotheSet
 						updateClothePosition={updateClothePosition}
-						key={clothe.id}
 						clothe={clothe}
+						key={clothe.id}
 					/>
 				);
 			})}
+			<button
+				style={{
+					position: 'absolute',
+					bottom: '50px',
+					left: '50%',
+				}}
+				onClick={() =>
+					fetcher(
+						`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`,
+						{
+							method: 'POST',
+							body: JSON.stringify({
+								sets: clothesPosition,
+							}),
+						}
+					)
+				}
+			>
+				Enviar
+			</button>
 		</div>
 	);
 }

@@ -15,6 +15,7 @@ export default function HeaderPage({ headerTitle }: Props) {
 				position: 'fixed',
 				top: '0',
 				left: '0',
+				zIndex: '1',
 			}}
 		>
 			<h1 style={{ color: '#fff', fontWeight: 'bold', fontSize: '1.2rem' }}>

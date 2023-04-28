@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import mongoose from 'mongoose';
 import { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 
@@ -139,4 +140,15 @@ export type ModalState = {
 	deleteModal: boolean;
 	clotheModal: boolean;
 	clothe: Clothes | null;
+};
+
+export type ClotheSchemaProps = {
+	createdAt: NativeDate;
+	updatedAt: NativeDate;
+} & {
+	favorite: boolean;
+	category?: string | undefined;
+	key?: string | undefined;
+	image?: string | undefined;
+	userId?: mongoose.Types.ObjectId | undefined;
 };

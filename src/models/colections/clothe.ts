@@ -1,6 +1,7 @@
+import { ClotheSchemaProps } from '@/@types';
 import mongoose, { Schema } from 'mongoose';
 
-const clotheSchema = new Schema(
+export const ClotheSchema = new Schema(
 	{
 		category: {
 			type: String,
@@ -28,20 +29,9 @@ const clotheSchema = new Schema(
 	{ timestamps: true }
 );
 
-let Clothe: mongoose.Model<
-	{
-		createdAt: NativeDate;
-		updatedAt: NativeDate;
-	} & {
-		favorite: boolean;
-		category?: string | undefined;
-		key?: string | undefined;
-		image?: string | undefined;
-		userId?: mongoose.Types.ObjectId | undefined;
-	}
->;
+let Clothe: mongoose.Model<ClotheSchemaProps>;
 
-clotheSchema.method('toJSON', function () {
+ClotheSchema.method('toJSON', function () {
 	const { __v, _id, ...object } = this.toObject();
 	object.id = _id;
 	return object;
@@ -50,7 +40,7 @@ clotheSchema.method('toJSON', function () {
 if (mongoose.modelNames().includes('Clothes')) {
 	Clothe = mongoose.model('Clothes');
 } else {
-	Clothe = mongoose.model('Clothes', clotheSchema);
+	Clothe = mongoose.model('Clothes', ClotheSchema);
 }
 
 export default Clothe;
