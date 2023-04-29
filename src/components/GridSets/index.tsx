@@ -51,6 +51,7 @@ export default function GridSets({
 							height: '332px',
 							cursor: 'pointer',
 							overflow: 'hidden',
+							background: '#fff',
 						}}
 						key={set.sets[0].x}
 						onClick={() => {
