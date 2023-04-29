@@ -6,11 +6,11 @@
 	gap: 30px;
 }
 
-.userName {
+.container h2 {
 	font-size: 1.3rem;
 	font-weight: bold;
 }
 
-.button {
+.container button {
 	cursor: pointer;
 }

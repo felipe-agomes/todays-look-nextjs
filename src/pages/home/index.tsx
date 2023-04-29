@@ -38,13 +38,13 @@ export default function Home({ serverSession }: Props) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
 	const [clothes, setClothes] = useState<Clothes[] | []>([]);
 	const [sets, setSets] = useState<SetsProps[] | []>([]);
+	const [workbench, setworkbench] = useState<Clothes[] | []>([]);
 	const [modal, setModal] = useState<ModalState>({
 		changeCategoryModal: false,
 		deleteModal: false,
 		clotheModal: false,
 		clothe: null,
 	});
-	const [workbench, setworkbench] = useState<Clothes[] | []>([]);
 
 	const clothesCategories = clothes.map((clothe) => clothe.category);
 	const categories = ['Favoritos', 'Todos', ...clothesCategories];

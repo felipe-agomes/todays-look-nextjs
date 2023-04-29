@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Style from './workbenchClotheSet.module.css';
 import ClotheSet from '../ClotheSet';
 import { Clothes, FetcherOptions, SetsProps } from '@/@types';
 import { Button } from '@chakra-ui/react';
@@ -48,7 +47,16 @@ export default function WorkbenchSet({
 
 	return (
 		<>
-			<div className={Style.workbench}>
+			<div
+				style={{
+					position: 'absolute',
+					top: '80px',
+					width: '360px',
+					height: '460px',
+					overflow: 'hidden',
+					background: '#fff',
+				}}
+			>
 				{clothesPosition.map((clothe) => {
 					return (
 						<ClotheSet

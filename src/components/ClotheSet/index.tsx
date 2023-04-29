@@ -1,4 +1,3 @@
-import Style from './ClotheSet.module.css';
 import { ClothePosition } from '../workbenchClotheSet';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import Image from 'next/image';
@@ -15,7 +14,15 @@ export default function ClotheSet({ clothe, updateClothePosition }: Props) {
 
 	return (
 		<Draggable onStop={handleStop}>
-			<div className={Style.draggable}>
+			<div
+				style={{
+					top: 'calc(50% - 60px)',
+					left: 'calc(50% - 60px)',
+					position: 'absolute',
+					width: '128px',
+					height: '128px',
+				}}
+			>
 				<Image
 					draggable={'false'}
 					width={128}

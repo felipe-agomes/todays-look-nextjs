@@ -1,12 +1,6 @@
-import { useFormik } from 'formik';
 import Style from './ChangeCategoryModal.module.css';
-import {
-	validateExistingCategory,
-	validateNewCategory,
-} from '@/utils/validate';
 import { Clothes, FetcherOptions, SetsProps } from '@/@types';
 import { CloseIcon } from '@chakra-ui/icons';
-import { Button } from '@chakra-ui/react';
 import ChoseCategory from '../ChoseCategory';
 
 type Props = {
