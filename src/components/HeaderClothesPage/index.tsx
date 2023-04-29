@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import style from './HeaderClothesPage.module.css';
+import { OpenOrCloseModalProps } from '@/@types';
 
 type Props = {
 	uniqueCategories: string[];
 	setCurrentPage: (category: string) => void;
 	openOrCloseModal: (
-		{
-			whichModal,
-			operation,
-		}: {
-			whichModal: 'clotheModal' | 'deleteModal';
-			operation: 'open' | 'close';
-		},
-		clotheId?: string
+		{ whichModal, operation }: OpenOrCloseModalProps,
+		clotheId?: string | null,
+		setId?: string | null
 	) => void;
 };
 

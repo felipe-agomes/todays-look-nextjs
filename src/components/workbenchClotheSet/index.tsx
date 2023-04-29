@@ -56,11 +56,10 @@ export default function WorkbenchSet({
 		>
 			<div
 				style={{
-					// position: 'absolute',
-					// top: '80px',
+					position: 'relative',
+					overflow: 'hidden',
 					width: '360px',
 					height: '460px',
-					overflow: 'hidden',
 					background: '#fff',
 				}}
 			>

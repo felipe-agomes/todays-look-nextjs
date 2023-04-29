@@ -1,14 +1,47 @@
-import { SetsProps } from '@/@types';
+import {
+	Clothes,
+	FetcherOptions,
+	ModalState,
+	OpenOrCloseModalProps,
+	SetsProps,
+} from '@/@types';
 import Style from './GridSets.module.css';
 import Image from 'next/image';
+import SetModal from '../SetModal';
+import SetImages from '../SetImages';
 
 type Props = {
 	sets: SetsProps[];
+	modal: ModalState;
+	fetcher: (
+		url: string,
+		options?: FetcherOptions
+	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
+	openOrCloseModal: (
+		{ whichModal, operation }: OpenOrCloseModalProps,
+		clotheId?: string | null,
+		setId?: string | null
+	) => void;
 };
 
-export default function GridSets({ sets }: Props) {
+export default function GridSets({
+	sets,
+	modal,
+	openOrCloseModal,
+	fetcher,
+}: Props) {
+	console.log(sets);
 	return (
 		<ul className={Style.boxList}>
+			{modal.setModal && (
+				<SetModal
+					fetcher={fetcher}
+					userId={modal.set?.userId!}
+					setId={modal.set?.id!}
+					modal={modal}
+					openOrCloseModal={openOrCloseModal}
+				/>
+			)}
 			{sets.map((set) => {
 				return (
 					<li
@@ -16,31 +49,20 @@ export default function GridSets({ sets }: Props) {
 							position: 'relative',
 							width: '260px',
 							height: '332px',
+							cursor: 'pointer',
+							overflow: 'hidden',
 						}}
 						key={set.sets[0].x}
-					>
-						{set.sets.map((subSet) => {
-							return (
-								<div
-									style={{
-										position: 'absolute',
-										top: 'calc(50% - 30px)',
-										left: 'calc(50% - 30px)',
-										width: '64px',
-										height: '64px',
-										transform: `translate(${subSet.x * 0.72}px, ${subSet.y * 0.72}px)`,
-									}}
-									key={subSet.y}
-								>
-									<Image
-										width={64}
-										height={64}
-										src={subSet.image}
-										alt='Roupa'
-									/>
-								</div>
+						onClick={() => {
+							openOrCloseModal(
+								{ whichModal: 'setModal', operation: 'open' },
+								null,
+								set.id
 							);
-						})}
+							console.log('setID: ', set.id);
+						}}
+					>
+						<SetImages set={set} />
 					</li>
 				);
 			})}

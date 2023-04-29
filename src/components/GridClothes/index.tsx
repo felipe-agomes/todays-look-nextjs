@@ -1,18 +1,13 @@
 import Image from 'next/image';
 import Style from './GridClothes.module.css';
-import { Clothes } from '@/@types';
+import { Clothes, OpenOrCloseModalProps } from '@/@types';
 
 type Props = {
 	clothes?: Clothes[];
 	openOrCloseModal: (
-		{
-			whichModal,
-			operation,
-		}: {
-			whichModal: 'clotheModal' | 'deleteModal' | 'changeCategoryModal';
-			operation: 'open' | 'close';
-		},
-		clotheId?: string
+		{ whichModal, operation }: OpenOrCloseModalProps,
+		clotheId?: string | null,
+		setId?: string | null
 	) => void;
 	children: JSX.Element;
 };

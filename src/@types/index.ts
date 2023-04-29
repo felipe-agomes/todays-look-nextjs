@@ -137,9 +137,11 @@ export type FetcherOptions = {
 
 export type ModalState = {
 	changeCategoryModal: boolean;
+	setModal: boolean;
 	deleteModal: boolean;
 	clotheModal: boolean;
 	clothe: Clothes | null;
+	set: SetsProps | null;
 };
 
 export type ClotheSchemaProps = {
@@ -155,7 +157,8 @@ export type ClotheSchemaProps = {
 
 export type SetsProps = {
 	userId: string;
-
+	id: string;
+	favorite: boolean;
 	sets: [
 		{
 			ClotheSchemacategory: string;
@@ -173,4 +176,15 @@ export type SetsResponse = {
 	error: string;
 	message: string;
 	sets: SetsProps | SetsProps[];
+};
+
+export type WhichModalProps =
+	| 'clotheModal'
+	| 'deleteModal'
+	| 'changeCategoryModal'
+	| 'setModal';
+
+export type OpenOrCloseModalProps = {
+	whichModal: WhichModalProps;
+	operation: 'open' | 'close';
 };

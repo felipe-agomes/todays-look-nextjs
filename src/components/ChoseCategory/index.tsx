@@ -1,4 +1,9 @@
-import { Clothes, FetcherOptions, SetsProps } from '@/@types';
+import {
+	Clothes,
+	FetcherOptions,
+	OpenOrCloseModalProps,
+	SetsProps,
+} from '@/@types';
 import {
 	validateExistingCategory,
 	validateNewCategory,
@@ -16,13 +21,7 @@ type Props = {
 		options?: FetcherOptions
 	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
 	openOrCloseModal: (
-		{
-			whichModal,
-			operation,
-		}: {
-			whichModal: 'clotheModal' | 'deleteModal' | 'changeCategoryModal';
-			operation: 'open' | 'close';
-		},
+		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string
 	) => void;
 };

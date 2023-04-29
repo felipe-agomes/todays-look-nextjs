@@ -1,16 +1,12 @@
+import { OpenOrCloseModalProps } from '@/@types';
 import Style from './DeleteModal.module.css';
 import { Button, ButtonGroup } from '@chakra-ui/react';
 
 type Props = {
 	openOrCloseModal: (
-		{
-			whichModal,
-			operation,
-		}: {
-			whichModal: 'clotheModal' | 'deleteModal' | 'changeCategoryModal';
-			operation: 'open' | 'close';
-		},
-		clotheId?: string
+		{ whichModal, operation }: OpenOrCloseModalProps,
+		clotheId?: string | null,
+		setId?: string | null
 	) => void;
 	deleteClothe: () => void;
 };

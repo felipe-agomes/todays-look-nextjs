@@ -1,5 +1,10 @@
 import Style from './ChangeCategoryModal.module.css';
-import { Clothes, FetcherOptions, SetsProps } from '@/@types';
+import {
+	Clothes,
+	FetcherOptions,
+	OpenOrCloseModalProps,
+	SetsProps,
+} from '@/@types';
 import { CloseIcon } from '@chakra-ui/icons';
 import ChoseCategory from '../ChoseCategory';
 
@@ -11,14 +16,9 @@ type Props = {
 		options?: FetcherOptions
 	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
 	openOrCloseModal: (
-		{
-			whichModal,
-			operation,
-		}: {
-			whichModal: 'clotheModal' | 'deleteModal' | 'changeCategoryModal';
-			operation: 'open' | 'close';
-		},
-		clotheId?: string
+		{ whichModal, operation }: OpenOrCloseModalProps,
+		clotheId?: string | null,
+		setId?: string | null
 	) => void;
 };
 

@@ -13,12 +13,14 @@ import {
 	ExtendedSession,
 	FetcherOptions,
 	ModalState,
+	OpenOrCloseModalProps,
 	SessionProps,
 	SetsProps,
 	SetsResponse,
+	WhichModalProps,
 } from '@/@types';
 import ClotheModal from '@/components/ClotheModal';
-import FormSendClothe from '@/components/FormSendClothe';
+import AddClothe from '@/components/AddClothe';
 import GridClothes from '@/components/GridClothes';
 
 import ProfilePage from '@/components/ProfilePage';
@@ -41,9 +43,11 @@ export default function Home({ serverSession }: Props) {
 	const [workbench, setworkbench] = useState<Clothes[] | []>([]);
 	const [modal, setModal] = useState<ModalState>({
 		changeCategoryModal: false,
+		setModal: false,
 		deleteModal: false,
 		clotheModal: false,
 		clothe: null,
+		set: null,
 	});
 
 	const clothesCategories = clothes.map((clothe) => clothe.category);
@@ -56,7 +60,6 @@ export default function Home({ serverSession }: Props) {
 		const dataClothes = (await fetcher(
 			`/api/protected/user/${serverSession.user.id}/clothe/all`
 		)) as Clothes[] | Clothes;
-
 		const dataSets = (await fetcher(
 			`/api/protected/user/${serverSession.user.id}/clothe/allSets`
 		)) as SetsProps[] | SetsProps;
@@ -87,25 +90,21 @@ export default function Home({ serverSession }: Props) {
 		url: string,
 		options?: FetcherOptions
 	): Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined> {
-		let response;
-		if (options?.method) {
-			response = await fetch(url, {
-				method: options.method,
-				body: options.body,
-				headers: { 'Content-Type': 'application/json' },
-			});
-		} else {
-			response = await fetch(url);
-		}
+		const response = await fetch(
+			url,
+			options?.method
+				? {
+						method: options.method,
+						body: options.body,
+						headers: { 'Content-Type': 'application/json' },
+				  }
+				: undefined
+		);
 
 		const data: any = await response.json();
-		let clotheOrSet;
+		console.log('DATA: ', data);
 
-		if (data.clothe) {
-			clotheOrSet = data.clothe as Clothes[];
-		} else if (data.set) {
-			clotheOrSet = data.set as SetsProps[];
-		}
+		let clotheOrSet = (data.clothe as Clothes[]) || (data.set as SetsProps[]);
 
 		if (data.error) {
 			console.error('Erro: ', data.message);
@@ -120,34 +119,38 @@ export default function Home({ serverSession }: Props) {
 	}
 
 	function openOrCloseModal(
-		{
-			whichModal,
-			operation,
-		}: {
-			whichModal: 'clotheModal' | 'deleteModal' | 'changeCategoryModal';
-			operation: 'open' | 'close';
-		},
-		clotheId?: string
+		{ whichModal, operation }: OpenOrCloseModalProps,
+		clotheId: string | null = null,
+		setId: string | null = null
 	) {
+		console.log(
+			`whichModal: ${whichModal} - operation: ${operation} - clotheId: ${clotheId} - setId: ${setId}`
+		);
+		const resetModal: ModalState = {
+			changeCategoryModal: false,
+			clothe: null,
+			clotheModal: false,
+			deleteModal: false,
+			set: null,
+			setModal: false,
+		};
+		let newModal = { ...modal };
 		if (whichModal === 'clotheModal') {
 			const newClothe = clothes.filter((clothe) => clothe.id === clotheId)[0];
-			operation === 'open'
-				? setModal({ ...modal, clothe: newClothe, clotheModal: true })
-				: setModal({
-						clothe: null,
-						clotheModal: false,
-						deleteModal: false,
-						changeCategoryModal: false,
-				  });
-		} else if (whichModal === 'deleteModal') {
-			operation === 'open'
-				? setModal({ ...modal, deleteModal: true })
-				: setModal({ ...modal, deleteModal: false });
-		} else if (whichModal === 'changeCategoryModal') {
-			operation === 'open'
-				? setModal({ ...modal, changeCategoryModal: true })
-				: setModal({ ...modal, changeCategoryModal: false });
+			newModal.clothe = operation === 'open' ? newClothe : null;
+			if (!newModal.clothe) {
+				setModal(resetModal);
+				return;
+			}
+			newModal.clotheModal = operation === 'open';
+		} else if (whichModal === 'setModal') {
+			const newSet = sets.filter((set) => set.id === setId)[0];
+			newModal.set = operation === 'open' ? newSet : null;
+			newModal.setModal = operation === 'open';
+		} else {
+			newModal[whichModal] = operation === 'open';
 		}
+		setModal(newModal);
 	}
 
 	function addToWorkbench(clotheId: string) {
@@ -178,7 +181,12 @@ export default function Home({ serverSession }: Props) {
 					<TabPanels>
 						<TabPanel className={style.page}>
 							<HeaderPage headerTitle='Conjuntos' />
-							<GridSets sets={sets} />
+							<GridSets
+								fetcher={fetcher}
+								modal={modal}
+								openOrCloseModal={openOrCloseModal}
+								sets={sets}
+							/>
 						</TabPanel>
 						<TabPanel className={style.page}>
 							<HeaderClothesPage
@@ -209,7 +217,7 @@ export default function Home({ serverSession }: Props) {
 						</TabPanel>
 						<TabPanel className={style.page}>
 							<HeaderPage headerTitle='Adicionar Roupa' />
-							<FormSendClothe
+							<AddClothe
 								userId={serverSession.user.id}
 								updateClothesAndSets={updateClothesAndSets}
 							/>

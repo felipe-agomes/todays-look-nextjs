@@ -1,7 +1,9 @@
 import { ClotheSchemaProps, Clothes } from '@/@types';
 import Set from './colections/set';
+import connectDb from '@/services/connectDb';
 
 async function createSet(userId: string, sets: Clothes[]) {
+	await connectDb();
 	try {
 		await Set.create({ userId, sets });
 		return {
@@ -15,6 +17,7 @@ async function createSet(userId: string, sets: Clothes[]) {
 }
 
 async function getAllSet(userId: string) {
+	await connectDb();
 	const set = await Set.find({
 		userId,
 	});
@@ -47,4 +50,22 @@ async function getAllSet(userId: string) {
 	};
 }
 
-export const setModels = { createSet, getAllSet };
+async function deleteSet(setId: string) {
+	await connectDb();
+	const set = await Set.findById(setId);
+	if (!set) {
+		return {
+			error: true,
+			message: 'Set não encontrado',
+		};
+	}
+
+	await Set.findByIdAndDelete(setId);
+	return {
+		error: false,
+		message: 'Set deletado com sucesso',
+		set,
+	};
+}
+
+export const setModels = { createSet, getAllSet, deleteSet };

@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react';
-import style from './FormSendClothe.module.css';
+import style from './AddClothe.module.css';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import { sendImageValidate } from '@/utils/validate';
@@ -15,10 +15,7 @@ type Props = {
 	updateClothesAndSets: () => void;
 };
 
-export default function FormSendClothe({
-	userId,
-	updateClothesAndSets,
-}: Props) {
+export default function AddClothe({ userId, updateClothesAndSets }: Props) {
 	const [formImage, setFormImage] = useState<File | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [displayImage, setDisplayImage] = useState<string | ArrayBuffer | null>(
@@ -99,12 +96,32 @@ export default function FormSendClothe({
 				htmlFor='file'
 				className={style.inputFile}
 			>
-				<Image
-					width={250}
-					height={250}
-					src={displayImage && typeof displayImage === 'string' ? displayImage : ''}
-					alt='Imagem'
-				/>
+				{displayImage && typeof displayImage === 'string' ? (
+					<Image
+						width={250}
+						height={250}
+						src={displayImage}
+						alt='Imagem'
+					/>
+				) : (
+					<div
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							width: '100%',
+							height: '100%',
+						}}
+					>
+						<h1
+							style={{
+								fontWeight: '500',
+							}}
+						>
+							Enviar Imagem
+						</h1>
+					</div>
+				)}
 			</label>
 			{formik.errors.file && formik.touched.file ? (
 				<span style={{ color: 'red' }}>{formik.errors.file}</span>
