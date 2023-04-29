@@ -40,6 +40,7 @@ export default function SetModal({
 				<Spinner
 					style={{
 						position: 'absolute',
+						zIndex: 2,
 						top: '50%',
 						left: '50%',
 					}}
@@ -61,7 +62,8 @@ export default function SetModal({
 			>
 				<ul>
 					<li>
-						<Button colorScheme='cyan'>Visualizar</Button>
+						{/* <Button colorScheme='cyan'>Visualizar</Button> // TODO: INCLUIR O
+						BOTÃO DE VISUALIZAR */}
 						<Button
 							onClick={async () => {
 								setLoading(true);
