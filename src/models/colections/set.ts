@@ -56,7 +56,7 @@ type SetType = {
 	sets?: ClotheSchemaProps[];
 };
 
-let Set: mongoose.Model<SetType>;
+let Set;
 
 if (mongoose.modelNames().includes('Sets')) {
 	Set = mongoose.model('Sets');
