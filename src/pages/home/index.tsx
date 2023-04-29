@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
 import { NextApiRequest } from 'next';
@@ -29,6 +28,7 @@ import HeaderClothesPage from '@/components/HeaderClothesPage';
 import HeaderPage from '@/components/HeaderPage';
 import WorkbenchSet from '@/components/workbenchClotheSet';
 import GridSets from '@/components/GridSets';
+import Image from 'next/image';
 
 type Props = {
 	serverSession: SessionProps;
@@ -166,12 +166,10 @@ export default function Home({ serverSession }: Props) {
 		setworkbench([]);
 	}
 
-	function removeItemWorkbench(clotheId) {
+	function removeItemWorkbench(clotheId: string) {
 		const newWorkbench = workbench.filter((clothe) => clothe.id !== clotheId);
 		setworkbench(newWorkbench);
 	}
-
-	console.log(clothes);
 
 	return (
 		<div className={style.homePage}>
@@ -236,14 +234,18 @@ export default function Home({ serverSession }: Props) {
 
 				<TabList className={style.footerPage}>
 					<Tab height={10}>
-						<img
-							src='wedding.png'
+						<Image
+							width={28}
+							height={28}
+							src='/wedding.png'
 							alt='Conjunto'
 						/>
 					</Tab>
 					<Tab height={10}>
-						<img
-							src='tshirt.png'
+						<Image
+							width={28}
+							height={28}
+							src='/tshirt.png'
 							alt='Roupas'
 						/>
 					</Tab>
@@ -261,8 +263,10 @@ export default function Home({ serverSession }: Props) {
 						</div>
 					</Tab>
 					<Tab height={10}>
-						<img
-							src='fashion.png'
+						<Image
+							width={28}
+							height={28}
+							src='/fashion.png'
 							alt='Novo conjunto'
 						/>
 					</Tab>

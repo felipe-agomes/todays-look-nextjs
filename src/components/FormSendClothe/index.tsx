@@ -1,9 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 import { Button } from '@chakra-ui/react';
 import style from './FormSendClothe.module.css';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import { sendImageValidate } from '@/utils/validate';
+import Image from 'next/image';
 
 type FormSendClothe = {
 	category: string;
@@ -15,7 +15,10 @@ type Props = {
 	updateClothesAndSets: () => void;
 };
 
-export default function FormSendClothe({ userId, updateClothesAndSets }: Props) {
+export default function FormSendClothe({
+	userId,
+	updateClothesAndSets,
+}: Props) {
 	const [formImage, setFormImage] = useState<File | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [displayImage, setDisplayImage] = useState<string | ArrayBuffer | null>(
@@ -96,16 +99,10 @@ export default function FormSendClothe({ userId, updateClothesAndSets }: Props) 
 				htmlFor='file'
 				className={style.inputFile}
 			>
-				<img
-					style={{
-						maxHeight: '100%',
-						maxWidth: '100%',
-					}}
-					src={
-						displayImage && typeof displayImage === 'string'
-							? displayImage
-							: 'https://www.google.com/url?sa=i&url=http%3A%2F%2Fcbissn.ibict.br%2Findex.php%2Fimagens%2F1-galeria-de-imagens-01%2Fdetail%2F3-imagem-3-titulo-com-ate-45-caracteres&psig=AOvVaw1QzcCWeiIXJ2IrxTx3zNoX&ust=1681002664255000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCNii1YeNmf4CFQAAAAAdAAAAABAE'
-					}
+				<Image
+					width={250}
+					height={250}
+					src={displayImage && typeof displayImage === 'string' ? displayImage : ''}
 					alt='Imagem'
 				/>
 			</label>

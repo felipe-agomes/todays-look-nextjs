@@ -20,7 +20,6 @@ export default async function getAllSet(
 					res.status(400).json(response);
 					return;
 				}
-				console.log(response);
 				res.status(200).json(response);
 				break;
 			default:

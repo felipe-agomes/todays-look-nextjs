@@ -1,6 +1,5 @@
 import { clotheModels } from '@/models/clotheModels';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
 
 export default async function deleteClothe(
 	req: NextApiRequest,

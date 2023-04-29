@@ -1,7 +1,5 @@
 import { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcrypt';
 import User from '@/models/colections/user';
 import connectDb from '@/services/connectDb';
 import { userModels } from '@/models/userModels';
@@ -55,13 +53,14 @@ export const authOptions: AuthOptions = {
 				let user = await User.findOne({
 					email: profile?.email,
 				});
+				const { picture } = profile as { picture: string };
 
 				if (!user) {
 					await userModels.createUser({
 						email: profile?.email!,
 						name: profile?.name!,
 						password: '',
-						image: profile?.picture!,
+						image: picture,
 					});
 				}
 				user = await User.findOne({

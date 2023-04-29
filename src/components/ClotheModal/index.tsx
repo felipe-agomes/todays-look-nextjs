@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable jsx-a11y/alt-text */
 import { Clothes, FetcherOptions, SetsProps } from '@/@types';
 import Style from './ClotheModal.module.css';
 import { Spinner } from '@chakra-ui/react';
@@ -14,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import DeleteModal from '../DeleteModal';
 import ChangeCategoryModal from '../ChangeCategoryModal';
+import Image from 'next/image';
 
 type Props = {
 	modal: {
@@ -95,9 +94,11 @@ export default function ClotheModal({
 						top={'20px'}
 					/>
 					<div style={{ width: '128px', height: '128px' }}>
-						<img
-							style={{ maxWidth: '100%', maxHeight: '100%' }}
-							src={clothe.image}
+						<Image
+							width={128}
+							height={128}
+							src={clothe.image!}
+							alt='Roupa'
 						/>
 					</div>
 					<div>

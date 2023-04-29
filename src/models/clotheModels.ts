@@ -1,4 +1,4 @@
-import { ClotheData, ClotheModel } from '@/@types';
+import { ClotheData } from '@/@types';
 import User from './colections/user';
 import Clothe from './colections/clothe';
 import connectDb from '@/services/connectDb';

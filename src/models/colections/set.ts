@@ -1,17 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { ClotheSchema } from './clothe';
 import { ClotheSchemaProps } from '@/@types';
-
-export type ClotheSchemaProps = {
-	createdAt: NativeDate;
-	updatedAt: NativeDate;
-} & {
-	favorite: boolean;
-	category?: string;
-	key?: string;
-	image?: string;
-	userId?: mongoose.Types.ObjectId;
-};
 
 const SetSchema = new Schema(
 	{
@@ -73,7 +61,7 @@ let Set: mongoose.Model<SetType>;
 if (mongoose.modelNames().includes('Sets')) {
 	Set = mongoose.model('Sets');
 } else {
-	Set = mongoose.model('Sets', SetSchema);
+	Set = mongoose.model<SetType>('Sets', SetSchema);
 }
 
 export default Set;

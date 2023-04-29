@@ -1,8 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-key */
 import { SetsProps } from '@/@types';
-import { useEffect } from 'react';
 import Style from './GridSets.module.css';
+import Image from 'next/image';
 
 type Props = {
 	sets: SetsProps[];
@@ -34,11 +32,9 @@ export default function GridSets({ sets }: Props) {
 									}}
 									key={subSet.y}
 								>
-									<img
-										style={{
-											maxWidth: '100%',
-											maxHeight: '100%',
-										}}
+									<Image
+										width={64}
+										height={64}
 										src={subSet.image}
 										alt='Roupa'
 									/>
