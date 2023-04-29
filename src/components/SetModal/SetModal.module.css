@@ -30,7 +30,7 @@
 	margin-bottom: 15px;
 	text-align: left;
 	list-style: none;
-	background: inherit;
+	background: #ccc;
 }
 
 .modalContainer li span {
