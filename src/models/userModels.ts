@@ -9,7 +9,6 @@ async function createUser(data: UserRegisterData) {
 	const user = await User.findOne({
 		email: data.email,
 	});
-	console.log(data);
 
 	if (user) {
 		return {

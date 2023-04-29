@@ -1,4 +1,6 @@
-import { Clothes, FetcherOptions } from '@/@types';
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable jsx-a11y/alt-text */
+import { Clothes, FetcherOptions, SetsProps } from '@/@types';
 import Style from './ClotheModal.module.css';
 import { Spinner } from '@chakra-ui/react';
 import {
@@ -6,7 +8,8 @@ import {
 	StarIcon,
 	DeleteIcon,
 	EditIcon,
-	PlusSquareIcon,
+	SmallAddIcon,
+	SmallCloseIcon,
 } from '@chakra-ui/icons';
 import { useEffect, useState } from 'react';
 import DeleteModal from '../DeleteModal';
@@ -20,10 +23,12 @@ type Props = {
 		clothe: Clothes | null;
 	};
 	categories: string[] | [];
+	workbench: Clothes[] | [];
+	removeItemWorkbench: (clotheId: string) => void;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<Clothes | Clothes[] | undefined>;
+	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
 	openOrCloseModal: (
 		{
 			whichModal,
@@ -34,15 +39,17 @@ type Props = {
 		},
 		clotheId?: string
 	) => void;
-	addToworkbench: (clotheId: string) => void;
+	addToWorkbench: (clotheId: string) => void;
 };
 
 export default function ClotheModal({
 	categories,
 	modal,
+	workbench,
 	openOrCloseModal,
 	fetcher,
-	addToworkbench,
+	addToWorkbench,
+	removeItemWorkbench,
 }: Props) {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [favorite, setFavorite] = useState<boolean>(false);
@@ -103,10 +110,10 @@ export default function ClotheModal({
 										<StarIcon
 											onClick={async () => {
 												setLoading(true);
-												const data = await fetcher(
+												const data = (await fetcher(
 													`/api/protected/user/${clothe.userId}/clothe/favorite/${clothe.id}`,
 													{ method: 'PUT', update: true }
-												);
+												)) as Clothes | Clothes[];
 												if (!Array.isArray(data)) {
 													data && setFavorite(data.favorite);
 												}
@@ -155,13 +162,23 @@ export default function ClotheModal({
 								<div className={Style.rowBox}>
 									<p>Adicionar ao conjunto</p>
 									<span>
-										<PlusSquareIcon
-											onClick={() => {
-												addToworkbench(clothe.id!);
-											}}
-											cursor={'pointer'}
-											boxSize={5}
-										/>
+										{workbench.find((benchClothe) => benchClothe.id === clothe.id) ? (
+											<SmallCloseIcon
+												onClick={() => removeItemWorkbench(clothe.id!)}
+												color={'red.500'}
+												cursor={'pointer'}
+												boxSize={5}
+											/>
+										) : (
+											<SmallAddIcon
+												color={'green.500'}
+												onClick={() => {
+													addToWorkbench(clothe.id!);
+												}}
+												cursor={'pointer'}
+												boxSize={5}
+											/>
+										)}
 									</span>
 								</div>
 							</li>

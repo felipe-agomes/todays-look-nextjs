@@ -1,4 +1,4 @@
-import { Clothes } from '@/@types';
+import { ClotheSchemaProps, Clothes } from '@/@types';
 import Set from './colections/set';
 
 async function createSet(userId: string, sets: Clothes[]) {
@@ -14,4 +14,37 @@ async function createSet(userId: string, sets: Clothes[]) {
 	}
 }
 
-export const setModels = { createSet };
+async function getAllSet(userId: string) {
+	const set = await Set.find({
+		userId,
+	});
+
+	if (!set) {
+		return {
+			error: true,
+			message: 'Nenhum conjunto encontrado',
+		};
+	}
+
+	const setObj = set.map((doc) => {
+		const obj = doc.toObject() as {
+			createdAt: NativeDate;
+			updatedAt: NativeDate;
+		} & {
+			userId?: string | undefined;
+			sets?: ClotheSchemaProps[] | undefined;
+		} & { id?: string; _id?: string };
+
+		obj.id = obj._id;
+		delete obj._id;
+		return obj;
+	});
+
+	return {
+		error: false,
+		message: 'Conjuntos buscados com sucesso',
+		set: setObj,
+	};
+}
+
+export const setModels = { createSet, getAllSet };

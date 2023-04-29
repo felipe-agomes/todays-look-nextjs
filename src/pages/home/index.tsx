@@ -15,6 +15,8 @@ import {
 	FetcherOptions,
 	ModalState,
 	SessionProps,
+	SetsProps,
+	SetsResponse,
 } from '@/@types';
 import ClotheModal from '@/components/ClotheModal';
 import FormSendClothe from '@/components/FormSendClothe';
@@ -26,6 +28,7 @@ import style from './home.module.css';
 import HeaderClothesPage from '@/components/HeaderClothesPage';
 import HeaderPage from '@/components/HeaderPage';
 import WorkbenchSet from '@/components/workbenchClotheSet';
+import GridSets from '@/components/GridSets';
 
 type Props = {
 	serverSession: SessionProps;
@@ -34,6 +37,7 @@ type Props = {
 export default function Home({ serverSession }: Props) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
 	const [clothes, setClothes] = useState<Clothes[] | []>([]);
+	const [sets, setSets] = useState<SetsProps[] | []>([]);
 	const [modal, setModal] = useState<ModalState>({
 		changeCategoryModal: false,
 		deleteModal: false,
@@ -48,17 +52,25 @@ export default function Home({ serverSession }: Props) {
 		(category, index) => categories.indexOf(category) === index
 	);
 
-	async function updateClothes() {
-		const data = await fetcher(
+	async function updateClothesAndSets() {
+		const dataClothes = (await fetcher(
 			`/api/protected/user/${serverSession.user.id}/clothe/all`
-		);
-		if (Array.isArray(data)) {
-			setClothes(data);
+		)) as Clothes[] | Clothes;
+
+		const dataSets = (await fetcher(
+			`/api/protected/user/${serverSession.user.id}/clothe/allSets`
+		)) as SetsProps[] | SetsProps;
+
+		if (Array.isArray(dataClothes)) {
+			setClothes(dataClothes);
+		}
+		if (Array.isArray(dataSets)) {
+			setSets(dataSets);
 		}
 	}
 
 	useEffect(() => {
-		updateClothes();
+		updateClothesAndSets();
 	}, [serverSession]);
 
 	function filteredClothes(category: string) {
@@ -74,7 +86,7 @@ export default function Home({ serverSession }: Props) {
 	async function fetcher(
 		url: string,
 		options?: FetcherOptions
-	): Promise<Clothes | Clothes[] | undefined> {
+	): Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined> {
 		let response;
 		if (options?.method) {
 			response = await fetch(url, {
@@ -86,7 +98,14 @@ export default function Home({ serverSession }: Props) {
 			response = await fetch(url);
 		}
 
-		const data: ClotheResponse = await response.json();
+		const data: any = await response.json();
+		let clotheOrSet;
+
+		if (data.clothe) {
+			clotheOrSet = data.clothe as Clothes[];
+		} else if (data.set) {
+			clotheOrSet = data.set as SetsProps[];
+		}
 
 		if (data.error) {
 			console.error('Erro: ', data.message);
@@ -94,10 +113,10 @@ export default function Home({ serverSession }: Props) {
 		}
 
 		if (options?.update) {
-			await updateClothes();
+			await updateClothesAndSets();
 		}
 
-		return data.clothe;
+		return clotheOrSet;
 	}
 
 	function openOrCloseModal(
@@ -131,21 +150,39 @@ export default function Home({ serverSession }: Props) {
 		}
 	}
 
-	function addToworkbench(clotheId: string) {
-		const newworkbench = [
+	function addToWorkbench(clotheId: string) {
+		const alreadyExists = workbench.find((clothe) => clothe.id === clotheId);
+
+		if (alreadyExists) return;
+
+		const newWorkbench = [
 			...workbench,
 			clothes.filter((clothe) => clothe.id === clotheId)[0],
 		];
-		setworkbench(newworkbench);
+		setworkbench(newWorkbench);
 	}
+
+	function resetWorkbench() {
+		setworkbench([]);
+	}
+
+	function removeItemWorkbench(clotheId) {
+		const newWorkbench = workbench.filter((clothe) => clothe.id !== clotheId);
+		setworkbench(newWorkbench);
+	}
+
+	console.log(clothes);
 
 	return (
 		<div className={style.homePage}>
 			<Tabs align='center'>
 				<main>
 					<TabPanels>
-						<TabPanel></TabPanel>
-						<TabPanel className={style.pageClothes}>
+						<TabPanel className={style.page}>
+							<HeaderPage headerTitle='Conjuntos' />
+							<GridSets sets={sets} />
+						</TabPanel>
+						<TabPanel className={style.page}>
 							<HeaderClothesPage
 								openOrCloseModal={openOrCloseModal}
 								setCurrentPage={setCurrentPage}
@@ -160,7 +197,9 @@ export default function Home({ serverSession }: Props) {
 								openOrCloseModal={openOrCloseModal}
 							>
 								<ClotheModal
-									addToworkbench={addToworkbench}
+									removeItemWorkbench={removeItemWorkbench}
+									workbench={workbench}
+									addToWorkbench={addToWorkbench}
 									categories={uniqueCategories.filter(
 										(category) => category !== 'Todos' && category !== 'Favoritos'
 									)}
@@ -174,12 +213,16 @@ export default function Home({ serverSession }: Props) {
 							<HeaderPage headerTitle='Adicionar Roupa' />
 							<FormSendClothe
 								userId={serverSession.user.id}
-								updateClothes={updateClothes}
+								updateClothesAndSets={updateClothesAndSets}
 							/>
 						</TabPanel>
-						<TabPanel className={style.page}>
+						<TabPanel
+							className={style.page}
+							style={{ background: '#eee' }}
+						>
 							<HeaderPage headerTitle='Criar Conjunto' />
 							<WorkbenchSet
+								resetWorkbench={resetWorkbench}
 								fetcher={fetcher}
 								workbench={workbench}
 							/>

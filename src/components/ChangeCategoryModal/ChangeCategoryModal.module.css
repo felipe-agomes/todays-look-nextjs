@@ -34,11 +34,3 @@
 	height: 30px;
 	border-radius: 5px;
 }
-
-.rowBox {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-
-	width: 100%;
-}

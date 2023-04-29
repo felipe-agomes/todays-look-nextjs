@@ -1,13 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { MouseEventHandler, useEffect, useState } from 'react';
 import Style from './ClotheSet.module.css';
 import { ClothePosition } from '../workbenchClotheSet';
-import Draggable, {
-	ControlPosition,
-	DraggableData,
-	DraggableEvent,
-} from 'react-draggable';
-import { DraggableProps } from 'framer-motion';
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 
 type Props = {
 	clothe: ClothePosition;
@@ -15,8 +9,6 @@ type Props = {
 };
 
 export default function ClotheSet({ clothe, updateClothePosition }: Props) {
-	const [dragginng, setDragginng] = useState<boolean>(false);
-
 	function handleStop(event: DraggableEvent, data: DraggableData) {
 		updateClothePosition(clothe.id, data.y, data.x);
 		console.log(data.x, data.y);

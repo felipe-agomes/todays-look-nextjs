@@ -1,7 +1,7 @@
 .boxList {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, 130px);
-	grid-template-rows: repeat(auto-fit, 130px);
+	grid-template-columns: repeat(auto-fit, 260px);
+	grid-template-rows: repeat(auto-fit, 332px);
 	gap: 10px;
 	justify-content: center;
 
@@ -9,27 +9,16 @@
 	top: 80px;
 	padding: 10px;
 	height: calc(100vh - 80px - 50px);
-	width: 100%;
+	transform: translateY(-65px);
 	overflow-y: scroll;
+	width: 100%;
 }
 
-.boxList::-webkit-scrollbar {
-	display: none;
-}
-
-.list {
+.boxList li {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	
-	width: 130px;
-	height: 130px;
+
 	list-style: none;
 	background: #fff;
-}
-
-.list > img {
-	max-width: 100%;
-	max-height: 100%;
-	cursor: pointer;
 }

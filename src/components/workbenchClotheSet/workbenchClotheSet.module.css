@@ -1,6 +1,8 @@
 .workbench {
 	position: absolute;
 	top: 80px;
-	width: 100vw;
-	height: calc(100vh - 130px);
+	width: 360px;
+	height: 460px;
+	overflow: hidden;
+	background: #fff;
 }

@@ -152,3 +152,25 @@ export type ClotheSchemaProps = {
 	image?: string | undefined;
 	userId?: mongoose.Types.ObjectId | undefined;
 };
+
+export type SetsProps = {
+	userId: string;
+
+	sets: [
+		{
+			ClotheSchemacategory: string;
+			favorite: boolean;
+			key: string;
+			image: string;
+			userId: string;
+			x: number;
+			y: number;
+		}
+	];
+};
+
+export type SetsResponse = {
+	error: string;
+	message: string;
+	sets: SetsProps | SetsProps[];
+};
