@@ -84,9 +84,9 @@ export default function BaseModal({
 					}}
 				>
 					<SetImages
-						size={{ height: 43, width: 43 }}
+						size={{ height: 67.33, width: 67.33 }}
 						set={set}
-						proportion={{ x: 0.50, y: 0.50 }}
+						proportion={{ x: 0.52, y: 0.52 }}
 					/>
 				</div>
 			)}

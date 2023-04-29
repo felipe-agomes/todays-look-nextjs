@@ -21,14 +21,15 @@ export default function SetImages({
 	return (
 		<>
 			{set.sets.map((subSet) => {
+				console.log(size);
 				return (
 					<div
 						style={{
 							position: 'absolute',
-							top: 'calc(50% - 30px)',
-							left: 'calc(50% - 30px)',
-							width: '64px',
-							height: '64px',
+							top: `calc(50% - ${size.height / 2 - 2}px)`,
+							left: `calc(50% - ${size.width / 2 - 2}px)`,
+							width: `${size.width}px`,
+							height: `${size.height}px`,
 							transform: `translate(${subSet.x * proportion.x}px, ${
 								subSet.y * proportion.y
 							}px)`,

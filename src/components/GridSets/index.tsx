@@ -62,7 +62,10 @@ export default function GridSets({
 							console.log('setID: ', set.id);
 						}}
 					>
-						<SetImages set={set} />
+						<SetImages
+							size={{ height: 92, width: 92 }}
+							set={set}
+						/>
 					</li>
 				);
 			})}
