@@ -46,11 +46,18 @@ export default function WorkbenchSet({
 	}
 
 	return (
-		<>
+		<div
+			style={{
+				display: 'flex',
+				alignItems: 'center',
+				flexDirection: 'column',
+				gap: '10px',
+			}}
+		>
 			<div
 				style={{
-					position: 'absolute',
-					top: '80px',
+					// position: 'absolute',
+					// top: '80px',
 					width: '360px',
 					height: '460px',
 					overflow: 'hidden',
@@ -67,45 +74,38 @@ export default function WorkbenchSet({
 					);
 				})}
 			</div>
-			<Button
-				colorScheme='red'
-				width={100}
-				style={{
-					position: 'absolute',
-					bottom: '110px',
-					right: '10px',
-				}}
-				onClick={resetWorkbench}
-			>
-				Resetar
-			</Button>
-			<Button
-				width={100}
-				colorScheme='cyan'
-				style={{
-					position: 'absolute',
-					bottom: '60px',
-					right: '10px',
-				}}
-				onClick={() => {
-					if (clothesPosition.length === 0) {
-						return;
-					}
-					fetcher(
-						`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`,
-						{
-							method: 'POST',
-							body: JSON.stringify({
-								sets: clothesPosition,
-							}),
-							update: true,
+			<div>
+				<Button
+					colorScheme='red'
+					width={100}
+					style={{ marginRight: '10px' }}
+					onClick={resetWorkbench}
+				>
+					Resetar
+				</Button>
+				<Button
+					width={100}
+					colorScheme='cyan'
+					onClick={() => {
+						if (clothesPosition.length === 0) {
+							return;
 						}
-					);
-					resetWorkbench();
-				}}
-			>
-				Enviar
-			</Button>
-		</>
+						fetcher(
+							`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`,
+							{
+								method: 'POST',
+								body: JSON.stringify({
+									sets: clothesPosition,
+								}),
+								update: true,
+							}
+						);
+						resetWorkbench();
+					}}
+				>
+					Enviar
+				</Button>
+			</div>
+		</div>
 	);
 }

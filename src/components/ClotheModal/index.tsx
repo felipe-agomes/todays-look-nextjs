@@ -101,7 +101,11 @@ export default function ClotheModal({
 							alt='Roupa'
 						/>
 					</div>
-					<div>
+					<div
+						style={{
+							width: '100%',
+						}}
+					>
 						<h1>Roupa categoria: {clothe.category}</h1>
 						<ul>
 							<li>

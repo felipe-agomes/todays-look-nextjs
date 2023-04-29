@@ -28,7 +28,7 @@ export default function GridSets({ sets }: Props) {
 										left: 'calc(50% - 30px)',
 										width: '64px',
 										height: '64px',
-										transform: `translate(${subSet.x * 0.72}px, ${subSet.y * 0.56}px)`,
+										transform: `translate(${subSet.x * 0.72}px, ${subSet.y * 0.72}px)`,
 									}}
 									key={subSet.y}
 								>
