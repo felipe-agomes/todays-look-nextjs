@@ -71,8 +71,8 @@ export default function ModalClothe({
 					{modal.deleteModal && (
 						<ModalDelete
 							openOrCloseModal={openOrCloseModal}
-							deleteClothe={() => {
-								fetcher(
+							deleteClothe={async () => {
+								await fetcher(
 									`/api/protected/user/${clothe.userId}/clothe/delete/${clothe.id}`,
 									{ method: 'DELETE', update: true }
 								);
