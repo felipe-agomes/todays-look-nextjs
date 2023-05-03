@@ -168,3 +168,8 @@ export type OpenOrCloseModalProps = {
 	whichModal: WhichModalProps;
 	operation: 'open' | 'close';
 };
+
+export type ClothePosition = {
+	x: number;
+	y: number;
+} & ClothesProps;

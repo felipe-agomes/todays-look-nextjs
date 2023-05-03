@@ -1,6 +1,6 @@
-import { ClothePosition } from '../WorkbenchClotheSet';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import Image from 'next/image';
+import { ClothePosition } from '@/@types';
 
 type Props = {
 	clothe: ClothePosition;

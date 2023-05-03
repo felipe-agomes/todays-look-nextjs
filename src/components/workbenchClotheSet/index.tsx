@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
 import ClotheSet from '../ClotheSet';
-import { ClothesProps, FetcherOptions, SetsProps } from '@/@types';
+import { ClothePosition, ClothesProps, FetcherOptions, SetsProps } from '@/@types';
 import { Button } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { validateNewCategory } from '@/utils/validate';
 import Style from './WorkbenchClotheSet.module.css';
-
-export type ClothePosition = {
-	x: number;
-	y: number;
-} & ClothesProps;
 
 type Props = {
 	workbench: ClothesProps[] | [];
