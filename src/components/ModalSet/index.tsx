@@ -5,8 +5,8 @@ import {
 	OpenOrCloseModalProps,
 	SetsProps,
 } from '@/@types';
-import BaseModal from '../BaseModal';
-import Style from './SetModal.module.css';
+import ModalBase from '../ModalBase';
+import Style from './ModalSet.module.css';
 import { Button, Spinner } from '@chakra-ui/react';
 import { useState } from 'react';
 
@@ -22,10 +22,12 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
+	) => Promise<
+		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
+	>;
 };
 
-export default function SetModal({
+export default function ModalSet({
 	modal,
 	setId,
 	userId,
@@ -53,7 +55,7 @@ export default function SetModal({
 			>
 				Conjunto
 			</h1>
-			<BaseModal
+			<ModalBase
 				set={modal.set}
 				openOrCloseModal={openOrCloseModal}
 			>
@@ -78,7 +80,7 @@ export default function SetModal({
 						</Button>
 					</li>
 				</ul>
-			</BaseModal>
+			</ModalBase>
 		</div>
 	);
 }

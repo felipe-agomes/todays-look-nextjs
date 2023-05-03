@@ -5,7 +5,7 @@ import {
 	OpenOrCloseModalProps,
 	SetsProps,
 } from '@/@types';
-import Style from './ClotheModal.module.css';
+import Style from './ModalClothe.module.css';
 import { Spinner } from '@chakra-ui/react';
 import {
 	StarIcon,
@@ -15,9 +15,9 @@ import {
 	SmallCloseIcon,
 } from '@chakra-ui/icons';
 import { useEffect, useState } from 'react';
-import DeleteModal from '../DeleteModal';
-import ChangeCategoryModal from '../ChangeCategoryModal';
-import BaseModal from '../BaseModal';
+import ModalDelete from '../ModalDelete';
+import ModalChangeCategory from '../ModalChangeCategory';
+import ModalBase from '../ModalBase';
 
 type Props = {
 	modal: ModalState;
@@ -27,7 +27,9 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
+	) => Promise<
+		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
+	>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
@@ -36,7 +38,7 @@ type Props = {
 	addToWorkbench: (clotheId: string) => void;
 };
 
-export default function ClotheModal({
+export default function ModalClothe({
 	categories,
 	modal,
 	workbench,
@@ -59,7 +61,7 @@ export default function ClotheModal({
 			{modal.clotheModal && (
 				<div className={Style.modalContainer}>
 					{modal.changeCategoryModal && (
-						<ChangeCategoryModal
+						<ModalChangeCategory
 							fetcher={fetcher}
 							openOrCloseModal={openOrCloseModal}
 							clothe={modal.clothe!}
@@ -67,7 +69,7 @@ export default function ClotheModal({
 						/>
 					)}
 					{modal.deleteModal && (
-						<DeleteModal
+						<ModalDelete
 							openOrCloseModal={openOrCloseModal}
 							deleteClothe={() => {
 								fetcher(
@@ -79,7 +81,7 @@ export default function ClotheModal({
 						/>
 					)}
 					{loading && <Spinner className={Style.spinner} />}
-					<BaseModal
+					<ModalBase
 						clothes={modal.clothe}
 						openOrCloseModal={openOrCloseModal}
 					>
@@ -167,7 +169,7 @@ export default function ClotheModal({
 								</li>
 							</ul>
 						</>
-					</BaseModal>
+					</ModalBase>
 				</div>
 			)}
 		</>

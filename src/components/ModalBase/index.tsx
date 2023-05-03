@@ -20,7 +20,7 @@ type Props = {
 	) => void;
 };
 
-export default function BaseModal({
+export default function ModalBase({
 	set,
 	clothes,
 	children,

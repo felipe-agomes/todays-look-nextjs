@@ -6,7 +6,7 @@ import {
 	SetsProps,
 } from '@/@types';
 import Style from './GridSets.module.css';
-import SetModal from '../SetModal';
+import ModalSet from '../ModalSet';
 import SetImages from '../SetImages';
 
 type Props = {
@@ -35,7 +35,7 @@ export default function GridSets({
 	return (
 		<ul className={Style.boxList}>
 			{modal.setModal && (
-				<SetModal
+				<ModalSet
 					fetcher={fetcher}
 					userId={modal.set?.userId!}
 					setId={modal.set?.id!}

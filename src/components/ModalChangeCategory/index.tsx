@@ -1,4 +1,4 @@
-import Style from './ChangeCategoryModal.module.css';
+import Style from './ModalChangeCategory.module.css';
 import {
 	ClothesProps,
 	FetcherOptions,
@@ -14,7 +14,9 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
+	) => Promise<
+		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
+	>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
@@ -22,7 +24,7 @@ type Props = {
 	) => void;
 };
 
-export default function ChangeCategoryModal({
+export default function ModalChangeCategory({
 	categories,
 	clothe,
 	openOrCloseModal,

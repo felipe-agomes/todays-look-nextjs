@@ -6,7 +6,7 @@ import {
 	OpenOrCloseModalProps,
 	SetsProps,
 } from '@/@types';
-import ClotheModal from '../ClotheModal';
+import ModalClothe from '../ModalClothe';
 
 type Props = {
 	clothes?: ClothesProps[];
@@ -30,7 +30,9 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions | undefined
-	) => Promise<ClothesProps | ClothesProps[] | SetsProps | SetsProps[] | undefined>;
+	) => Promise<
+		ClothesProps | ClothesProps[] | SetsProps | SetsProps[] | undefined
+	>;
 };
 
 export default function GridClothes({
@@ -46,7 +48,7 @@ export default function GridClothes({
 	return (
 		<>
 			{modal.clotheModal && (
-				<ClotheModal
+				<ModalClothe
 					removeItemWorkbench={removeItemWorkbench}
 					workbench={workbench}
 					addToWorkbench={addToWorkbench}

@@ -1,5 +1,5 @@
 import { OpenOrCloseModalProps } from '@/@types';
-import Style from './DeleteModal.module.css';
+import Style from './ModalDelete.module.css';
 import { Button, ButtonGroup } from '@chakra-ui/react';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 	deleteClothe: () => void;
 };
 
-export default function DeleteModal({ openOrCloseModal, deleteClothe }: Props) {
+export default function ModalDelete({ openOrCloseModal, deleteClothe }: Props) {
 	return (
 		<div className={Style.modalContainer}>
 			<h1>Deseja realmente remover a roupa?</h1>
