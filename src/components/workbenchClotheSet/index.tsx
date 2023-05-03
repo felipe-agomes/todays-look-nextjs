@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import ClotheSet from '../ClotheSet';
-import { Clothes, FetcherOptions, SetsProps } from '@/@types';
+import { ClothesProps, FetcherOptions, SetsProps } from '@/@types';
 import { Button } from '@chakra-ui/react';
 
 export type ClothePosition = {
 	x: number;
 	y: number;
-} & Clothes;
+} & ClothesProps;
 
 type Props = {
-	workbench: Clothes[] | [];
+	workbench: ClothesProps[] | [];
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
+	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
 	resetWorkbench: () => void;
 };
 

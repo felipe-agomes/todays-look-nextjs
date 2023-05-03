@@ -1,36 +1,31 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
 import { NextApiRequest } from 'next';
 
 import { AddIcon } from '@chakra-ui/icons';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react';
+import { Avatar } from '@chakra-ui/react';
 
 import {
-	ClotheResponse,
-	Clothes,
+	ClothesProps,
 	ExtendedSession,
 	FetcherOptions,
 	ModalState,
 	OpenOrCloseModalProps,
 	SessionProps,
 	SetsProps,
-	SetsResponse,
-	WhichModalProps,
 } from '@/@types';
-import ClotheModal from '@/components/ClotheModal';
 import AddClothe from '@/components/AddClothe';
 import GridClothes from '@/components/GridClothes';
 
 import ProfilePage from '@/components/ProfilePage';
 
 import style from './home.module.css';
-import HeaderClothesPage from '@/components/HeaderClothesPage';
-import HeaderPage from '@/components/HeaderPage';
 import WorkbenchSet from '@/components/workbenchClotheSet';
 import GridSets from '@/components/GridSets';
 import Image from 'next/image';
+import ContainerPage from '@/components/ContainerPage';
+import Header from '@/components/Header';
 
 type Props = {
 	serverSession: SessionProps;
@@ -38,9 +33,9 @@ type Props = {
 
 export default function Home({ serverSession }: Props) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
-	const [clothes, setClothes] = useState<Clothes[] | []>([]);
+	const [clothes, setClothes] = useState<ClothesProps[] | []>([]);
 	const [sets, setSets] = useState<SetsProps[] | []>([]);
-	const [workbench, setworkbench] = useState<Clothes[] | []>([]);
+	const [workbench, setworkbench] = useState<ClothesProps[] | []>([]);
 	const [modal, setModal] = useState<ModalState>({
 		changeCategoryModal: false,
 		setModal: false,
@@ -59,7 +54,7 @@ export default function Home({ serverSession }: Props) {
 	async function updateClothesAndSets() {
 		const dataClothes = (await fetcher(
 			`/api/protected/user/${serverSession.user.id}/clothe/all`
-		)) as Clothes[] | Clothes;
+		)) as ClothesProps[] | ClothesProps;
 		const dataSets = (await fetcher(
 			`/api/protected/user/${serverSession.user.id}/clothe/allSets`
 		)) as SetsProps[] | SetsProps;
@@ -89,7 +84,9 @@ export default function Home({ serverSession }: Props) {
 	async function fetcher(
 		url: string,
 		options?: FetcherOptions
-	): Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined> {
+	): Promise<
+		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
+	> {
 		const response = await fetch(
 			url,
 			options?.method
@@ -102,9 +99,9 @@ export default function Home({ serverSession }: Props) {
 		);
 
 		const data: any = await response.json();
-		console.log('DATA: ', data);
 
-		let clotheOrSet = (data.clothe as Clothes[]) || (data.set as SetsProps[]);
+		let clotheOrSet =
+			(data.clothe as ClothesProps[]) || (data.set as SetsProps[]);
 
 		if (data.error) {
 			console.error('Erro: ', data.message);
@@ -180,62 +177,68 @@ export default function Home({ serverSession }: Props) {
 				<main>
 					<TabPanels>
 						<TabPanel className={style.page}>
-							<HeaderPage headerTitle='Conjuntos' />
-							<GridSets
-								fetcher={fetcher}
-								modal={modal}
-								openOrCloseModal={openOrCloseModal}
-								sets={sets}
-							/>
+							<Header title='Conjuntos' />
+							<ContainerPage>
+								<GridSets
+									fetcher={fetcher}
+									modal={modal}
+									openOrCloseModal={openOrCloseModal}
+									sets={sets}
+								/>
+							</ContainerPage>
 						</TabPanel>
 						<TabPanel className={style.page}>
-							<HeaderClothesPage
+							<Header
+								title='Roupas'
+								categoryes={true}
 								openOrCloseModal={openOrCloseModal}
 								setCurrentPage={setCurrentPage}
 								uniqueCategories={uniqueCategories}
 							/>
-							<GridClothes
-								clothes={
-									currentPage === 'Todos'
-										? filteredClothes('Todos')
-										: filteredClothes(currentPage)
-								}
-								openOrCloseModal={openOrCloseModal}
-							>
-								<ClotheModal
-									removeItemWorkbench={removeItemWorkbench}
-									workbench={workbench}
-									addToWorkbench={addToWorkbench}
-									categories={uniqueCategories.filter(
-										(category) => category !== 'Todos' && category !== 'Favoritos'
-									)}
+							<ContainerPage>
+								<GridClothes
+									clothes={
+										currentPage === 'Todos'
+											? filteredClothes('Todos')
+											: filteredClothes(currentPage)
+									}
 									openOrCloseModal={openOrCloseModal}
+									addToWorkbench={addToWorkbench}
 									fetcher={fetcher}
 									modal={modal}
+									removeItemWorkbench={removeItemWorkbench}
+									uniqueCategories={uniqueCategories}
+									workbench={workbench}
 								/>
-							</GridClothes>
+							</ContainerPage>
 						</TabPanel>
 						<TabPanel className={style.page}>
-							<HeaderPage headerTitle='Adicionar Roupa' />
-							<AddClothe
-								userId={serverSession.user.id}
-								updateClothesAndSets={updateClothesAndSets}
-							/>
+							<Header title='Adicionar Roupa' />
+							<ContainerPage>
+								<AddClothe
+									userId={serverSession.user.id}
+									updateClothesAndSets={updateClothesAndSets}
+								/>
+							</ContainerPage>
 						</TabPanel>
 						<TabPanel
 							className={style.page}
 							style={{ background: '#eee' }}
 						>
-							<HeaderPage headerTitle='Criar Conjunto' />
-							<WorkbenchSet
-								resetWorkbench={resetWorkbench}
-								fetcher={fetcher}
-								workbench={workbench}
-							/>
+							<Header title='Criar Conjunto' />
+							<ContainerPage>
+								<WorkbenchSet
+									resetWorkbench={resetWorkbench}
+									fetcher={fetcher}
+									workbench={workbench}
+								/>
+							</ContainerPage>
 						</TabPanel>
 						<TabPanel className={style.page}>
-							<HeaderPage headerTitle='Perfil' />
-							<ProfilePage userName={serverSession.user.name} />
+							<Header title='Perfil' />
+							<ContainerPage>
+								<ProfilePage userName={serverSession.user.name} />
+							</ContainerPage>
 						</TabPanel>
 					</TabPanels>
 				</main>

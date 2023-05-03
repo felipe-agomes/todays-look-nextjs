@@ -5,10 +5,8 @@
 	gap: 10px;
 	justify-content: center;
 
-	position: relative;
-	top: 80px;
-	padding: 10px;
-	height: calc(100vh - 80px - 50px);
+	padding: 10px 0;
+	height: calc(100vh - 120px);
 	width: 100%;
 	overflow-y: scroll;
 }
@@ -22,8 +20,9 @@
 	align-items: center;
 	justify-content: center;
 
-	width: 128px;
-	height: 128px;
+	position: relative;
+	width: auto;
+	height: auto;
 	list-style: none;
 	background: #fff;
 }

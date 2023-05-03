@@ -1,5 +1,5 @@
 import {
-	Clothes,
+	ClothesProps,
 	FetcherOptions,
 	ModalState,
 	OpenOrCloseModalProps,
@@ -7,7 +7,6 @@ import {
 } from '@/@types';
 import BaseModal from '../BaseModal';
 import Style from './SetModal.module.css';
-import { StarIcon } from '@chakra-ui/icons';
 import { Button, Spinner } from '@chakra-ui/react';
 import { useState } from 'react';
 
@@ -23,7 +22,7 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
+	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
 };
 
 export default function SetModal({
@@ -56,14 +55,10 @@ export default function SetModal({
 			</h1>
 			<BaseModal
 				set={modal.set}
-				clotheOrSet='set'
 				openOrCloseModal={openOrCloseModal}
-				modal={modal}
 			>
 				<ul>
 					<li>
-						{/* <Button colorScheme='cyan'>Visualizar</Button> // TODO: INCLUIR O
-						BOTÃO DE VISUALIZAR */}
 						<Button
 							onClick={async () => {
 								setLoading(true);

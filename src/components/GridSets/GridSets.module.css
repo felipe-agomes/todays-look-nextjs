@@ -1,16 +1,13 @@
 .boxList {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, 260px);
-	grid-template-rows: repeat(auto-fit, 332px);
+	grid-template-columns: repeat(auto-fit, 160px);
+	grid-template-rows: repeat(auto-fit, 204.44px);
 	gap: 10px;
 	justify-content: center;
 
-	position: relative;
-	top: 80px;
-	padding: 10px;
-	height: calc(100vh - 80px - 50px);
-	transform: translateY(-65px);
+	padding: 10px 0;
 	overflow-y: scroll;
+	height: calc(100vh - 130px);
 	width: 100%;
 }
 

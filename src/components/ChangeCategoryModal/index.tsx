@@ -1,6 +1,6 @@
 import Style from './ChangeCategoryModal.module.css';
 import {
-	Clothes,
+	ClothesProps,
 	FetcherOptions,
 	OpenOrCloseModalProps,
 	SetsProps,
@@ -10,11 +10,11 @@ import ChoseCategory from '../ChoseCategory';
 
 type Props = {
 	categories: string[];
-	clothe: Clothes;
+	clothe: ClothesProps;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
+	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,

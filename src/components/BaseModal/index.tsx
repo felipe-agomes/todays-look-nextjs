@@ -1,30 +1,18 @@
 import {
-	Clothes,
-	FetcherOptions,
+	ClothesProps,
 	ModalState,
 	OpenOrCloseModalProps,
 	SetsProps,
 } from '@/@types';
-import {
-	CloseIcon,
-	DeleteIcon,
-	EditIcon,
-	SmallAddIcon,
-	SmallCloseIcon,
-	StarIcon,
-} from '@chakra-ui/icons';
+import { CloseIcon } from '@chakra-ui/icons';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import Style from './BaseModal.module.css';
 import SetImages from '../SetImages';
 
 type Props = {
-	modal: ModalState;
 	set?: SetsProps | null;
-	clothes?: Clothes | null;
-	workbench?: Clothes[] | [];
+	clothes?: ClothesProps | null;
+	workbench?: ClothesProps[] | [];
 	children: JSX.Element;
-	clotheOrSet: 'clothe' | 'set';
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
@@ -33,11 +21,9 @@ type Props = {
 };
 
 export default function BaseModal({
-	clotheOrSet,
 	set,
 	clothes,
 	children,
-	modal,
 	openOrCloseModal,
 }: Props) {
 	return (
@@ -77,16 +63,16 @@ export default function BaseModal({
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'center',
-						height: '242px',
-						width: '190px',
+						width: '242px',
+						height: '309.22px',
 						background: '#fff',
 						overflow: 'hidden',
 					}}
 				>
 					<SetImages
-						size={{ height: 67.33, width: 67.33 }}
+						size={{ height: 86.04, width: 86.04 }}
 						set={set}
-						proportion={{ x: 0.52, y: 0.52 }}
+						proportion={{ x: 0.67, y: 0.67 }}
 					/>
 				</div>
 			)}

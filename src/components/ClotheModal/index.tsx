@@ -1,5 +1,5 @@
 import {
-	Clothes,
+	ClothesProps,
 	FetcherOptions,
 	ModalState,
 	OpenOrCloseModalProps,
@@ -8,7 +8,6 @@ import {
 import Style from './ClotheModal.module.css';
 import { Spinner } from '@chakra-ui/react';
 import {
-	CloseIcon,
 	StarIcon,
 	DeleteIcon,
 	EditIcon,
@@ -18,18 +17,17 @@ import {
 import { useEffect, useState } from 'react';
 import DeleteModal from '../DeleteModal';
 import ChangeCategoryModal from '../ChangeCategoryModal';
-import Image from 'next/image';
 import BaseModal from '../BaseModal';
 
 type Props = {
 	modal: ModalState;
 	categories: string[] | [];
-	workbench: Clothes[] | [];
+	workbench: ClothesProps[] | [];
 	removeItemWorkbench: (clotheId: string) => void;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
+	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
@@ -84,8 +82,6 @@ export default function ClotheModal({
 					{loading && <Spinner className={Style.spinner} />}
 					<BaseModal
 						clothes={modal.clothe}
-						clotheOrSet='clothe'
-						modal={modal}
 						openOrCloseModal={openOrCloseModal}
 					>
 						<>
@@ -101,7 +97,7 @@ export default function ClotheModal({
 													const data = (await fetcher(
 														`/api/protected/user/${clothe.userId}/clothe/favorite/${clothe.id}`,
 														{ method: 'PUT', update: true }
-													)) as Clothes | Clothes[];
+													)) as ClothesProps | ClothesProps[];
 													if (!Array.isArray(data)) {
 														data && setFavorite(data.favorite);
 													}

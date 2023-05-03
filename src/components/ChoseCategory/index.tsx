@@ -1,5 +1,5 @@
 import {
-	Clothes,
+	ClothesProps,
 	FetcherOptions,
 	OpenOrCloseModalProps,
 	SetsProps,
@@ -19,7 +19,7 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | Clothes | Clothes[] | undefined>;
+	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string

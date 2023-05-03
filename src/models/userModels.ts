@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { UserLoginData, UserModel, UserRegisterData } from '@/@types';
+import { UserLoginData, UserProps, UserRegisterData } from '@/@types';
 import User from './colections/user';
 import connectDb from '@/services/connectDb';
 
@@ -90,9 +90,9 @@ async function deleteUser(id: number) {
 async function getAllUsers(): Promise<{
 	error: boolean;
 	message: string;
-	users?: UserModel[];
+	users?: UserProps[];
 }> {
-	const users: UserModel[] = await User.find();
+	const users: UserProps[] = await User.find();
 
 	if (users.length === 0) {
 		return {
