@@ -1,4 +1,4 @@
-import { ClotheSchemaProps, ClothesProps } from '@/@types';
+import { ClotheSchemaProps, ClothesProps, SetsProps } from '@/@types';
 import Set from './colections/set';
 import connectDb from '@/services/connectDb';
 
@@ -7,7 +7,6 @@ async function createSet(
 	data: { sets: ClothesProps[]; category: string }
 ) {
 	await connectDb();
-	console.log(data);
 	try {
 		await Set.create({ userId, sets: data.sets, category: data.category });
 		return {
@@ -72,4 +71,24 @@ async function deleteSet(setId: string) {
 	};
 }
 
-export const setModels = { createSet, getAllSet, deleteSet };
+async function toggleFAvorite(setId: string) {
+	const set = await Set.findById(setId);
+
+	if (!set) {
+		return {
+			error: true,
+			message: 'Conjunto não encontrado',
+		};
+	}
+
+	const newSet = { favorite: !set.favorite };
+
+	await set.updateOne(newSet);
+	return {
+		error: false,
+		message: 'Favorito alterado com sucesso',
+		set: newSet,
+	};
+}
+
+export const setModels = { createSet, getAllSet, deleteSet, toggleFAvorite };

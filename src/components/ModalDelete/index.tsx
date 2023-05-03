@@ -1,6 +1,7 @@
 import { OpenOrCloseModalProps } from '@/@types';
 import Style from './ModalDelete.module.css';
 import { Button, ButtonGroup } from '@chakra-ui/react';
+import deleteSet from '@/pages/api/protected/user/[userId]/clothe/deleteSet/[setId]';
 
 type Props = {
 	openOrCloseModal: (
@@ -8,10 +9,15 @@ type Props = {
 		clotheId?: string | null,
 		setId?: string | null
 	) => void;
-	deleteClothe: () => void;
+	deleteClothe?: () => Promise<void>;
+	deleteSet?: () => Promise<void>;
 };
 
-export default function ModalDelete({ openOrCloseModal, deleteClothe }: Props) {
+export default function ModalDelete({
+	openOrCloseModal,
+	deleteClothe,
+	deleteSet,
+}: Props) {
 	return (
 		<div className={Style.modalContainer}>
 			<h1>Deseja realmente remover a roupa?</h1>
@@ -27,7 +33,11 @@ export default function ModalDelete({ openOrCloseModal, deleteClothe }: Props) {
 				<Button
 					color={'white'}
 					colorScheme={'red'}
-					onClick={deleteClothe}
+					onClick={async () => {
+						deleteClothe && (await deleteClothe());
+						deleteSet && (await deleteSet());
+						openOrCloseModal({ whichModal: 'setModal', operation: 'close' });
+					}}
 				>
 					Sim
 				</Button>

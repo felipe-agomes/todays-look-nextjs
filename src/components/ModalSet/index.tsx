@@ -8,7 +8,10 @@ import {
 import ModalBase from '../ModalBase';
 import Style from './ModalSet.module.css';
 import { Button, Spinner } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons';
+import { color } from 'framer-motion';
+import ModalDelete from '../ModalDelete';
 
 type Props = {
 	modal: ModalState;
@@ -35,10 +38,27 @@ export default function ModalSet({
 	fetcher,
 }: Props) {
 	const [loading, setLoading] = useState<boolean>(false);
+	const [favorite, setFavorite] = useState<boolean>(false);
+
+	useEffect(() => {
+		setFavorite(modal.set?.favorite!);
+	}, [modal]);
 	return (
 		<div className={Style.modalContainer}>
+			{modal.deleteModal && (
+				<ModalDelete
+					deleteSet={async () => {
+						await fetcher(`/api/protected/user/${userId}/clothe/deleteSet/${setId}`, {
+							method: 'DELETE',
+							update: true,
+						});
+					}}
+					openOrCloseModal={openOrCloseModal}
+				/>
+			)}
 			{loading && (
 				<Spinner
+					color='cyan'
 					style={{
 						position: 'absolute',
 						zIndex: 2,
@@ -53,7 +73,7 @@ export default function ModalSet({
 					fontSize: '1.2rem',
 				}}
 			>
-				Conjunto
+				Conjunto: {modal.set?.category}
 			</h1>
 			<ModalBase
 				set={modal.set}
@@ -61,23 +81,65 @@ export default function ModalSet({
 			>
 				<ul>
 					<li>
-						<Button
+						<p>Favoritar conjunto</p>
+						<StarIcon
+							cursor={'pointer'}
+							boxSize={5}
+							color={favorite ? 'gold' : 'whiteAlpha.600'}
 							onClick={async () => {
 								setLoading(true);
-								await fetcher(
-									`/api/protected/user/${userId}/clothe/deleteSet/${setId}`,
-									{
-										update: true,
-										method: 'DELETE',
-									}
-								);
+								const data = (await fetcher(
+									`/api/protected/user/${modal.set?.userId}/clothe/favoriteSet/${modal.set?.id}`,
+									{ update: true, method: 'PUT' }
+								)) as SetsProps;
+								console.log(data);
+								data && setFavorite(data.favorite);
+								setLoading(false);
+							}}
+						/>
+					</li>
+					<li>
+						<p>Deletar conjunto</p>
+						<DeleteIcon
+							cursor={'pointer'}
+							boxSize={5}
+							color={'red'}
+							onClick={() => {
+								openOrCloseModal({ whichModal: 'deleteModal', operation: 'open' });
+							}}
+							// 	async () => {
+							// 	setLoading(true);
+							// 	await fetcher(
+							// 		`/api/protected/user/${userId}/clothe/deleteSet/${setId}`,
+							// 		{
+							// 			update: true,
+							// 			method: 'DELETE',
+							// 		}
+							// 	);
+							// 	setLoading(false);
+							// 	openOrCloseModal({ whichModal: 'setModal', operation: 'close' });
+							// 	}
+							// }
+						/>
+					</li>
+					<li>
+						<p>Alterar categoria</p>
+						<EditIcon
+							cursor={'pointer'}
+							boxSize={5}
+							onClick={async () => {
+								setLoading(true);
+								// await fetcher(
+								// 	`/api/protected/user/${userId}/clothe/deleteSet/${setId}`,
+								// 	{
+								// 		update: true,
+								// 		method: 'DELETE',
+								// 	}
+								// );
 								setLoading(false);
 								openOrCloseModal({ whichModal: 'setModal', operation: 'close' });
 							}}
-							colorScheme='red'
-						>
-							Deletar
-						</Button>
+						/>
 					</li>
 				</ul>
 			</ModalBase>

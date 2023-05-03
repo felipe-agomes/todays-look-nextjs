@@ -31,7 +31,6 @@ export default function GridSets({
 	openOrCloseModal,
 	fetcher,
 }: Props) {
-	console.log(sets);
 	return (
 		<ul className={Style.boxList}>
 			{modal.setModal && (

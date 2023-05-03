@@ -74,6 +74,9 @@ export default function ModalBase({
 						set={set}
 						proportion={{ x: 0.67, y: 0.67 }}
 					/>
+					<div>
+						<ul></ul>
+					</div>
 				</div>
 			)}
 			<div

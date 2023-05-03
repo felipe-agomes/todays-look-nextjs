@@ -56,7 +56,6 @@ export default function Home({ serverSession }: Props) {
 
 	const clotheUniqueCaterories = uniqueCategories(clothesCategories);
 	const setsUniqueCategories = uniqueCategories(setsCategories);
-	console.log(setsUniqueCategories);
 
 	async function updateClothesAndSets() {
 		const dataClothes = (await fetcher(
@@ -158,6 +157,10 @@ export default function Home({ serverSession }: Props) {
 			const newSet = sets.filter((set) => set.id === setId)[0];
 			newModal.set = operation === 'open' ? newSet : null;
 			newModal.setModal = operation === 'open';
+			if (!newModal.set) {
+				setModal(resetModal);
+				return;
+			}
 		} else {
 			newModal[whichModal] = operation === 'open';
 		}

@@ -62,6 +62,8 @@ type SetType = {
 	updatedAt: NativeDate;
 } & {
 	userId?: mongoose.Types.ObjectId;
+	favorite?: boolean;
+	category?: string;
 	sets?: ClotheSchemaProps[];
 };
 

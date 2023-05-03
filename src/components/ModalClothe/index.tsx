@@ -98,10 +98,8 @@ export default function ModalClothe({
 													const data = (await fetcher(
 														`/api/protected/user/${clothe.userId}/clothe/favorite/${clothe.id}`,
 														{ method: 'PUT', update: true }
-													)) as ClothesProps | ClothesProps[];
-													if (!Array.isArray(data)) {
-														data && setFavorite(data.favorite);
-													}
+													)) as ClothesProps;
+													data && setFavorite(data.favorite);
 													setLoading(false);
 												}}
 												cursor={'pointer'}
@@ -128,7 +126,7 @@ export default function ModalClothe({
 								</li>
 								<li>
 									<div className={Style.rowBox}>
-										<p>Categoria</p>
+										<p>Alterar categoria</p>
 										<span>
 											<EditIcon
 												onClick={() => {
