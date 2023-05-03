@@ -62,6 +62,7 @@ export type ClothesProps = {
 export type SetsProps = {
 	userId: string;
 	id: string;
+	category: string;
 	favorite: boolean;
 	sets: [
 		{

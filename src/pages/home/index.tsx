@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
 import { NextApiRequest } from 'next';
@@ -21,11 +22,13 @@ import GridClothes from '@/components/GridClothes';
 import ProfilePage from '@/components/ProfilePage';
 
 import style from './home.module.css';
-import WorkbenchSet from '@/components/workbenchClotheSet';
+import WorkbenchSet from '@/components/WorkbenchClotheSet';
 import GridSets from '@/components/GridSets';
 import Image from 'next/image';
 import ContainerPage from '@/components/ContainerPage';
 import Header from '@/components/Header';
+import Head from 'next/head';
+import uniqueCategories from '@/functions/uniqueCategories';
 
 type Props = {
 	serverSession: SessionProps;
@@ -45,11 +48,15 @@ export default function Home({ serverSession }: Props) {
 		set: null,
 	});
 
-	const clothesCategories = clothes.map((clothe) => clothe.category);
-	const categories = ['Favoritos', 'Todos', ...clothesCategories];
-	const uniqueCategories = categories.filter(
-		(category, index) => categories.indexOf(category) === index
-	);
+	const clothesAllCategories = clothes.map((clothe) => clothe.category);
+	const clothesCategories = ['Favoritos', 'Todos', ...clothesAllCategories];
+
+	const setsAllCategories = sets.map((set) => set.category);
+	const setsCategories = ['Favoritos', 'Todos', ...setsAllCategories];
+
+	const clotheUniqueCaterories = uniqueCategories(clothesCategories);
+	const setsUniqueCategories = uniqueCategories(setsCategories);
+	console.log(setsUniqueCategories);
 
 	async function updateClothesAndSets() {
 		const dataClothes = (await fetcher(
@@ -77,6 +84,16 @@ export default function Home({ serverSession }: Props) {
 		} else {
 			return clothes.filter(
 				(clothe) => clothe.category === category || category === 'Todos'
+			);
+		}
+	}
+
+	function filteredSets(category: string) {
+		if (category === 'Favoritos') {
+			return sets.filter((set) => set.favorite);
+		} else {
+			return sets.filter(
+				(set) => set.category === category || category === 'Todos'
 			);
 		}
 	}
@@ -120,9 +137,6 @@ export default function Home({ serverSession }: Props) {
 		clotheId: string | null = null,
 		setId: string | null = null
 	) {
-		console.log(
-			`whichModal: ${whichModal} - operation: ${operation} - clotheId: ${clotheId} - setId: ${setId}`
-		);
 		const resetModal: ModalState = {
 			changeCategoryModal: false,
 			clothe: null,
@@ -172,125 +186,143 @@ export default function Home({ serverSession }: Props) {
 	}
 
 	return (
-		<div className={style.homePage}>
-			<Tabs align='center'>
-				<main>
-					<TabPanels>
-						<TabPanel className={style.page}>
-							<Header title='Conjuntos' />
-							<ContainerPage>
-								<GridSets
-									fetcher={fetcher}
-									modal={modal}
+		<>
+			<Head>
+				<link
+					rel='icon'
+					href='/favIcon.ico'
+				/>
+			</Head>
+			<div className={style.homePage}>
+				<Tabs align='center'>
+					<main>
+						<TabPanels>
+							<TabPanel className={style.page}>
+								<Header
+									title='Conjuntos'
+									categoryes={true}
+									uniqueCategories={setsUniqueCategories}
 									openOrCloseModal={openOrCloseModal}
-									sets={sets}
+									setCurrentPage={setCurrentPage}
 								/>
-							</ContainerPage>
-						</TabPanel>
-						<TabPanel className={style.page}>
-							<Header
-								title='Roupas'
-								categoryes={true}
-								openOrCloseModal={openOrCloseModal}
-								setCurrentPage={setCurrentPage}
-								uniqueCategories={uniqueCategories}
-							/>
-							<ContainerPage>
-								<GridClothes
-									clothes={
-										currentPage === 'Todos'
-											? filteredClothes('Todos')
-											: filteredClothes(currentPage)
-									}
+								<ContainerPage>
+									<GridSets
+										sets={
+											currentPage === 'Todos'
+												? filteredSets('Todos')
+												: filteredSets(currentPage)
+										}
+										fetcher={fetcher}
+										modal={modal}
+										openOrCloseModal={openOrCloseModal}
+									/>
+								</ContainerPage>
+							</TabPanel>
+							<TabPanel className={style.page}>
+								<Header
+									title='Roupas'
+									categoryes={true}
 									openOrCloseModal={openOrCloseModal}
-									addToWorkbench={addToWorkbench}
-									fetcher={fetcher}
-									modal={modal}
-									removeItemWorkbench={removeItemWorkbench}
-									uniqueCategories={uniqueCategories}
-									workbench={workbench}
+									setCurrentPage={setCurrentPage}
+									uniqueCategories={clotheUniqueCaterories}
 								/>
-							</ContainerPage>
-						</TabPanel>
-						<TabPanel className={style.page}>
-							<Header title='Adicionar Roupa' />
-							<ContainerPage>
-								<AddClothe
-									userId={serverSession.user.id}
-									updateClothesAndSets={updateClothesAndSets}
-								/>
-							</ContainerPage>
-						</TabPanel>
-						<TabPanel
-							className={style.page}
-							style={{ background: '#eee' }}
-						>
-							<Header title='Criar Conjunto' />
-							<ContainerPage>
-								<WorkbenchSet
-									resetWorkbench={resetWorkbench}
-									fetcher={fetcher}
-									workbench={workbench}
-								/>
-							</ContainerPage>
-						</TabPanel>
-						<TabPanel className={style.page}>
-							<Header title='Perfil' />
-							<ContainerPage>
-								<ProfilePage userName={serverSession.user.name} />
-							</ContainerPage>
-						</TabPanel>
-					</TabPanels>
-				</main>
+								<ContainerPage>
+									<GridClothes
+										clothes={
+											currentPage === 'Todos'
+												? filteredClothes('Todos')
+												: filteredClothes(currentPage)
+										}
+										openOrCloseModal={openOrCloseModal}
+										addToWorkbench={addToWorkbench}
+										fetcher={fetcher}
+										modal={modal}
+										removeItemWorkbench={removeItemWorkbench}
+										uniqueCategories={clotheUniqueCaterories}
+										workbench={workbench}
+									/>
+								</ContainerPage>
+							</TabPanel>
+							<TabPanel className={style.page}>
+								<Header title='Adicionar Roupa' />
+								<ContainerPage>
+									<AddClothe
+										userId={serverSession.user.id}
+										updateClothesAndSets={updateClothesAndSets}
+									/>
+								</ContainerPage>
+							</TabPanel>
+							<TabPanel
+								className={style.page}
+								style={{ background: '#eee' }}
+							>
+								<Header title='Criar Conjunto' />
+								<ContainerPage>
+									<WorkbenchSet
+										resetWorkbench={resetWorkbench}
+										fetcher={fetcher}
+										workbench={workbench}
+									/>
+								</ContainerPage>
+							</TabPanel>
+							<TabPanel className={style.page}>
+								<Header title='Perfil' />
+								<ContainerPage>
+									<ProfilePage userName={serverSession.user.name} />
+								</ContainerPage>
+							</TabPanel>
+						</TabPanels>
+					</main>
 
-				<TabList className={style.footerPage}>
-					<Tab height={10}>
-						<Image
-							width={28}
-							height={28}
-							src='/wedding.png'
-							alt='Conjunto'
-						/>
-					</Tab>
-					<Tab height={10}>
-						<Image
-							width={28}
-							height={28}
-							src='/tshirt.png'
-							alt='Roupas'
-						/>
-					</Tab>
-					<Tab height={10}>
-						<div className={style.boxAddIcon}>
-							<div className={style.addIcon}>
-								<AddIcon
-									borderRadius={'full'}
-									width={5}
-									height={5}
-									color={'white'}
-								></AddIcon>
+					<TabList className={style.footerPage}>
+						<Tab height={10}>
+							<Image
+								width={28}
+								height={28}
+								src='/wedding.png'
+								alt='Conjunto'
+							/>
+						</Tab>
+						<Tab height={10}>
+							<Image
+								width={28}
+								height={28}
+								src='/tshirt.png'
+								alt='Roupas'
+							/>
+						</Tab>
+						<Tab height={10}>
+							<div className={style.boxAddIcon}>
+								<div className={style.addIcon}>
+									<AddIcon
+										borderRadius={'full'}
+										width={5}
+										height={5}
+										color={'white'}
+									></AddIcon>
+								</div>
+								<p>Adicionar</p>
 							</div>
-							<p>Adicionar</p>
-						</div>
-					</Tab>
-					<Tab height={10}>
-						<Image
-							width={28}
-							height={28}
-							src='/fashion.png'
-							alt='Novo conjunto'
-						/>
-					</Tab>
-					<Tab height={10}>
-						<Avatar
-							size={'sm'}
-							name={serverSession.user.name}
-							src={serverSession.user.image}
-						/>
-					</Tab>
-				</TabList>
-			</Tabs>
-		</div>
+						</Tab>
+						<Tab height={10}>
+							<Image
+								width={28}
+								height={28}
+								src='/fashion.png'
+								alt='Novo conjunto'
+							/>
+						</Tab>
+						<Tab height={10}>
+							<Avatar
+								size={'sm'}
+								name={serverSession.user.name}
+								src={serverSession.user.image}
+							/>
+						</Tab>
+					</TabList>
+				</Tabs>
+			</div>
+		</>
 	);
 }
 

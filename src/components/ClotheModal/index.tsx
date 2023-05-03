@@ -54,7 +54,6 @@ export default function ClotheModal({
 
 	const clothe = { ...modal.clothe };
 
-	console.log(modal);
 	return (
 		<>
 			{modal.clotheModal && (
@@ -116,7 +115,6 @@ export default function ClotheModal({
 										<span>
 											<DeleteIcon
 												onClick={() => {
-													console.log('cliclou papai');
 													openOrCloseModal({ whichModal: 'deleteModal', operation: 'open' });
 												}}
 												cursor={'pointer'}

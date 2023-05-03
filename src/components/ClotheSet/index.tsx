@@ -1,4 +1,4 @@
-import { ClothePosition } from '../workbenchClotheSet';
+import { ClothePosition } from '../WorkbenchClotheSet';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import Image from 'next/image';
 

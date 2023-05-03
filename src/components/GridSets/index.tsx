@@ -15,7 +15,9 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
+	) => Promise<
+		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
+	>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
@@ -63,7 +65,7 @@ export default function GridSets({
 					>
 						<SetImages
 							size={{ height: 56.88, width: 56.88 }}
-							proportion={{x: 0.44, y: 0.44}}
+							proportion={{ x: 0.44, y: 0.44 }}
 							set={set}
 						/>
 					</li>

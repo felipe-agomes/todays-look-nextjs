@@ -19,7 +19,9 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
+	) => Promise<
+		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
+	>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string
@@ -43,7 +45,7 @@ export default function ChoseCategory({
 
 	const formikNewCategory = useFormik({
 		initialValues: {
-			newCategory: '',
+			category: '',
 		},
 		validate: validateNewCategory,
 		onSubmit: handleSubmit,
@@ -51,7 +53,7 @@ export default function ChoseCategory({
 
 	async function handleSubmit(values: {
 		existingCategory?: String;
-		newCategory?: String;
+		category?: String;
 	}) {
 		await fetcher(
 			`/api/protected/user/${userId}/clothe/updateCategory/${clotheId}`,
@@ -60,7 +62,7 @@ export default function ChoseCategory({
 				body: JSON.stringify({
 					toUpdate: values.existingCategory
 						? values.existingCategory
-						: values.newCategory,
+						: values.category,
 				}),
 				update: true,
 			}
@@ -114,10 +116,10 @@ export default function ChoseCategory({
 				<div className={Style.rowBox}>
 					<input
 						type='text'
-						id='newCategory'
-						name='newCategory'
+						id='category'
+						name='category'
 						onChange={formikNewCategory.handleChange}
-						value={formikNewCategory.values.newCategory}
+						value={formikNewCategory.values.category}
 					/>
 					<Button
 						type='submit'
@@ -128,10 +130,9 @@ export default function ChoseCategory({
 						Salvar
 					</Button>
 				</div>
-				{formikNewCategory.errors.newCategory &&
-				formikNewCategory.touched.newCategory ? (
+				{formikNewCategory.errors.category && formikNewCategory.touched.category ? (
 					<span style={{ color: 'red' }}>
-						<p>{formikNewCategory.errors.newCategory}</p>
+						<p>{formikNewCategory.errors.category}</p>
 					</span>
 				) : (
 					<></>

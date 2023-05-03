@@ -8,6 +8,15 @@ const SetSchema = new Schema(
 			ref: 'User',
 			require: true,
 		},
+		category: {
+			type: String,
+			require: true,
+		},
+		favorite: {
+			type: Boolean,
+			require: true,
+			default: false,
+		},
 		sets: {
 			type: [
 				{

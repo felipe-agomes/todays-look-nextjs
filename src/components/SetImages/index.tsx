@@ -21,7 +21,6 @@ export default function SetImages({
 	return (
 		<>
 			{set.sets.map((subSet) => {
-				console.log(size);
 				return (
 					<div
 						style={{

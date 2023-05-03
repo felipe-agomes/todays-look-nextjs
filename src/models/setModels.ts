@@ -2,14 +2,18 @@ import { ClotheSchemaProps, ClothesProps } from '@/@types';
 import Set from './colections/set';
 import connectDb from '@/services/connectDb';
 
-async function createSet(userId: string, sets: ClothesProps[]) {
+async function createSet(
+	userId: string,
+	data: { sets: ClothesProps[]; category: string }
+) {
 	await connectDb();
+	console.log(data);
 	try {
-		await Set.create({ userId, sets });
+		await Set.create({ userId, sets: data.sets, category: data.category });
 		return {
 			error: false,
 			message: 'Conjunto criado com sucesso',
-			set: { userId, sets },
+			set: { userId, data },
 		};
 	} catch (error) {
 		throw new Error(`Error: ${error}`);

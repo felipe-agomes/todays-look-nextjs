@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import ClotheSet from '../ClotheSet';
 import { ClothesProps, FetcherOptions, SetsProps } from '@/@types';
 import { Button } from '@chakra-ui/react';
+import { useFormik } from 'formik';
+import { validateNewCategory } from '@/utils/validate';
+import Style from './WorkbenchClotheSet.module.css';
 
 export type ClothePosition = {
 	x: number;
@@ -13,7 +16,9 @@ type Props = {
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
-	) => Promise<SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined>;
+	) => Promise<
+		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
+	>;
 	resetWorkbench: () => void;
 };
 
@@ -25,6 +30,13 @@ export default function WorkbenchSet({
 	const [clothesPosition, setClothesPosition] = useState<ClothePosition[] | []>(
 		[]
 	);
+	const formik = useFormik({
+		initialValues: {
+			category: '',
+		},
+		onSubmit: handleSubmit,
+		validate: validateNewCategory,
+	});
 
 	useEffect(() => {
 		const initialClothesPosition = workbench.map((clothe) => {
@@ -45,24 +57,25 @@ export default function WorkbenchSet({
 		setClothesPosition(newClothesPosition);
 	}
 
+	function handleSubmit(values: { category: string }) {
+		if (clothesPosition.length === 0) {
+			return;
+		}
+		const data = {
+			category: values.category,
+			sets: clothesPosition,
+		};
+		fetcher(`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`, {
+			method: 'POST',
+			body: JSON.stringify(data),
+			update: true,
+		});
+		resetWorkbench();
+		formik.resetForm({ values: { category: '' } });
+	}
 	return (
-		<div
-			style={{
-				display: 'flex',
-				alignItems: 'center',
-				flexDirection: 'column',
-				gap: '10px',
-			}}
-		>
-			<div
-				style={{
-					position: 'relative',
-					overflow: 'hidden',
-					width: '360px',
-					height: '460px',
-					background: '#fff',
-				}}
-			>
+		<div className={Style.container}>
+			<div className={Style.workbench}>
 				{clothesPosition.map((clothe) => {
 					return (
 						<ClotheSet
@@ -73,38 +86,41 @@ export default function WorkbenchSet({
 					);
 				})}
 			</div>
-			<div>
+			<form
+				className={Style.form}
+				onSubmit={formik.handleSubmit}
+			>
+				<input
+					className={Style.input}
+					placeholder='Categoria'
+					type='text'
+					name='category'
+					value={formik.values.category}
+					onChange={formik.handleChange}
+				/>
 				<Button
-					colorScheme='red'
-					width={100}
-					style={{ marginRight: '10px' }}
-					onClick={resetWorkbench}
-				>
-					Resetar
-				</Button>
-				<Button
-					width={100}
+					type='submit'
+					width={'70px'}
 					colorScheme='cyan'
-					onClick={() => {
-						if (clothesPosition.length === 0) {
-							return;
-						}
-						fetcher(
-							`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`,
-							{
-								method: 'POST',
-								body: JSON.stringify({
-									sets: clothesPosition,
-								}),
-								update: true,
-							}
-						);
-						resetWorkbench();
-					}}
 				>
 					Enviar
 				</Button>
-			</div>
+				<Button
+					colorScheme='red'
+					width={'70px'}
+					onClick={() => {
+						resetWorkbench();
+						formik.resetForm({ values: { category: '' } });
+					}}
+				>
+					Resetar
+				</Button>
+			</form>
+			{formik.errors.category && formik.touched.category ? (
+				<span style={{ color: 'red' }}>{formik.errors.category}</span>
+			) : (
+				<></>
+			)}
 		</div>
 	);
 }

@@ -1,0 +1,31 @@
+.input {
+	border: none;
+	height: 40px;
+	border-radius: 3px;
+	padding: 0 10px;
+	background: #fff;
+	width: 50%;
+	outline: none;
+}
+
+.workbench {
+	position: relative;
+	overflow: hidden;
+	width: 360px;
+	height: 460px;
+	background: #fff;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.form {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+}

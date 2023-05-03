@@ -75,14 +75,14 @@ export function sendImageValidate(values: FormSendImageValues) {
 	return error;
 }
 
-export function validateNewCategory(value: { newCategory: string }) {
-	const error: { newCategory?: String } = {};
-	if (!value.newCategory) {
-		error.newCategory = 'Categoria deve ser informada';
-	} else if (value.newCategory.length < 2) {
-		error.newCategory = 'Categoria não pode ser menor que 2 caracteres';
-	} else if (value.newCategory.length > 10) {
-		error.newCategory = 'Categoria deve ter menos que 10 caracteres';
+export function validateNewCategory(value: { category: string }) {
+	const error: { category?: String } = {};
+	if (!value.category) {
+		error.category = 'Categoria deve ser informada';
+	} else if (value.category.length < 2) {
+		error.category = 'Categoria não pode ser menor que 2 caracteres';
+	} else if (value.category.length > 10) {
+		error.category = 'Categoria deve ter menos que 10 caracteres';
 	}
 
 	return error;
