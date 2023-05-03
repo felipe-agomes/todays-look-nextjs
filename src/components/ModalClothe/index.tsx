@@ -80,7 +80,12 @@ export default function ModalClothe({
 							}}
 						/>
 					)}
-					{loading && <Spinner className={Style.spinner} />}
+					{loading && (
+						<Spinner
+							color={'cyan'}
+							className={Style.spinner}
+						/>
+					)}
 					<ModalBase
 						clothes={modal.clothe}
 						openOrCloseModal={openOrCloseModal}
