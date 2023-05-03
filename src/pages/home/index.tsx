@@ -22,7 +22,7 @@ import GridClothes from '@/components/GridClothes';
 import ProfilePage from '@/components/ProfilePage';
 
 import style from './home.module.css';
-import WorkbenchSet from '@/components/WorkbenchClotheSet';
+import WorkbenchSet from '@/components/WorkbenchSet';
 import GridSets from '@/components/GridSets';
 import Image from 'next/image';
 import ContainerPage from '@/components/ContainerPage';
