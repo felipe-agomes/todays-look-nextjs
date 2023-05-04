@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image';
 import Style from './GridClothes.module.css';
 import {
@@ -68,10 +69,7 @@ export default function GridClothes({
 								className={Style.list}
 								key={clothe.id}
 							>
-								<Image
-									style={{ cursor: 'pointer' }}
-									width={128}
-									height={128}
+								<img
 									src={clothe.image}
 									alt='Roupa'
 									onClick={() => {

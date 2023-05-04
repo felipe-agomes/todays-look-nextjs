@@ -14,8 +14,9 @@ import Style from './ChoseCategory.module.css';
 
 type Props = {
 	categories: string[];
-	clotheId: string;
+	clotheOrSetId: string;
 	userId: string;
+	clothesOrSets: 'clothes' | 'sets';
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
@@ -29,8 +30,9 @@ type Props = {
 };
 
 export default function ChoseCategory({
+	clothesOrSets,
 	categories,
-	clotheId,
+	clotheOrSetId,
 	userId,
 	fetcher,
 	openOrCloseModal,
@@ -55,8 +57,14 @@ export default function ChoseCategory({
 		existingCategory?: String;
 		category?: String;
 	}) {
-		await fetcher(
-			`/api/protected/user/${userId}/clothe/updateCategory/${clotheId}`,
+		const path =
+			clothesOrSets === 'clothes' ? 'updateCategory' : 'updateCategorySet';
+		console.log(`values: ${values}`);
+		console.log(`userId: ${userId}`);
+		console.log(`clotheId: ${clotheOrSetId}`);
+		console.log(`path: ${path}`);
+		const response = await fetcher(
+			`/api/protected/user/${userId}/clothe/${path}/${clotheOrSetId}`,
 			{
 				method: 'PUT',
 				body: JSON.stringify({
@@ -67,7 +75,8 @@ export default function ChoseCategory({
 				update: true,
 			}
 		);
-		openOrCloseModal({ whichModal: 'changeCategoryModal', operation: 'close' });
+		console.log(response);
+		openOrCloseModal({ whichModal: 'clotheModal', operation: 'close' });
 	}
 
 	return (

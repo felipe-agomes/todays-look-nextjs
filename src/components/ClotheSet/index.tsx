@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import Image from 'next/image';
 import { ClothePosition } from '@/@types';
@@ -23,10 +24,8 @@ export default function ClotheSet({ clothe, updateClothePosition }: Props) {
 					height: '128px',
 				}}
 			>
-				<Image
-					draggable={'false'}
-					width={128}
-					height={128}
+				<img
+					draggable={false}
 					src={clothe.image}
 					alt='Roupa'
 				/>

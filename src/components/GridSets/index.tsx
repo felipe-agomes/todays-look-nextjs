@@ -12,6 +12,7 @@ import SetImages from '../SetImages';
 type Props = {
 	sets: SetsProps[];
 	modal: ModalState;
+	uniqueCategories: string[];
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
@@ -28,6 +29,7 @@ type Props = {
 export default function GridSets({
 	sets,
 	modal,
+	uniqueCategories,
 	openOrCloseModal,
 	fetcher,
 }: Props) {
@@ -35,6 +37,9 @@ export default function GridSets({
 		<ul className={Style.boxList}>
 			{modal.setModal && (
 				<ModalSet
+					categories={uniqueCategories.filter(
+						(category) => category !== 'Todos' && category !== 'Favoritos'
+					)}
 					fetcher={fetcher}
 					userId={modal.set?.userId!}
 					setId={modal.set?.id!}

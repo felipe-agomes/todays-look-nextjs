@@ -91,4 +91,28 @@ async function toggleFAvorite(setId: string) {
 	};
 }
 
-export const setModels = { createSet, getAllSet, deleteSet, toggleFAvorite };
+async function updateCategorySet(setId: string, toUpdate: string) {
+	const set = await Set.findById(setId);
+	if (!set) {
+		return {
+			error: true,
+			message: 'Set não encontrado',
+		};
+	}
+
+	const newSet = { category: toUpdate };
+	await set.updateOne(newSet);
+	return {
+		error: false,
+		message: 'Categoria alterada com sucesso',
+		set: newSet,
+	};
+}
+
+export const setModels = {
+	createSet,
+	getAllSet,
+	deleteSet,
+	toggleFAvorite,
+	updateCategorySet,
+};

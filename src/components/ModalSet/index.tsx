@@ -7,16 +7,17 @@ import {
 } from '@/@types';
 import ModalBase from '../ModalBase';
 import Style from './ModalSet.module.css';
-import { Button, Spinner } from '@chakra-ui/react';
+import { Spinner } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons';
-import { color } from 'framer-motion';
 import ModalDelete from '../ModalDelete';
+import ModalChangeCategory from '../ModalChangeCategory';
 
 type Props = {
 	modal: ModalState;
 	userId: string;
 	setId: string;
+	categories: string[] | [];
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
@@ -34,6 +35,7 @@ export default function ModalSet({
 	modal,
 	setId,
 	userId,
+	categories,
 	openOrCloseModal,
 	fetcher,
 }: Props) {
@@ -45,6 +47,15 @@ export default function ModalSet({
 	}, [modal]);
 	return (
 		<div className={Style.modalContainer}>
+			{modal.changeCategoryModal && (
+				<ModalChangeCategory
+					clothesOrSets='sets'
+					categories={categories}
+					clotheOrSet={modal.set!}
+					fetcher={fetcher}
+					openOrCloseModal={openOrCloseModal}
+				/>
+			)}
 			{modal.deleteModal && (
 				<ModalDelete
 					deleteSet={async () => {
@@ -107,19 +118,6 @@ export default function ModalSet({
 							onClick={() => {
 								openOrCloseModal({ whichModal: 'deleteModal', operation: 'open' });
 							}}
-							// 	async () => {
-							// 	setLoading(true);
-							// 	await fetcher(
-							// 		`/api/protected/user/${userId}/clothe/deleteSet/${setId}`,
-							// 		{
-							// 			update: true,
-							// 			method: 'DELETE',
-							// 		}
-							// 	);
-							// 	setLoading(false);
-							// 	openOrCloseModal({ whichModal: 'setModal', operation: 'close' });
-							// 	}
-							// }
 						/>
 					</li>
 					<li>
@@ -127,17 +125,12 @@ export default function ModalSet({
 						<EditIcon
 							cursor={'pointer'}
 							boxSize={5}
-							onClick={async () => {
-								setLoading(true);
-								// await fetcher(
-								// 	`/api/protected/user/${userId}/clothe/deleteSet/${setId}`,
-								// 	{
-								// 		update: true,
-								// 		method: 'DELETE',
-								// 	}
-								// );
-								setLoading(false);
-								openOrCloseModal({ whichModal: 'setModal', operation: 'close' });
+							onClick={() => {
+								console.log('aqui');
+								openOrCloseModal({
+									whichModal: 'changeCategoryModal',
+									operation: 'open',
+								});
 							}}
 						/>
 					</li>

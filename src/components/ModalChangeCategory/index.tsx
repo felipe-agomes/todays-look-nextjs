@@ -10,7 +10,8 @@ import ChoseCategory from '../ChoseCategory';
 
 type Props = {
 	categories: string[];
-	clothe: ClothesProps;
+	clotheOrSet: ClothesProps | SetsProps;
+	clothesOrSets: 'clothes' | 'sets';
 	fetcher: (
 		url: string,
 		options?: FetcherOptions
@@ -26,7 +27,8 @@ type Props = {
 
 export default function ModalChangeCategory({
 	categories,
-	clothe,
+	clothesOrSets,
+	clotheOrSet,
 	openOrCloseModal,
 	fetcher,
 }: Props) {
@@ -45,11 +47,12 @@ export default function ModalChangeCategory({
 				top={'20px'}
 			/>
 			<ChoseCategory
+				clothesOrSets={clothesOrSets}
 				fetcher={fetcher}
 				openOrCloseModal={openOrCloseModal}
 				categories={categories}
-				clotheId={clothe.id}
-				userId={clothe.userId}
+				clotheOrSetId={clotheOrSet.id}
+				userId={clotheOrSet.userId}
 			/>
 		</div>
 	);

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
@@ -77,23 +78,26 @@ export default function Home({ serverSession }: Props) {
 		updateClothesAndSets();
 	}, [serverSession]);
 
-	function filteredClothes(category: string) {
-		if (category === 'Favoritos') {
-			return clothes.filter((clothe) => clothe.favorite);
+	function filteredCategory<ClothesOrSetsProps>(
+		category: string,
+		clothesOrSets: 'clothe' | 'sets'
+	): ClothesOrSetsProps[] {
+		if (clothesOrSets === 'clothe') {
+			if (category === 'Favoritos') {
+				return clothes.filter((clothe) => clothe.favorite) as ClothesOrSetsProps[];
+			} else {
+				return clothes.filter(
+					(clothe) => clothe.category === category || category === 'Todos'
+				) as ClothesOrSetsProps[];
+			}
 		} else {
-			return clothes.filter(
-				(clothe) => clothe.category === category || category === 'Todos'
-			);
-		}
-	}
-
-	function filteredSets(category: string) {
-		if (category === 'Favoritos') {
-			return sets.filter((set) => set.favorite);
-		} else {
-			return sets.filter(
-				(set) => set.category === category || category === 'Todos'
-			);
+			if (category === 'Favoritos') {
+				return sets.filter((set) => set.favorite) as ClothesOrSetsProps[];
+			} else {
+				return sets.filter(
+					(set) => set.category === category || category === 'Todos'
+				) as ClothesOrSetsProps[];
+			}
 		}
 	}
 
@@ -212,9 +216,10 @@ export default function Home({ serverSession }: Props) {
 									<GridSets
 										sets={
 											currentPage === 'Todos'
-												? filteredSets('Todos')
-												: filteredSets(currentPage)
+												? filteredCategory('Todos', 'sets')
+												: filteredCategory(currentPage, 'sets')
 										}
+										uniqueCategories={setsUniqueCategories}
 										fetcher={fetcher}
 										modal={modal}
 										openOrCloseModal={openOrCloseModal}
@@ -233,8 +238,8 @@ export default function Home({ serverSession }: Props) {
 									<GridClothes
 										clothes={
 											currentPage === 'Todos'
-												? filteredClothes('Todos')
-												: filteredClothes(currentPage)
+												? filteredCategory('Todos', 'clothe')
+												: filteredCategory(currentPage, 'clothe')
 										}
 										openOrCloseModal={openOrCloseModal}
 										addToWorkbench={addToWorkbench}
@@ -255,10 +260,7 @@ export default function Home({ serverSession }: Props) {
 									/>
 								</ContainerPage>
 							</TabPanel>
-							<TabPanel
-								className={style.page}
-								style={{ background: '#eee' }}
-							>
+							<TabPanel className={style.page}>
 								<Header title='Criar Conjunto' />
 								<ContainerPage>
 									<WorkbenchSet
@@ -279,17 +281,13 @@ export default function Home({ serverSession }: Props) {
 
 					<TabList className={style.footerPage}>
 						<Tab height={10}>
-							<Image
-								width={28}
-								height={28}
+							<img
 								src='/wedding.png'
 								alt='Conjunto'
 							/>
 						</Tab>
 						<Tab height={10}>
-							<Image
-								width={28}
-								height={28}
+							<img
 								src='/tshirt.png'
 								alt='Roupas'
 							/>
@@ -308,9 +306,7 @@ export default function Home({ serverSession }: Props) {
 							</div>
 						</Tab>
 						<Tab height={10}>
-							<Image
-								width={28}
-								height={28}
+							<img
 								src='/fashion.png'
 								alt='Novo conjunto'
 							/>

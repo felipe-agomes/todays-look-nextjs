@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { SetsProps } from '@/@types';
 import Image from 'next/image';
 
@@ -35,9 +36,7 @@ export default function SetImages({
 						}}
 						key={subSet.y}
 					>
-						<Image
-							width={size?.width}
-							height={size?.height}
+						<img
 							src={subSet.image}
 							alt='Roupa'
 						/>

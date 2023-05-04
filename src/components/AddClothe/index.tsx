@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from '@chakra-ui/react';
 import style from './AddClothe.module.css';
 import { useState } from 'react';
@@ -97,9 +98,7 @@ export default function AddClothe({ userId, updateClothesAndSets }: Props) {
 				className={style.inputFile}
 			>
 				{displayImage && typeof displayImage === 'string' ? (
-					<Image
-						width={250}
-						height={250}
+					<img
 						src={displayImage}
 						alt='Imagem'
 					/>

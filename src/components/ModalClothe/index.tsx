@@ -62,9 +62,10 @@ export default function ModalClothe({
 				<div className={Style.modalContainer}>
 					{modal.changeCategoryModal && (
 						<ModalChangeCategory
+							clothesOrSets='clothes'
 							fetcher={fetcher}
 							openOrCloseModal={openOrCloseModal}
-							clothe={modal.clothe!}
+							clotheOrSet={modal.clothe!}
 							categories={categories}
 						/>
 					)}

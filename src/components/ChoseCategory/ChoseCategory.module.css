@@ -5,3 +5,12 @@
 
 	width: 100%;
 }
+
+.rowBox > select {
+	outline: none;
+}
+
+.rowBox > input {
+	outline: none;
+	padding-left: 5px;
+}

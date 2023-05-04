@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
 	ClothesProps,
 	ModalState,
@@ -48,9 +49,7 @@ export default function ModalBase({
 						height: '128px',
 					}}
 				>
-					<Image
-						width={128}
-						height={128}
+					<img
 						src={clothes.image}
 						alt='Roupa'
 					/>
