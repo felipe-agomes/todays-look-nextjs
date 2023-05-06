@@ -4,11 +4,10 @@ import style from './AddClothe.module.css';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import { sendImageValidate } from '@/utils/validate';
-import Image from 'next/image';
 
 type FormSendClothe = {
 	category: string;
-	file: string;
+	file: null | File;
 };
 
 type Props = {
@@ -24,7 +23,7 @@ export default function AddClothe({ userId, updateClothesAndSets }: Props) {
 	);
 	const initialValues: FormSendClothe = {
 		category: '',
-		file: '',
+		file: null,
 	};
 
 	const formik = useFormik({
@@ -68,7 +67,6 @@ export default function AddClothe({ userId, updateClothesAndSets }: Props) {
 				return;
 			}
 			if (!file.type.startsWith('image/')) {
-				reject(new Error('The file is not an image'));
 				return;
 			}
 			const reader = new FileReader();
@@ -122,7 +120,7 @@ export default function AddClothe({ userId, updateClothesAndSets }: Props) {
 					</div>
 				)}
 			</label>
-			{formik.errors.file && formik.touched.file ? (
+			{formik.errors.file ? (
 				<span style={{ color: 'red' }}>{formik.errors.file}</span>
 			) : (
 				<></>
@@ -132,7 +130,7 @@ export default function AddClothe({ userId, updateClothesAndSets }: Props) {
 				id='file'
 				name='file'
 				onChange={(e) => {
-					formik.handleChange(e);
+					formik.setFieldValue('file', e.target?.files ? e.target.files[0] : null);
 					handleDisplayImage(e.target.files && e.target.files[0]);
 					setFormImage(e.target.files && e.target.files[0]);
 				}}

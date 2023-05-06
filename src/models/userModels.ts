@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { UserLoginData, UserProps, UserRegisterData } from '@/@types';
 import User from './colections/user';
-import connectDb from '@/services/connectDb';
+import connectDb from '../services/connectDb';
 
 async function createUser(data: UserRegisterData) {
 	await connectDb();

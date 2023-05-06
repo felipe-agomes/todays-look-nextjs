@@ -59,7 +59,7 @@ export const authOptions: AuthOptions = {
 					await userModels.createUser({
 						email: profile?.email!,
 						name: profile?.name!,
-						password: '',
+						password: process.env.DEFAULT_PASSWORD!,
 						image: picture,
 					});
 				}
@@ -90,5 +90,4 @@ export const authOptions: AuthOptions = {
 		},
 	},
 	secret: process.env.NEXTAUTH_SECRET,
-	
 };

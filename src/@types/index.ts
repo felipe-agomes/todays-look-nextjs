@@ -42,7 +42,7 @@ export type FormLoginValues = {
 
 export type FormSendImageValues = {
 	category?: string;
-	file?: string;
+	file: File | null;
 };
 
 export type FormSendImageErrorValues = {
