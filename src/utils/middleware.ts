@@ -5,9 +5,7 @@ export const uploadWithBackground = multer({
 	storage: s3Upload,
 	limits: { fileSize: 24_000_000 },
 	fileFilter(req, file, callback) {
-		const allowedMimes = ['image/jpeg', 'image/pjpeg', 'image/png'];
-
-		if (allowedMimes.includes(file.mimetype)) {
+		if (file.mimetype.startsWith('image/')) {
 			callback(null, true);
 		} else {
 			callback(new Error('Tipo inválido, envie uma imagem'));

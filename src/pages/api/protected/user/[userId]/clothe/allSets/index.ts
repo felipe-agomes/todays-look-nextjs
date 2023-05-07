@@ -12,7 +12,13 @@ export default async function getAllSet(
 			case 'GET':
 				const { userId } = req.query;
 
-				if (!userId || Array.isArray(userId)) return;
+				if (!(typeof userId === 'string')) {
+					res.status(400).json({
+						error: true,
+						message: 'UserId inválido',
+					});
+					return;
+				}
 
 				const response = await setModels.getAllSet(userId);
 

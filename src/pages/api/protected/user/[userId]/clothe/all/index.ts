@@ -6,7 +6,7 @@ export default async function getAllClothes(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const session = await getSession({ req });	
+	const session = await getSession({ req });
 
 	if (session) {
 		const userId = req.query.userId;
