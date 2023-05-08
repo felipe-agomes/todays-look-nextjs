@@ -41,7 +41,7 @@ async function getAllClothes(userId: string) {
 
 	return {
 		error: false,
-		message: 'Roupas encontrada com sucesso',
+		message: 'Roupas encontradas com sucesso',
 		clothe,
 	};
 }
@@ -88,6 +88,7 @@ async function toggleFavorite(clotheId: string) {
 }
 
 async function updateCategory(clotheId: String, toUpdate: String) {
+	await connectDb();
 	const clothe = await Clothe.findById(clotheId);
 
 	if (!clothe) {
