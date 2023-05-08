@@ -43,6 +43,18 @@ describe('getAllClothes', () => {
 		});
 	});
 
+	it('should return an error if the setModels.getAllClothes return a error object', async () => {
+		(getSession as jest.Mock).mockResolvedValueOnce({ user: {} });
+		(clotheModels.getAllClothes as jest.Mock).mockResolvedValueOnce({
+			error: true,
+		});
+
+		await getAllClothes(req, res);
+
+		expect(res.status).toBeCalledWith(400);
+		expect(res.json).toBeCalledWith({ error: true });
+	});
+
 	it('should return an error if the user is not logged in', async () => {
 		(getSession as jest.Mock).mockResolvedValueOnce(null);
 

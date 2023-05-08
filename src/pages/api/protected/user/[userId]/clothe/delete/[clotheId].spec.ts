@@ -71,8 +71,6 @@ describe('deleteClothe', () => {
 	});
 
 	it.skip('should return 400 if user is not logged in', async () => {
-		const session = false;
-
 		await deleteClothe(req, res);
 
 		expect(res.status).toHaveBeenCalledWith(400);

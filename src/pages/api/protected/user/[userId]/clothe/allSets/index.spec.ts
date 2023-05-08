@@ -83,6 +83,16 @@ describe('getAllSet', () => {
 		expect(res.json).toBeCalledWith({ error: true });
 	});
 
+	it('should return an error if the setModels.getAllSet return a error object', async () => {
+		(getSession as jest.Mock).mockResolvedValueOnce(true);
+		(setModels.getAllSet as jest.Mock).mockResolvedValueOnce({ error: true });
+
+		await getAllSet(req, res);
+
+		expect(res.status).toBeCalledWith(400);
+		expect(res.json).toBeCalledWith({ error: true });
+	});
+
 	it('should return an error if the userId is invalid', async () => {
 		(getSession as jest.Mock).mockResolvedValueOnce({ user: {} });
 		req.query.userId = undefined;

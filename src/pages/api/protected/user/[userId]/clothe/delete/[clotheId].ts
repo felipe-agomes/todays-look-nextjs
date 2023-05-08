@@ -37,9 +37,4 @@ export default async function deleteClothe(
 		}
 		return;
 	}
-
-	res.status(400).json({
-		error: true,
-		message: 'Usuario precisa estar logado',
-	});
 }

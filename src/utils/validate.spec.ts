@@ -74,6 +74,17 @@ describe('registerValidate', () => {
 		);
 	});
 
+	it('should return error object with space into usarname', () => {
+		const values: FormRegisterValues = {
+			email: 'email@example.com',
+			username: 'user name',
+			password: 'passwordMoreLarger12',
+			cpassword: 'passwordMoreLarger12',
+		};
+		const result = registerValidate(values);
+		expect(result.username).toBe('Nome de usuário inválido');
+	});
+
 	it('should return error object with larger user', () => {
 		const values: FormRegisterValues = {
 			email: 'email@example.com',

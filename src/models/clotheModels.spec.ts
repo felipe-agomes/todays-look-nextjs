@@ -1,7 +1,7 @@
 import { clotheModels } from './clotheModels';
 import User from './colections/user';
 import Clothe from './colections/clothe';
-import { ClotheData } from '@/@types';
+import { ClotheData, ClothesProps } from '@/@types';
 
 jest.mock('@/services/connectDb');
 jest.mock('./colections/user');
@@ -11,45 +11,66 @@ const mockUserFindById = User.findById as jest.Mock;
 const mockClotheCreate = Clothe.create as jest.Mock;
 const mockClotheFindByUserId = Clothe.find as jest.Mock;
 const mockClotheFindById = Clothe.findById as jest.Mock;
+const userId = '123';
 const mockArrayClothe = [
-	{ id: '321', userId: '123', category: 'category', favorite: false },
-	{ id: '654', userId: '123', category: 'category', favorite: false },
+	{ id: '321', userId, category: 'category', favorite: false },
+	{ id: '654', userId, category: 'category', favorite: false },
 ];
-const clothe = {
+const clothe: ClothesProps = {
 	id: '321',
-	userId: '123',
+	userId,
 	category: 'category',
+	image: 'image',
+	key: 'key',
 	favorite: false,
 };
 const clotheId = '321';
-const userId = '123';
 const mockClothe = { ...clothe, updateOne: jest.fn() };
 
 describe('setNewClothe', () => {
-	beforeEach(() => {
-		mockUserFindById.mockResolvedValue({ id: '123' });
-		mockClotheCreate.mockResolvedValue(undefined);
-	});
-
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
 	it('should create a new clothe', async () => {
-		const data: ClotheData = {
-			userId: '123',
-			category: 'category',
-			image: 'image',
-			key: 'key',
-		};
+		mockUserFindById.mockResolvedValue({ id: userId });
+		mockClotheCreate.mockResolvedValue(undefined);
 
-		const result = await clotheModels.setNewClothe(data);
+		const result = await clotheModels.setNewClothe(clothe);
 
-		expect(mockUserFindById).toBeCalledWith('123');
-		expect(mockClotheCreate).toBeCalledWith(data);
+		expect(mockUserFindById).toBeCalledWith(userId);
+		expect(mockClotheCreate).toBeCalledWith(clothe);
 		expect(result).toEqual({
 			error: false,
 			message: 'Roupa cadastrada com sucesso',
+		});
+	});
+
+	it('should return an error if an error occurs in the Clothe.create', async () => {
+		mockUserFindById.mockResolvedValue({ id: userId });
+		mockClotheCreate.mockImplementationOnce(() => {
+			throw new Error('error');
+		});
+
+		const result = await clotheModels.setNewClothe(clothe);
+
+		expect(mockUserFindById).toBeCalledWith(userId);
+		expect(result).toEqual({
+			error: true,
+			message: `Erro ao cadastrar, dados insuficientes passados Error: error`,
+		});
+	});
+
+	it('should return an error if not existis userId', async () => {
+		mockUserFindById.mockResolvedValue(null);
+
+		const result = await clotheModels.setNewClothe(clothe);
+
+		expect(mockUserFindById).toBeCalledWith(userId);
+		expect(mockClotheCreate).not.toBeCalled();
+		expect(result).toEqual({
+			error: true,
+			message: 'Usuario não existe',
 		});
 	});
 });
@@ -64,7 +85,7 @@ describe('getAllClothes', () => {
 
 		const result = await clotheModels.getAllClothes(userId);
 
-		expect(mockClotheFindByUserId).toBeCalledWith({ userId: '123' });
+		expect(mockClotheFindByUserId).toBeCalledWith({ userId });
 		expect(result).toEqual({
 			error: false,
 			message: 'Roupas encontradas com sucesso',
@@ -77,7 +98,7 @@ describe('getAllClothes', () => {
 
 		const result = await clotheModels.getAllClothes(userId);
 
-		expect(mockClotheFindByUserId).toBeCalledWith({ userId: '123' });
+		expect(mockClotheFindByUserId).toBeCalledWith({ userId });
 		expect(result).toEqual({
 			error: true,
 			message: 'Nenhuma roupa desse usuario encontrada',
@@ -175,22 +196,3 @@ describe('updateCategory', () => {
 		expect(result).toEqual({ error: true, message: 'Nenhuma roupa encontrada' });
 	});
 });
-
-// async function updateCategory(clotheId: String, toUpdate: String) {
-// 	const clothe = await Clothe.findById(clotheId);
-
-// 	if (!clothe) {
-// 		return {
-// 			error: true,
-// 			message: 'Nenhuma roupa encontrada',
-// 		};
-// 	}
-
-// 	const newClothe = { category: toUpdate };
-// 	await clothe.updateOne(newClothe);
-// 	return {
-// 		error: false,
-// 		message: 'Categoria alterada com sucesso',
-// 		clothe: newClothe,
-// 	};
-// }
