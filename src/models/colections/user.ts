@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-const UserSchema = new Schema(
+export const UserSchema = new Schema(
 	{
 		name: {
 			type: String,
@@ -19,7 +19,7 @@ const UserSchema = new Schema(
 			require: true,
 		},
 	},
-	{ timestamps: true }
+	{ timestamps: true },
 );
 
 let User: mongoose.Model<
