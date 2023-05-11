@@ -191,7 +191,6 @@ export default function Home({ serverSession }: Props) {
 
 	function removeItemWorkbench(clotheId: string) {
 		const newWorkbench = workbench.filter((clothe) => clothe.id !== clotheId);
-		console.log(newWorkbench);
 		setworkbench(newWorkbench);
 	}
 

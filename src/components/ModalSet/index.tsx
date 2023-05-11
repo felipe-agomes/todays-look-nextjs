@@ -103,7 +103,6 @@ export default function ModalSet({
 									`/api/protected/user/${modal.set?.userId}/clothe/favoriteSet/${modal.set?.id}`,
 									{ update: true, method: 'PUT' }
 								)) as SetsProps;
-								console.log(data);
 								data && setFavorite(data.favorite);
 								setLoading(false);
 							}}
@@ -126,7 +125,6 @@ export default function ModalSet({
 							cursor={'pointer'}
 							boxSize={5}
 							onClick={() => {
-								console.log('aqui');
 								openOrCloseModal({
 									whichModal: 'changeCategoryModal',
 									operation: 'open',

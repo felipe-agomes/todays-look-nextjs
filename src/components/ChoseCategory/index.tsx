@@ -62,10 +62,6 @@ export default function ChoseCategory({
 		handleSetLoading(true);
 		const path =
 			clothesOrSets === 'clothes' ? 'updateCategory' : 'updateCategorySet';
-		console.log(`values: ${values}`);
-		console.log(`userId: ${userId}`);
-		console.log(`clotheId: ${clotheOrSetId}`);
-		console.log(`path: ${path}`);
 		const response = await fetcher(
 			`/api/protected/user/${userId}/clothe/${path}/${clotheOrSetId}`,
 			{
@@ -78,7 +74,6 @@ export default function ChoseCategory({
 				update: true,
 			},
 		);
-		console.log(response);
 		openOrCloseModal({ whichModal: 'clotheModal', operation: 'close' });
 		handleSetLoading(false);
 	}
