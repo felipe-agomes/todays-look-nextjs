@@ -62,17 +62,6 @@ const resultAllSets = [
 	},
 ];
 
-// {
-// 	createdAt: NativeDate;
-// 	updatedAt: NativeDate;
-// } & {
-// 	userId?: string | undefined;
-// 	sets?: ClotheSchemaProps[] | undefined;
-// } & {
-// 	id?: string | undefined;
-// 	_id?: string | undefined;
-// }
-
 jest.mock('./colections/set');
 jest.mock('@/services/connectDb');
 
@@ -135,40 +124,6 @@ describe('setModels.getAllSet', () => {
 		expect(result).toHaveProperty('message', 'Nenhum conjunto encontrado');
 	});
 });
-
-// async function getAllSet(userId: string) {
-// 	await connectDb();
-// 	const set = await Set.find({
-// 		userId,
-// 	});
-
-// 	if (!set) {
-// 		return {
-// 			error: true,
-// 			message: 'Nenhum conjunto encontrado',
-// 		};
-// 	}
-
-// 	const setObj = set.map((doc) => {
-// 		const obj = doc.toObject() as {
-// 			createdAt: NativeDate;
-// 			updatedAt: NativeDate;
-// 		} & {
-// 			userId?: string | undefined;
-// 			sets?: ClotheSchemaProps[] | undefined;
-// 		} & { id?: string; _id?: string };
-
-// 		obj.id = obj._id;
-// 		delete obj._id;
-// 		return obj;
-// 	});
-
-// 	return {
-// 		error: false,
-// 		message: 'Conjuntos buscados com sucesso',
-// 		set: setObj,
-// 	};
-// }
 
 // describe('setModels.deleteSet', () => {});
 // describe('setModels.toggleFavorite', () => {});
