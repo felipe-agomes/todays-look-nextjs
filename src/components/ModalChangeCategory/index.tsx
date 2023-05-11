@@ -7,6 +7,8 @@ import {
 } from '@/@types';
 import { CloseIcon } from '@chakra-ui/icons';
 import ChoseCategory from '../ChoseCategory';
+import { Spinner } from '@chakra-ui/react';
+import { useState } from 'react';
 
 type Props = {
 	categories: string[];
@@ -14,14 +16,14 @@ type Props = {
 	clothesOrSets: 'clothes' | 'sets';
 	fetcher: (
 		url: string,
-		options?: FetcherOptions
+		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
-		setId?: string | null
+		setId?: string | null,
 	) => void;
 };
 
@@ -32,8 +34,20 @@ export default function ModalChangeCategory({
 	openOrCloseModal,
 	fetcher,
 }: Props) {
+	const [loading, setLoading] = useState<boolean>(false);
+
+	function handleSetLoading(boolean: boolean) {
+		setLoading(boolean);
+	}
+
 	return (
 		<div className={Style.modalContainer}>
+			{loading && (
+				<Spinner
+					color={'cyan'}
+					className={Style.spinner}
+				/>
+			)}
 			<CloseIcon
 				onClick={() => {
 					openOrCloseModal({
@@ -47,6 +61,7 @@ export default function ModalChangeCategory({
 				top={'20px'}
 			/>
 			<ChoseCategory
+				handleSetLoading={handleSetLoading}
 				clothesOrSets={clothesOrSets}
 				fetcher={fetcher}
 				openOrCloseModal={openOrCloseModal}

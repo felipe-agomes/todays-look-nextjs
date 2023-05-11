@@ -34,3 +34,9 @@
 	height: 30px;
 	border-radius: 5px;
 }
+
+.spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}

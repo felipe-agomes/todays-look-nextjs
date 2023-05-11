@@ -19,14 +19,15 @@ type Props = {
 	clothesOrSets: 'clothes' | 'sets';
 	fetcher: (
 		url: string,
-		options?: FetcherOptions
+		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
-		clotheId?: string
+		clotheId?: string,
 	) => void;
+	handleSetLoading: (boolean: boolean) => void;
 };
 
 export default function ChoseCategory({
@@ -36,6 +37,7 @@ export default function ChoseCategory({
 	userId,
 	fetcher,
 	openOrCloseModal,
+	handleSetLoading,
 }: Props) {
 	const formikExistingCategory = useFormik({
 		initialValues: {
@@ -57,6 +59,7 @@ export default function ChoseCategory({
 		existingCategory?: String;
 		category?: String;
 	}) {
+		handleSetLoading(true);
 		const path =
 			clothesOrSets === 'clothes' ? 'updateCategory' : 'updateCategorySet';
 		console.log(`values: ${values}`);
@@ -73,10 +76,11 @@ export default function ChoseCategory({
 						: values.category,
 				}),
 				update: true,
-			}
+			},
 		);
 		console.log(response);
 		openOrCloseModal({ whichModal: 'clotheModal', operation: 'close' });
+		handleSetLoading(false);
 	}
 
 	return (
