@@ -37,7 +37,8 @@ type Props = {
 };
 
 export default function Home({ serverSession }: Props) {
-	const [currentPage, setCurrentPage] = useState<string>('Todos');
+	const [currentPageClothes, setCurrentPageClothes] = useState<string>('Todos');
+	const [currentPageSets, setCurrentPageSets] = useState<string>('Todos');
 	const [clothes, setClothes] = useState<ClothesProps[] | []>([]);
 	const [sets, setSets] = useState<SetsProps[] | []>([]);
 	const [workbench, setworkbench] = useState<ClothePosition[] | []>([]);
@@ -213,14 +214,14 @@ export default function Home({ serverSession }: Props) {
 									categoryes={true}
 									uniqueCategories={setsUniqueCategories}
 									openOrCloseModal={openOrCloseModal}
-									setCurrentPage={setCurrentPage}
+									setCurrentPage={setCurrentPageSets}
 								/>
 								<ContainerPage>
 									<GridSets
 										sets={
-											currentPage === 'Todos'
+											currentPageSets === 'Todos'
 												? filteredCategory('Todos', 'sets')
-												: filteredCategory(currentPage, 'sets')
+												: filteredCategory(currentPageSets, 'sets')
 										}
 										uniqueCategories={setsUniqueCategories}
 										fetcher={fetcher}
@@ -234,15 +235,15 @@ export default function Home({ serverSession }: Props) {
 									title='Roupas'
 									categoryes={true}
 									openOrCloseModal={openOrCloseModal}
-									setCurrentPage={setCurrentPage}
+									setCurrentPage={setCurrentPageClothes}
 									uniqueCategories={clotheUniqueCaterories}
 								/>
 								<ContainerPage>
 									<GridClothes
 										clothes={
-											currentPage === 'Todos'
+											currentPageClothes === 'Todos'
 												? filteredCategory('Todos', 'clothe')
-												: filteredCategory(currentPage, 'clothe')
+												: filteredCategory(currentPageClothes, 'clothe')
 										}
 										openOrCloseModal={openOrCloseModal}
 										addToWorkbench={addToWorkbench}
