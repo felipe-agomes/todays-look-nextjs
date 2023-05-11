@@ -1,9 +1,13 @@
 import { ClothePosition } from '@/@types';
 import { setModels } from './setModels';
 import Set from './colections/set';
+import { existsSync } from 'fs';
+import getAllSet from '@/pages/api/protected/user/[userId]/clothe/allSets';
+import connectDb from '@/services/connectDb';
 
 const ExistingUserId = 'some_user_id';
 const resultSet = {
+	id: 'some_set_id',
 	category: 'category',
 	sets: [
 		{
@@ -18,9 +22,74 @@ const resultSet = {
 		} as ClothePosition,
 	],
 };
+
+const resultAllSets = [
+	{
+		id: 'some_set_id',
+		_id: 'some_set__id',
+		category: 'category',
+		sets: [
+			{
+				favorite: false,
+				image: 'image',
+				key: 'key',
+				userId: ExistingUserId,
+				x: 0,
+				y: 0,
+				category: 'category',
+				id: 'some_clothe_id',
+			} as ClothePosition,
+		],
+		toObject: jest.fn().mockResolvedValue(resultSet),
+	},
+	{
+		id: 'some_set_id',
+		_id: 'some_set__id',
+		category: 'category',
+		sets: [
+			{
+				favorite: false,
+				image: 'image',
+				key: 'key',
+				userId: ExistingUserId,
+				x: 0,
+				y: 0,
+				category: 'category',
+				id: 'some_clothe_id',
+			} as ClothePosition,
+		],
+		toObject: jest.fn().mockResolvedValue(resultSet),
+	},
+];
+
+// {
+// 	createdAt: NativeDate;
+// 	updatedAt: NativeDate;
+// } & {
+// 	userId?: string | undefined;
+// 	sets?: ClotheSchemaProps[] | undefined;
+// } & {
+// 	id?: string | undefined;
+// 	_id?: string | undefined;
+// }
+
+jest.mock('./colections/set');
+jest.mock('@/services/connectDb');
+
+const setCreateMock = Set.create as jest.Mock;
+const setFindMock = Set.find as jest.Mock;
+
 describe('setModels.createSet', () => {
-	it('should return a sucess message with new user if all data is passed correctly ', async () => {
-		Set.create = jest.fn().mockResolvedValue(undefined);
+	afterEach(() => {
+		(connectDb as jest.Mock).mockResolvedValue(undefined);
+	});
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	it('should return a sucess message with new set if all data is passed correctly', async () => {
+		setCreateMock.mockResolvedValue(undefined);
 
 		const result = await setModels.createSet(ExistingUserId, resultSet);
 
@@ -31,9 +100,7 @@ describe('setModels.createSet', () => {
 	});
 
 	it('should return an error message if the set creation failed', async () => {
-		Set.create = jest
-			.fn()
-			.mockRejectedValue(new Error('Erro ao cadastrar usuário'));
+		setCreateMock.mockRejectedValue(new Error('Erro ao cadastrar usuário'));
 
 		await expect(
 			setModels.createSet(ExistingUserId, resultSet),
@@ -41,24 +108,68 @@ describe('setModels.createSet', () => {
 	});
 });
 
-// async function createSet(
-// 	userId: string,
-// 	data: { sets: ClothesProps[]; category: string }
-// ) {
+describe('setModels.getAllSet', () => {
+	afterEach(() => {
+		(connectDb as jest.Mock).mockResolvedValue(undefined);
+	});
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	it('should return a sucess message with all sets if all data is passed correctly', async () => {
+		setFindMock.mockResolvedValue(resultAllSets);
+
+		const result = await setModels.getAllSet(ExistingUserId);
+
+		expect(result).toHaveProperty('error', false);
+		expect(result).toHaveProperty('message', 'Conjuntos buscados com sucesso');
+	});
+
+	it('should return a error message when no set is found', async () => {
+		setFindMock.mockResolvedValue(null);
+
+		const result = await setModels.getAllSet(ExistingUserId);
+
+		expect(result).toHaveProperty('error', true);
+		expect(result).toHaveProperty('message', 'Nenhum conjunto encontrado');
+	});
+});
+
+// async function getAllSet(userId: string) {
 // 	await connectDb();
-// 	try {
-// 		await Set.create({ userId, sets: data.sets, category: data.category });
+// 	const set = await Set.find({
+// 		userId,
+// 	});
+
+// 	if (!set) {
 // 		return {
-// 			error: false,
-// 			message: 'Conjunto criado com sucesso',
-// 			set: { userId, data },
+// 			error: true,
+// 			message: 'Nenhum conjunto encontrado',
 // 		};
-// 	} catch (error) {
-// 		throw new Error(`Error: ${error}`);
 // 	}
+
+// 	const setObj = set.map((doc) => {
+// 		const obj = doc.toObject() as {
+// 			createdAt: NativeDate;
+// 			updatedAt: NativeDate;
+// 		} & {
+// 			userId?: string | undefined;
+// 			sets?: ClotheSchemaProps[] | undefined;
+// 		} & { id?: string; _id?: string };
+
+// 		obj.id = obj._id;
+// 		delete obj._id;
+// 		return obj;
+// 	});
+
+// 	return {
+// 		error: false,
+// 		message: 'Conjuntos buscados com sucesso',
+// 		set: setObj,
+// 	};
 // }
 
-// describe('setModels.getAllSet', () => {});
 // describe('setModels.deleteSet', () => {});
 // describe('setModels.toggleFavorite', () => {});
 // describe('setModels.updateCategorySet', () => {});
