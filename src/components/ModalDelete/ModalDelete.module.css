@@ -22,3 +22,9 @@
 
 	margin-top: 30px;
 }
+
+.spinner {
+	position: absolute;
+	top: calc(50% - 0.75rem);
+	left: calc(50% - 0.75rem);
+}

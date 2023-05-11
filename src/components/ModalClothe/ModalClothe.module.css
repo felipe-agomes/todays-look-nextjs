@@ -37,10 +37,10 @@
 	justify-content: center;
 }
 
-.modalContainer .spinner {
+.spinner {
 	position: absolute;
-	top: 50%;
-	left: 50%;
+	top: calc(50% - 0.75rem);
+	left: calc(50% - 0.75rem);
 }
 
 .rowBox {
