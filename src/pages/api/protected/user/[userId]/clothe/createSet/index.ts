@@ -1,10 +1,10 @@
-import { ClothesProps } from '@/@types';
+import { ClothePosition } from '@/@types';
 import { setModels } from '@/models/setModels';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function createSet(
 	req: NextApiRequest,
-	res: NextApiResponse
+	res: NextApiResponse,
 ) {
 	const session = true;
 
@@ -12,7 +12,7 @@ export default async function createSet(
 		switch (req.method) {
 			case 'POST':
 				const { userId } = req.query;
-				const data = req.body as { sets: ClothesProps[]; category: string };
+				const data = req.body as { sets: ClothePosition[]; category: string };
 				if (!(userId && data && !Array.isArray(userId))) {
 					res.status(400).json({
 						error: true,

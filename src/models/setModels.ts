@@ -1,10 +1,10 @@
-import { ClotheSchemaProps, ClothesProps, SetsProps } from '@/@types';
+import { ClothePosition, ClotheSchemaProps } from '@/@types';
 import Set from './colections/set';
 import connectDb from '@/services/connectDb';
 
 async function createSet(
 	userId: string,
-	data: { sets: ClothesProps[]; category: string }
+	data: { sets: ClothePosition[]; category: string },
 ) {
 	await connectDb();
 	try {

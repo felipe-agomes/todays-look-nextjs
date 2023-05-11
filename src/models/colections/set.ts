@@ -20,10 +20,6 @@ const SetSchema = new Schema(
 		sets: {
 			type: [
 				{
-					ClotheSchemacategory: {
-						type: String,
-						require: true,
-					},
 					favorite: {
 						type: Boolean,
 						require: true,

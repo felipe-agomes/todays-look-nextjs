@@ -64,17 +64,7 @@ export type SetsProps = {
 	id: string;
 	category: string;
 	favorite: boolean;
-	sets: [
-		{
-			ClotheSchemacategory: string;
-			favorite: boolean;
-			key: string;
-			image: string;
-			userId: string;
-			x: number;
-			y: number;
-		}
-	];
+	sets: ClothePosition[];
 };
 
 export type UserProps = {
