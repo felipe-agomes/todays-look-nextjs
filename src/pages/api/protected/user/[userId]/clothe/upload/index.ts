@@ -1,13 +1,13 @@
 import { ClotheData, ExtendedRequest } from '@/@types';
 import { clotheModels } from '@/models/clotheModels';
-import { uploadWithBackground } from '@/utils/middleware';
+import { uploadImage } from '@/utils/middleware';
 import { Request, Response } from 'express';
 import { PageConfig } from 'next';
 import { createRouter, expressWrapper } from 'next-connect';
 
 const router = createRouter<Request, Response>();
 
-router.use(expressWrapper(uploadWithBackground.single('image')));
+router.use(expressWrapper(uploadImage.single('image')));
 
 router.post(async (req: ExtendedRequest, res) => {
 	const userId = req.query?.userId;

@@ -1,7 +1,7 @@
 import { s3Upload } from '@/config/multerS3';
 import multer from 'multer';
 
-export const uploadWithBackground = multer({
+export const uploadImage = multer({
 	storage: s3Upload,
 	limits: { fileSize: 24_000_000 },
 	fileFilter(req, file, callback) {
