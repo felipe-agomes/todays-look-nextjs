@@ -50,7 +50,7 @@ const SetSchema = new Schema(
 			],
 		},
 	},
-	{ timestamps: true }
+	{ timestamps: true },
 );
 
 type SetType = {
@@ -60,7 +60,7 @@ type SetType = {
 	userId?: mongoose.Types.ObjectId;
 	favorite?: boolean;
 	category?: string;
-	sets?: ClotheSchemaProps[];
+	sets?: ClotheSchemaProps & { x: number; y: number }[];
 };
 
 let Set: mongoose.Model<SetType>;
