@@ -25,7 +25,7 @@ async function getAllSet(userId: string) {
 		userId,
 	});
 
-	if (!set) {
+	if (!set || set.length === 0) {
 		return {
 			error: true,
 			message: 'Nenhum conjunto encontrado',
