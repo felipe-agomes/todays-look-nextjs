@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import Style from './GridClothes.module.css';
 import {
+	ClothePosition,
 	ClothesProps,
 	FetcherOptions,
 	OpenOrCloseModalProps,
@@ -11,7 +12,7 @@ import ModalClothe from '../ModalClothe';
 
 type Props = {
 	clothes?: ClothesProps[];
-	workbench: [] | ClothesProps[];
+	workbench: [] | ClothePosition[];
 	uniqueCategories: string[];
 	modal: {
 		changeCategoryModal: boolean;
@@ -26,11 +27,11 @@ type Props = {
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
-		setId?: string | null
+		setId?: string | null,
 	) => void;
 	fetcher: (
 		url: string,
-		options?: FetcherOptions | undefined
+		options?: FetcherOptions | undefined,
 	) => Promise<
 		ClothesProps | ClothesProps[] | SetsProps | SetsProps[] | undefined
 	>;
@@ -54,7 +55,7 @@ export default function GridClothes({
 					workbench={workbench}
 					addToWorkbench={addToWorkbench}
 					categories={uniqueCategories.filter(
-						(category) => category !== 'Todos' && category !== 'Favoritos'
+						(category) => category !== 'Todos' && category !== 'Favoritos',
 					)}
 					openOrCloseModal={openOrCloseModal}
 					fetcher={fetcher}
@@ -75,7 +76,7 @@ export default function GridClothes({
 									onClick={() => {
 										openOrCloseModal(
 											{ whichModal: 'clotheModal', operation: 'open' },
-											clothe.id
+											clothe.id,
 										);
 									}}
 								/>
