@@ -9,6 +9,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { Avatar } from '@chakra-ui/react';
 
 import {
+	ClothePosition,
 	ClothesProps,
 	ExtendedSession,
 	FetcherOptions,
@@ -39,7 +40,7 @@ export default function Home({ serverSession }: Props) {
 	const [currentPage, setCurrentPage] = useState<string>('Todos');
 	const [clothes, setClothes] = useState<ClothesProps[] | []>([]);
 	const [sets, setSets] = useState<SetsProps[] | []>([]);
-	const [workbench, setworkbench] = useState<ClothesProps[] | []>([]);
+	const [workbench, setworkbench] = useState<ClothePosition[] | []>([]);
 	const [modal, setModal] = useState<ModalState>({
 		changeCategoryModal: false,
 		setModal: false,
@@ -178,7 +179,7 @@ export default function Home({ serverSession }: Props) {
 
 		const newWorkbench = [
 			...workbench,
-			clothes.filter((clothe) => clothe.id === clotheId)[0],
+			{ ...clothes.filter((clothe) => clothe.id === clotheId)[0], x: 0, y: 0 },
 		];
 		setworkbench(newWorkbench);
 	}
@@ -189,6 +190,7 @@ export default function Home({ serverSession }: Props) {
 
 	function removeItemWorkbench(clotheId: string) {
 		const newWorkbench = workbench.filter((clothe) => clothe.id !== clotheId);
+		console.log(newWorkbench);
 		setworkbench(newWorkbench);
 	}
 

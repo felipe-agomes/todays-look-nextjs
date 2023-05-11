@@ -1,4 +1,5 @@
 import {
+	ClothePosition,
 	ClothesProps,
 	FetcherOptions,
 	ModalState,
@@ -22,18 +23,18 @@ import ModalBase from '../ModalBase';
 type Props = {
 	modal: ModalState;
 	categories: string[] | [];
-	workbench: ClothesProps[] | [];
+	workbench: ClothePosition[] | [];
 	removeItemWorkbench: (clotheId: string) => void;
 	fetcher: (
 		url: string,
-		options?: FetcherOptions
+		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
-		setId?: string | null
+		setId?: string | null,
 	) => void;
 	addToWorkbench: (clotheId: string) => void;
 };
@@ -75,7 +76,7 @@ export default function ModalClothe({
 							deleteClothe={async () => {
 								await fetcher(
 									`/api/protected/user/${clothe.userId}/clothe/delete/${clothe.id}`,
-									{ method: 'DELETE', update: true }
+									{ method: 'DELETE', update: true },
 								);
 								openOrCloseModal({ whichModal: 'clotheModal', operation: 'close' });
 							}}
@@ -103,7 +104,7 @@ export default function ModalClothe({
 													setLoading(true);
 													const data = (await fetcher(
 														`/api/protected/user/${clothe.userId}/clothe/favorite/${clothe.id}`,
-														{ method: 'PUT', update: true }
+														{ method: 'PUT', update: true },
 													)) as ClothesProps;
 													data && setFavorite(data.favorite);
 													setLoading(false);
@@ -151,7 +152,9 @@ export default function ModalClothe({
 									<div className={Style.rowBox}>
 										<p>Adicionar ao conjunto</p>
 										<span>
-											{workbench.find((benchClothe) => benchClothe.id === clothe.id) ? (
+											{workbench.find(
+												(workbenchClothe) => workbenchClothe.id === clothe.id,
+											) ? (
 												<SmallCloseIcon
 													onClick={() => removeItemWorkbench(clothe.id!)}
 													color={'red.500'}

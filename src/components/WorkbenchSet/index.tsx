@@ -12,10 +12,10 @@ import { validateNewCategory } from '@/utils/validate';
 import Style from './WorkbenchSet.module.css';
 
 type Props = {
-	workbench: ClothesProps[] | [];
+	workbench: ClothePosition[] | [];
 	fetcher: (
 		url: string,
-		options?: FetcherOptions
+		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
@@ -28,7 +28,7 @@ export default function WorkbenchSet({
 	resetWorkbench,
 }: Props) {
 	const [clothesPosition, setClothesPosition] = useState<ClothePosition[] | []>(
-		[]
+		[],
 	);
 	const formik = useFormik({
 		initialValues: {
@@ -39,10 +39,7 @@ export default function WorkbenchSet({
 	});
 
 	useEffect(() => {
-		const initialClothesPosition = workbench.map((clothe) => {
-			return { ...clothe, x: 0, y: 0 };
-		});
-		setClothesPosition(initialClothesPosition);
+		setClothesPosition(workbench);
 	}, [workbench]);
 
 	function updateClothePosition(id: string, y: number, x: number) {
