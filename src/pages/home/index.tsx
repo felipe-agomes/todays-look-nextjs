@@ -60,10 +60,10 @@ export default function Home({ serverSession }: Props) {
 
 	async function updateClothesAndSets() {
 		const dataClothes = (await fetcher(
-			`/api/protected/user/${serverSession.user.id}/clothe/all`
+			`/api/protected/user/${serverSession.user.id}/clothe/all`,
 		)) as ClothesProps[] | ClothesProps;
 		const dataSets = (await fetcher(
-			`/api/protected/user/${serverSession.user.id}/clothe/allSets`
+			`/api/protected/user/${serverSession.user.id}/clothe/allSets`,
 		)) as SetsProps[] | SetsProps;
 
 		if (Array.isArray(dataClothes)) {
@@ -80,14 +80,14 @@ export default function Home({ serverSession }: Props) {
 
 	function filteredCategory<ClothesOrSetsProps>(
 		category: string,
-		clothesOrSets: 'clothe' | 'sets'
+		clothesOrSets: 'clothe' | 'sets',
 	): ClothesOrSetsProps[] {
 		if (clothesOrSets === 'clothe') {
 			if (category === 'Favoritos') {
 				return clothes.filter((clothe) => clothe.favorite) as ClothesOrSetsProps[];
 			} else {
 				return clothes.filter(
-					(clothe) => clothe.category === category || category === 'Todos'
+					(clothe) => clothe.category === category || category === 'Todos',
 				) as ClothesOrSetsProps[];
 			}
 		} else {
@@ -95,7 +95,7 @@ export default function Home({ serverSession }: Props) {
 				return sets.filter((set) => set.favorite) as ClothesOrSetsProps[];
 			} else {
 				return sets.filter(
-					(set) => set.category === category || category === 'Todos'
+					(set) => set.category === category || category === 'Todos',
 				) as ClothesOrSetsProps[];
 			}
 		}
@@ -103,7 +103,7 @@ export default function Home({ serverSession }: Props) {
 
 	async function fetcher(
 		url: string,
-		options?: FetcherOptions
+		options?: FetcherOptions,
 	): Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	> {
@@ -115,7 +115,7 @@ export default function Home({ serverSession }: Props) {
 						body: options.body,
 						headers: { 'Content-Type': 'application/json' },
 				  }
-				: undefined
+				: undefined,
 		);
 
 		const data: any = await response.json();
@@ -138,7 +138,7 @@ export default function Home({ serverSession }: Props) {
 	function openOrCloseModal(
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId: string | null = null,
-		setId: string | null = null
+		setId: string | null = null,
 	) {
 		const resetModal: ModalState = {
 			changeCategoryModal: false,
@@ -195,6 +195,7 @@ export default function Home({ serverSession }: Props) {
 	return (
 		<>
 			<Head>
+				<title>{"Today's Look"}</title>
 				<link
 					rel='icon'
 					href='/favIcon.ico'
