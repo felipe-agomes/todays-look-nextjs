@@ -10,6 +10,7 @@ import {
 } from '@/@types';
 import ModalClothe from '../ModalClothe';
 import useAppContext from '@/hooks/useAppContext';
+import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 
 type Props = {
 	uniqueCategories: string[];
@@ -45,25 +46,8 @@ export default function GridClothes({
 	openOrCloseModal,
 }: Props) {
 	const { clothes, currentCategoryClothes } = useAppContext();
-
-	function filterClotheByCategory(
-		currentCategory: string,
-		clothes: ClothesProps[],
-	): ClothesProps[] {
-		const mapFindCategory = [
-			{ test: 'Todos', resolve: clothes },
-			{ test: 'Favoritos', resolve: clothes.filter((clothe) => clothe.favorite) },
-		];
-		return (
-			mapFindCategory.find(({ test }) => test === currentCategory)?.resolve ??
-			clothes.filter((clothe) => clothe.category === currentCategory)
-		);
-	}
-
-	const filteredClotheByCategory: ClothesProps[] = filterClotheByCategory(
-		currentCategoryClothes,
-		clothes,
-	);
+	const filteredClotheByCategory: ClothesProps[] =
+		filterClotheOrSetByCategory<ClothesProps>(currentCategoryClothes, clothes);
 
 	return (
 		<>

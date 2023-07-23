@@ -45,12 +45,10 @@ export default function Home({ serverSession }: Props) {
 		setSets,
 		workbench,
 		setWorkbench,
-		currentCategoryClothes,
 		currentCategorySets,
 		setCurrentCategoryClothes,
 		setCurrentCategorySets,
 	} = useAppContext();
-
 
 	const [modal, setModal] = useState<ModalState>({
 		changeCategoryModal: false,
@@ -227,11 +225,6 @@ export default function Home({ serverSession }: Props) {
 								/>
 								<ContainerPage>
 									<GridSets
-										sets={
-											currentCategorySets === 'Todos'
-												? filteredCategory('Todos', 'sets')
-												: filteredCategory(currentCategorySets, 'sets')
-										}
 										uniqueCategories={setsUniqueCategories}
 										fetcher={fetcher}
 										modal={modal}

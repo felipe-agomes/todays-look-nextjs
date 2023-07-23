@@ -8,37 +8,43 @@ import {
 import Style from './GridSets.module.css';
 import ModalSet from '../ModalSet';
 import SetImages from '../SetImages';
+import useAppContext from '@/hooks/useAppContext';
+import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 
 type Props = {
-	sets: SetsProps[];
 	modal: ModalState;
 	uniqueCategories: string[];
 	fetcher: (
 		url: string,
-		options?: FetcherOptions
+		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
-		setId?: string | null
+		setId?: string | null,
 	) => void;
 };
 
 export default function GridSets({
-	sets,
 	modal,
 	uniqueCategories,
 	openOrCloseModal,
 	fetcher,
 }: Props) {
+	const { sets, currentCategorySets } = useAppContext();
+	const filteredSetsByCategory = filterClotheOrSetByCategory<SetsProps>(
+		currentCategorySets,
+		sets,
+	);
+
 	return (
 		<ul className={Style.boxList}>
 			{modal.setModal && (
 				<ModalSet
 					categories={uniqueCategories.filter(
-						(category) => category !== 'Todos' && category !== 'Favoritos'
+						(category) => category !== 'Todos' && category !== 'Favoritos',
 					)}
 					fetcher={fetcher}
 					userId={modal.set?.userId!}
@@ -47,7 +53,7 @@ export default function GridSets({
 					openOrCloseModal={openOrCloseModal}
 				/>
 			)}
-			{sets.map((set) => {
+			{filteredSetsByCategory.map((set) => {
 				return (
 					<li
 						style={{
@@ -63,7 +69,7 @@ export default function GridSets({
 							openOrCloseModal(
 								{ whichModal: 'setModal', operation: 'open' },
 								null,
-								set.id
+								set.id,
 							);
 						}}
 					>
