@@ -45,7 +45,6 @@ export default function Home({ serverSession }: Props) {
 		setSets,
 		workbench,
 		setWorkbench,
-		currentCategorySets,
 		setCurrentCategoryClothes,
 		setCurrentCategorySets,
 	} = useAppContext();
@@ -87,29 +86,6 @@ export default function Home({ serverSession }: Props) {
 	useEffect(() => {
 		updateClothesAndSets();
 	}, [serverSession]);
-
-	function filteredCategory<ClothesOrSetsProps>(
-		category: string,
-		clothesOrSets: 'clothe' | 'sets',
-	): ClothesOrSetsProps[] {
-		if (clothesOrSets === 'clothe') {
-			if (category === 'Favoritos') {
-				return clothes.filter((clothe) => clothe.favorite) as ClothesOrSetsProps[];
-			} else {
-				return clothes.filter(
-					(clothe) => clothe.category === category || category === 'Todos',
-				) as ClothesOrSetsProps[];
-			}
-		} else {
-			if (category === 'Favoritos') {
-				return sets.filter((set) => set.favorite) as ClothesOrSetsProps[];
-			} else {
-				return sets.filter(
-					(set) => set.category === category || category === 'Todos',
-				) as ClothesOrSetsProps[];
-			}
-		}
-	}
 
 	async function fetcher(
 		url: string,
@@ -218,10 +194,7 @@ export default function Home({ serverSession }: Props) {
 							<TabPanel className={style.page}>
 								<Header
 									title='Conjuntos'
-									categoryes={true}
-									uniqueCategories={setsUniqueCategories}
 									openOrCloseModal={openOrCloseModal}
-									setCurrentPage={setCurrentCategorySets}
 								/>
 								<ContainerPage>
 									<GridSets
@@ -235,10 +208,8 @@ export default function Home({ serverSession }: Props) {
 							<TabPanel className={style.page}>
 								<Header
 									title='Roupas'
-									categoryes={true}
+									isClothe
 									openOrCloseModal={openOrCloseModal}
-									setCurrentPage={setCurrentCategoryClothes}
-									uniqueCategories={clotheUniqueCaterories}
 								/>
 								<ContainerPage>
 									<GridClothes

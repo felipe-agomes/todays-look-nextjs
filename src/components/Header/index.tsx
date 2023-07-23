@@ -1,31 +1,37 @@
-import { useState } from 'react';
-import { OpenOrCloseModalProps } from '@/@types';
+import { ClothesProps, OpenOrCloseModalProps, SetsProps } from '@/@types';
 import Style from './Header.module.css';
+import useAppContext from '@/hooks/useAppContext';
+import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
 
 type Props = {
-	uniqueCategories?: string[];
-	categoryes?: boolean;
 	title: string;
-	setCurrentPage?: (category: string) => void;
+	isClothe?: boolean;
 	openOrCloseModal?: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
-		setId?: string | null
+		setId?: string | null,
 	) => void;
 };
 
 export default function Header({
-	uniqueCategories,
 	title,
-	categoryes = false,
-	setCurrentPage,
+	isClothe,
 	openOrCloseModal,
 }: Props) {
-	const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
-
-	function handleClickCategory(category: string) {
-		if (setCurrentPage) setCurrentPage(category);
-	}
+	const {
+		sets,
+		setCurrentCategorySets,
+		currentCategorySets,
+		clothes,
+		setCurrentCategoryClothes,
+		currentCategoryClothes,
+	} = useAppContext();
+	const categories = isClothe
+		? categoriesClotheOrSet<ClothesProps>(clothes)
+		: categoriesClotheOrSet<SetsProps>(sets);
+	const currentCategory = isClothe
+		? { category: currentCategoryClothes, setCategory: setCurrentCategoryClothes }
+		: { category: currentCategorySets, setCategory: setCurrentCategorySets };
 
 	return (
 		<>
@@ -33,33 +39,31 @@ export default function Header({
 				<div className={Style.topHeader}>
 					<h1>{title}</h1>
 				</div>
-				{categoryes && (
-					<nav className={Style.navegation}>
-						<ul className={Style.categories}>
-							{uniqueCategories &&
-								uniqueCategories.map((category) => {
-									return (
-										<li
-											key={category}
-											style={{ cursor: 'pointer' }}
-											className={selectedCategory === category ? Style.categoryActive : ''}
-											onClick={() => {
-												setSelectedCategory(category);
-												handleClickCategory(category);
-												if (openOrCloseModal)
-													openOrCloseModal({
-														whichModal: 'clotheModal',
-														operation: 'close',
-													});
-											}}
-										>
-											{category}
-										</li>
-									);
-								})}
-						</ul>
-					</nav>
-				)}
+				<nav className={Style.navegation}>
+					<ul className={Style.categories}>
+						{categories.map((category) => {
+							return (
+								<li
+									key={category}
+									style={{ cursor: 'pointer' }}
+									className={
+										currentCategory.category === category ? Style.categoryActive : ''
+									}
+									onClick={() => {
+										currentCategory.setCategory(category);
+										if (openOrCloseModal)
+											openOrCloseModal({
+												whichModal: 'clotheModal',
+												operation: 'close',
+											});
+									}}
+								>
+									{category}
+								</li>
+							);
+						})}
+					</ul>
+				</nav>
 			</header>
 		</>
 	);
