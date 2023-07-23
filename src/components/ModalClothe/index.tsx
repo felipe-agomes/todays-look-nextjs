@@ -19,11 +19,11 @@ import { useEffect, useState } from 'react';
 import ModalDelete from '../ModalDelete';
 import ModalChangeCategory from '../ModalChangeCategory';
 import ModalBase from '../ModalBase';
+import useAppContext from '@/hooks/useAppContext';
 
 type Props = {
 	modal: ModalState;
 	categories: string[] | [];
-	workbench: ClothePosition[] | [];
 	removeItemWorkbench: (clotheId: string) => void;
 	fetcher: (
 		url: string,
@@ -42,12 +42,12 @@ type Props = {
 export default function ModalClothe({
 	categories,
 	modal,
-	workbench,
 	openOrCloseModal,
 	fetcher,
 	addToWorkbench,
 	removeItemWorkbench,
 }: Props) {
+	const { workbench } = useAppContext();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [favorite, setFavorite] = useState<boolean>(false);
 

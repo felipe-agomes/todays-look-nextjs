@@ -9,10 +9,9 @@ import {
 	SetsProps,
 } from '@/@types';
 import ModalClothe from '../ModalClothe';
+import useAppContext from '@/hooks/useAppContext';
 
 type Props = {
-	clothes?: ClothesProps[];
-	workbench: [] | ClothePosition[];
 	uniqueCategories: string[];
 	modal: {
 		changeCategoryModal: boolean;
@@ -38,8 +37,6 @@ type Props = {
 };
 
 export default function GridClothes({
-	clothes,
-	workbench,
 	modal,
 	uniqueCategories,
 	fetcher,
@@ -47,12 +44,32 @@ export default function GridClothes({
 	removeItemWorkbench,
 	openOrCloseModal,
 }: Props) {
+	const { clothes, currentCategoryClothes } = useAppContext();
+
+	function filterClotheByCategory(
+		currentCategory: string,
+		clothes: ClothesProps[],
+	): ClothesProps[] {
+		const mapFindCategory = [
+			{ test: 'Todos', resolve: clothes },
+			{ test: 'Favoritos', resolve: clothes.filter((clothe) => clothe.favorite) },
+		];
+		return (
+			mapFindCategory.find(({ test }) => test === currentCategory)?.resolve ??
+			clothes.filter((clothe) => clothe.category === currentCategory)
+		);
+	}
+
+	const filteredClotheByCategory: ClothesProps[] = filterClotheByCategory(
+		currentCategoryClothes,
+		clothes,
+	);
+
 	return (
 		<>
 			{modal.clotheModal && (
 				<ModalClothe
 					removeItemWorkbench={removeItemWorkbench}
-					workbench={workbench}
 					addToWorkbench={addToWorkbench}
 					categories={uniqueCategories.filter(
 						(category) => category !== 'Todos' && category !== 'Favoritos',
@@ -63,8 +80,8 @@ export default function GridClothes({
 				/>
 			)}
 			<ul className={Style.boxList}>
-				{clothes &&
-					clothes.map((clothe) => {
+				{filteredClotheByCategory &&
+					filteredClotheByCategory.map((clothe) => {
 						return (
 							<li
 								className={Style.list}

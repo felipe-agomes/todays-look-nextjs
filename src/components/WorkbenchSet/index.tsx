@@ -10,9 +10,9 @@ import { Button } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { validateNewCategory } from '@/utils/validate';
 import Style from './WorkbenchSet.module.css';
+import useAppContext from '@/hooks/useAppContext';
 
 type Props = {
-	workbench: ClothePosition[] | [];
 	fetcher: (
 		url: string,
 		options?: FetcherOptions,
@@ -22,11 +22,8 @@ type Props = {
 	resetWorkbench: () => void;
 };
 
-export default function WorkbenchSet({
-	workbench,
-	fetcher,
-	resetWorkbench,
-}: Props) {
+export default function WorkbenchSet({ fetcher, resetWorkbench }: Props) {
+	const { workbench } = useAppContext();
 	const [clothesPosition, setClothesPosition] = useState<ClothePosition[] | []>(
 		[],
 	);

@@ -38,10 +38,20 @@ type Props = {
 };
 
 export default function Home({ serverSession }: Props) {
-	const { clothes, setClothes, sets, setSets, workbench, setWorkbench } =
-		useAppContext();
-	const [currentPageClothes, setCurrentPageClothes] = useState<string>('Todos');
-	const [currentPageSets, setCurrentPageSets] = useState<string>('Todos');
+	const {
+		clothes,
+		setClothes,
+		sets,
+		setSets,
+		workbench,
+		setWorkbench,
+		currentCategoryClothes,
+		currentCategorySets,
+		setCurrentCategoryClothes,
+		setCurrentCategorySets,
+	} = useAppContext();
+
+
 	const [modal, setModal] = useState<ModalState>({
 		changeCategoryModal: false,
 		setModal: false,
@@ -213,14 +223,14 @@ export default function Home({ serverSession }: Props) {
 									categoryes={true}
 									uniqueCategories={setsUniqueCategories}
 									openOrCloseModal={openOrCloseModal}
-									setCurrentPage={setCurrentPageSets}
+									setCurrentPage={setCurrentCategorySets}
 								/>
 								<ContainerPage>
 									<GridSets
 										sets={
-											currentPageSets === 'Todos'
+											currentCategorySets === 'Todos'
 												? filteredCategory('Todos', 'sets')
-												: filteredCategory(currentPageSets, 'sets')
+												: filteredCategory(currentCategorySets, 'sets')
 										}
 										uniqueCategories={setsUniqueCategories}
 										fetcher={fetcher}
@@ -234,23 +244,17 @@ export default function Home({ serverSession }: Props) {
 									title='Roupas'
 									categoryes={true}
 									openOrCloseModal={openOrCloseModal}
-									setCurrentPage={setCurrentPageClothes}
+									setCurrentPage={setCurrentCategoryClothes}
 									uniqueCategories={clotheUniqueCaterories}
 								/>
 								<ContainerPage>
 									<GridClothes
-										clothes={
-											currentPageClothes === 'Todos'
-												? filteredCategory('Todos', 'clothe')
-												: filteredCategory(currentPageClothes, 'clothe')
-										}
 										openOrCloseModal={openOrCloseModal}
 										addToWorkbench={addToWorkbench}
 										fetcher={fetcher}
 										modal={modal}
 										removeItemWorkbench={removeItemWorkbench}
 										uniqueCategories={clotheUniqueCaterories}
-										workbench={workbench}
 									/>
 								</ContainerPage>
 							</TabPanel>
@@ -269,7 +273,6 @@ export default function Home({ serverSession }: Props) {
 									<WorkbenchSet
 										resetWorkbench={resetWorkbench}
 										fetcher={fetcher}
-										workbench={workbench}
 									/>
 								</ContainerPage>
 							</TabPanel>

@@ -8,6 +8,10 @@ type AppContextType = {
 	setClothes: (newValue: ClothesProps[] | []) => void;
 	sets: SetsProps[] | [];
 	setSets: (newValue: SetsProps[] | []) => void;
+	currentCategoryClothes: string;
+	setCurrentCategoryClothes: (newValue: string) => void;
+	currentCategorySets: string;
+	setCurrentCategorySets: (newValue: string) => void;
 };
 
 export const AppContext = createContext<AppContextType>({
@@ -17,6 +21,10 @@ export const AppContext = createContext<AppContextType>({
 	setSets() {},
 	workbench: [],
 	setWorkbench() {},
+	currentCategoryClothes: 'Todos',
+	setCurrentCategoryClothes() {},
+	currentCategorySets: 'Todos',
+	setCurrentCategorySets() {},
 });
 
 export default function ProviderAppContext({
@@ -27,10 +35,23 @@ export default function ProviderAppContext({
 	const [clothes, setClothes] = useState<ClothesProps[] | []>([]);
 	const [workbench, setWorkbench] = useState<ClothePosition[] | []>([]);
 	const [sets, setSets] = useState<SetsProps[] | []>([]);
+	const [currentCategoryClothes, setCurrentCategoryClothes] = useState('Todos');
+	const [currentCategorySets, setCurrentCategorySets] = useState('Todos');
 
 	return (
 		<AppContext.Provider
-			value={{ clothes, setClothes, workbench, setWorkbench, sets, setSets }}
+			value={{
+				clothes,
+				setClothes,
+				workbench,
+				setWorkbench,
+				sets,
+				setSets,
+				currentCategoryClothes,
+				setCurrentCategoryClothes,
+				currentCategorySets,
+				setCurrentCategorySets,
+			}}
 		>
 			{children}
 		</AppContext.Provider>
