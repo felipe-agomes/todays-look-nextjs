@@ -13,7 +13,6 @@ import useAppContext from '@/hooks/useAppContext';
 import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 
 type Props = {
-	uniqueCategories: string[];
 	modal: {
 		changeCategoryModal: boolean;
 		setModal: boolean;
@@ -39,7 +38,6 @@ type Props = {
 
 export default function GridClothes({
 	modal,
-	uniqueCategories,
 	fetcher,
 	addToWorkbench,
 	removeItemWorkbench,
@@ -55,35 +53,31 @@ export default function GridClothes({
 				<ModalClothe
 					removeItemWorkbench={removeItemWorkbench}
 					addToWorkbench={addToWorkbench}
-					categories={uniqueCategories.filter(
-						(category) => category !== 'Todos' && category !== 'Favoritos',
-					)}
 					openOrCloseModal={openOrCloseModal}
 					fetcher={fetcher}
 					modal={modal}
 				/>
 			)}
 			<ul className={Style.boxList}>
-				{filteredClotheByCategory &&
-					filteredClotheByCategory.map((clothe) => {
-						return (
-							<li
-								className={Style.list}
-								key={clothe.id}
-							>
-								<img
-									src={clothe.image}
-									alt='Roupa'
-									onClick={() => {
-										openOrCloseModal(
-											{ whichModal: 'clotheModal', operation: 'open' },
-											clothe.id,
-										);
-									}}
-								/>
-							</li>
-						);
-					})}
+				{filteredClotheByCategory.map((clothe) => {
+					return (
+						<li
+							className={Style.list}
+							key={clothe.id}
+						>
+							<img
+								src={clothe.image}
+								alt='Roupa'
+								onClick={() => {
+									openOrCloseModal(
+										{ whichModal: 'clotheModal', operation: 'open' },
+										clothe.id,
+									);
+								}}
+							/>
+						</li>
+					);
+				})}
 			</ul>
 		</>
 	);

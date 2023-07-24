@@ -1,5 +1,4 @@
 import {
-	ClothePosition,
 	ClothesProps,
 	FetcherOptions,
 	ModalState,
@@ -23,7 +22,6 @@ import useAppContext from '@/hooks/useAppContext';
 
 type Props = {
 	modal: ModalState;
-	categories: string[] | [];
 	removeItemWorkbench: (clotheId: string) => void;
 	fetcher: (
 		url: string,
@@ -40,14 +38,13 @@ type Props = {
 };
 
 export default function ModalClothe({
-	categories,
 	modal,
 	openOrCloseModal,
 	fetcher,
 	addToWorkbench,
 	removeItemWorkbench,
 }: Props) {
-	const { workbench } = useAppContext();
+	const { workbench, clothes } = useAppContext();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [favorite, setFavorite] = useState<boolean>(false);
 
@@ -56,6 +53,7 @@ export default function ModalClothe({
 	}, [modal]);
 
 	const clothe = { ...modal.clothe };
+	const categories = [...new Set(clothes.map((clothe) => clothe.category))];
 
 	return (
 		<>

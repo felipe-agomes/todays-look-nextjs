@@ -12,20 +12,20 @@ import { useEffect, useState } from 'react';
 import { DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons';
 import ModalDelete from '../ModalDelete';
 import ModalChangeCategory from '../ModalChangeCategory';
+import useAppContext from '@/hooks/useAppContext';
 
 type Props = {
 	modal: ModalState;
 	userId: string;
 	setId: string;
-	categories: string[] | [];
 	openOrCloseModal: (
 		{ whichModal, operation }: OpenOrCloseModalProps,
 		clotheId?: string | null,
-		setId?: string | null
+		setId?: string | null,
 	) => void;
 	fetcher: (
 		url: string,
-		options?: FetcherOptions
+		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
@@ -35,16 +35,19 @@ export default function ModalSet({
 	modal,
 	setId,
 	userId,
-	categories,
 	openOrCloseModal,
 	fetcher,
 }: Props) {
+	const { sets } = useAppContext();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [favorite, setFavorite] = useState<boolean>(false);
 
 	useEffect(() => {
 		setFavorite(modal.set?.favorite!);
 	}, [modal]);
+
+	const categories = [...new Set(sets.map((set) => set.category))];
+
 	return (
 		<div className={Style.modalContainer}>
 			{modal.changeCategoryModal && (
@@ -101,7 +104,7 @@ export default function ModalSet({
 								setLoading(true);
 								const data = (await fetcher(
 									`/api/protected/user/${modal.set?.userId}/clothe/favoriteSet/${modal.set?.id}`,
-									{ update: true, method: 'PUT' }
+									{ update: true, method: 'PUT' },
 								)) as SetsProps;
 								data && setFavorite(data.favorite);
 								setLoading(false);

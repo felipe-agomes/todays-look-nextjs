@@ -13,7 +13,6 @@ import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCate
 
 type Props = {
 	modal: ModalState;
-	uniqueCategories: string[];
 	fetcher: (
 		url: string,
 		options?: FetcherOptions,
@@ -27,12 +26,7 @@ type Props = {
 	) => void;
 };
 
-export default function GridSets({
-	modal,
-	uniqueCategories,
-	openOrCloseModal,
-	fetcher,
-}: Props) {
+export default function GridSets({ modal, openOrCloseModal, fetcher }: Props) {
 	const { sets, currentCategorySets } = useAppContext();
 	const filteredSetsByCategory = filterClotheOrSetByCategory<SetsProps>(
 		currentCategorySets,
@@ -43,9 +37,6 @@ export default function GridSets({
 		<ul className={Style.boxList}>
 			{modal.setModal && (
 				<ModalSet
-					categories={uniqueCategories.filter(
-						(category) => category !== 'Todos' && category !== 'Favoritos',
-					)}
 					fetcher={fetcher}
 					userId={modal.set?.userId!}
 					setId={modal.set?.id!}

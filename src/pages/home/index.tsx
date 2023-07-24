@@ -9,7 +9,6 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { Avatar } from '@chakra-ui/react';
 
 import {
-	ClothePosition,
 	ClothesProps,
 	ExtendedSession,
 	FetcherOptions,
@@ -26,11 +25,9 @@ import ProfilePage from '@/components/ProfilePage';
 import style from './home.module.css';
 import WorkbenchSet from '@/components/WorkbenchSet';
 import GridSets from '@/components/GridSets';
-import Image from 'next/image';
 import ContainerPage from '@/components/ContainerPage';
 import Header from '@/components/Header';
 import Head from 'next/head';
-import uniqueCategories from '@/functions/uniqueCategories';
 import useAppContext from '@/hooks/useAppContext';
 
 type Props = {
@@ -38,16 +35,8 @@ type Props = {
 };
 
 export default function Home({ serverSession }: Props) {
-	const {
-		clothes,
-		setClothes,
-		sets,
-		setSets,
-		workbench,
-		setWorkbench,
-		setCurrentCategoryClothes,
-		setCurrentCategorySets,
-	} = useAppContext();
+	const { clothes, setClothes, sets, setSets, workbench, setWorkbench } =
+		useAppContext();
 
 	const [modal, setModal] = useState<ModalState>({
 		changeCategoryModal: false,
@@ -57,15 +46,6 @@ export default function Home({ serverSession }: Props) {
 		clothe: null,
 		set: null,
 	});
-
-	const clothesAllCategories = clothes.map((clothe) => clothe.category);
-	const clothesCategories = ['Favoritos', 'Todos', ...clothesAllCategories];
-
-	const setsAllCategories = sets.map((set) => set.category);
-	const setsCategories = ['Favoritos', 'Todos', ...setsAllCategories];
-
-	const clotheUniqueCaterories = uniqueCategories(clothesCategories);
-	const setsUniqueCategories = uniqueCategories(setsCategories);
 
 	async function updateClothesAndSets() {
 		const dataClothes = (await fetcher(
@@ -198,7 +178,6 @@ export default function Home({ serverSession }: Props) {
 								/>
 								<ContainerPage>
 									<GridSets
-										uniqueCategories={setsUniqueCategories}
 										fetcher={fetcher}
 										modal={modal}
 										openOrCloseModal={openOrCloseModal}
@@ -218,7 +197,6 @@ export default function Home({ serverSession }: Props) {
 										fetcher={fetcher}
 										modal={modal}
 										removeItemWorkbench={removeItemWorkbench}
-										uniqueCategories={clotheUniqueCaterories}
 									/>
 								</ContainerPage>
 							</TabPanel>
