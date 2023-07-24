@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 import { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 
+export type UserId = string;
+export type ModalId = string;
+
 export type ExtendedSession = {
 	user?: {
 		id: string;

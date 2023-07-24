@@ -2,6 +2,7 @@ import Style from './ModalChangeCategory.module.css';
 import {
 	ClothesProps,
 	FetcherOptions,
+	ModalId,
 	OpenOrCloseModalProps,
 	SetsProps,
 } from '@/@types';
@@ -9,36 +10,40 @@ import { CloseIcon } from '@chakra-ui/icons';
 import ChoseCategory from '../ChoseCategory';
 import { Spinner } from '@chakra-ui/react';
 import { useState } from 'react';
+import useAppContext from '@/hooks/useAppContext';
+import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
 
 type Props = {
-	categories: string[];
-	clotheOrSet: ClothesProps | SetsProps;
-	clothesOrSets: 'clothes' | 'sets';
+	modalId: ModalId | null;
+	isClothe?: boolean;
+	setModal: (newValue: ModalId | null) => void;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
-	openOrCloseModal: (
-		{ whichModal, operation }: OpenOrCloseModalProps,
-		clotheId?: string | null,
-		setId?: string | null,
-	) => void;
 };
 
 export default function ModalChangeCategory({
-	categories,
-	clothesOrSets,
-	clotheOrSet,
-	openOrCloseModal,
+	isClothe,
+	modalId,
+	setModal,
 	fetcher,
 }: Props) {
+	const { clothes, sets } = useAppContext();
 	const [loading, setLoading] = useState<boolean>(false);
 
 	function handleSetLoading(boolean: boolean) {
 		setLoading(boolean);
 	}
+
+	const clotheOrSet = isClothe
+		? clothes.find((clothe) => clothe.id === modalId)
+		: sets.find((set) => set.id === modalId);
+	const categories = isClothe
+		? categoriesClotheOrSet<ClothesProps>(clothes)
+		: categoriesClotheOrSet<SetsProps>(sets);
 
 	return (
 		<div className={Style.modalContainer}>
@@ -50,10 +55,7 @@ export default function ModalChangeCategory({
 			)}
 			<CloseIcon
 				onClick={() => {
-					openOrCloseModal({
-						whichModal: 'changeCategoryModal',
-						operation: 'close',
-					});
+					setModal(null);
 				}}
 				cursor={'pointer'}
 				position={'absolute'}
@@ -62,12 +64,12 @@ export default function ModalChangeCategory({
 			/>
 			<ChoseCategory
 				handleSetLoading={handleSetLoading}
-				clothesOrSets={clothesOrSets}
+				isClothe={isClothe}
 				fetcher={fetcher}
-				openOrCloseModal={openOrCloseModal}
+				setModal={setModal}
 				categories={categories}
-				clotheOrSetId={clotheOrSet.id}
-				userId={clotheOrSet.userId}
+				clotheOrSetId={clotheOrSet?.id ?? ''}
+				userId={clotheOrSet?.userId ?? ''}
 			/>
 		</div>
 	);

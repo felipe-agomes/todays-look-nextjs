@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import {
 	ClothesProps,
+	ModalId,
 	ModalState,
 	OpenOrCloseModalProps,
 	SetsProps,
@@ -14,24 +15,20 @@ type Props = {
 	clothes?: ClothesProps | null;
 	workbench?: ClothesProps[] | [];
 	children: JSX.Element;
-	openOrCloseModal: (
-		{ whichModal, operation }: OpenOrCloseModalProps,
-		clotheId?: string | null,
-		setId?: string | null
-	) => void;
+	setModalId: (newValue: ModalId | null) => void;
 };
 
 export default function ModalBase({
 	set,
 	clothes,
 	children,
-	openOrCloseModal,
+	setModalId,
 }: Props) {
 	return (
 		<>
 			<CloseIcon
 				onClick={() => {
-					openOrCloseModal({ whichModal: 'clotheModal', operation: 'close' });
+					setModalId(null);
 				}}
 				cursor={'pointer'}
 				position={'absolute'}

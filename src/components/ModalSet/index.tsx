@@ -1,9 +1,11 @@
 import {
 	ClothesProps,
 	FetcherOptions,
+	ModalId,
 	ModalState,
 	OpenOrCloseModalProps,
 	SetsProps,
+	UserId,
 } from '@/@types';
 import ModalBase from '../ModalBase';
 import Style from './ModalSet.module.css';
@@ -15,14 +17,9 @@ import ModalChangeCategory from '../ModalChangeCategory';
 import useAppContext from '@/hooks/useAppContext';
 
 type Props = {
-	modal: ModalState;
-	userId: string;
-	setId: string;
-	openOrCloseModal: (
-		{ whichModal, operation }: OpenOrCloseModalProps,
-		clotheId?: string | null,
-		setId?: string | null,
-	) => void;
+	userId: UserId;
+	modalId: ModalId;
+	setModalId: (newValue: ModalId | null) => void;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions,
@@ -32,37 +29,37 @@ type Props = {
 };
 
 export default function ModalSet({
-	modal,
-	setId,
+	modalId,
 	userId,
-	openOrCloseModal,
 	fetcher,
+	setModalId,
 }: Props) {
 	const { sets } = useAppContext();
+	const [changeCategoryModal, setChangeCategoryModal] = useState<ModalId | null>(
+		null,
+	);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [favorite, setFavorite] = useState<boolean>(false);
 
-	useEffect(() => {
-		setFavorite(modal.set?.favorite!);
-	}, [modal]);
+	// useEffect(() => {
+	// 	setFavorite(modal.set?.favorite!);
+	// }, [modalId]);
 
-	const categories = [...new Set(sets.map((set) => set.category))];
+	const set = sets.find((set) => set.id === modalId);
 
 	return (
 		<div className={Style.modalContainer}>
-			{modal.changeCategoryModal && (
+			{changeCategoryModal && (
 				<ModalChangeCategory
-					clothesOrSets='sets'
-					categories={categories}
-					clotheOrSet={modal.set!}
+					modalId={changeCategoryModal}
+					setModal={setChangeCategoryModal}
 					fetcher={fetcher}
-					openOrCloseModal={openOrCloseModal}
 				/>
 			)}
-			{modal.deleteModal && (
+			{/*{modal.deleteModal && (
 				<ModalDelete
 					deleteSet={async () => {
-						await fetcher(`/api/protected/user/${userId}/clothe/deleteSet/${setId}`, {
+						await fetcher(`/api/protected/user/${userId}/clothe/deleteSet/${modalId}`, {
 							method: 'DELETE',
 							update: true,
 						});
@@ -80,18 +77,18 @@ export default function ModalSet({
 						left: '50%',
 					}}
 				/>
-			)}
+			)} */}
 			<h1
 				style={{
 					fontWeight: '500',
 					fontSize: '1.2rem',
 				}}
 			>
-				Conjunto: {modal.set?.category}
+				Conjunto: {set?.category}
 			</h1>
 			<ModalBase
-				set={modal.set}
-				openOrCloseModal={openOrCloseModal}
+				set={set}
+				setModalId={setModalId}
 			>
 				<ul>
 					<li>
@@ -103,7 +100,7 @@ export default function ModalSet({
 							onClick={async () => {
 								setLoading(true);
 								const data = (await fetcher(
-									`/api/protected/user/${modal.set?.userId}/clothe/favoriteSet/${modal.set?.id}`,
+									`/api/protected/user/${set?.userId}/clothe/favoriteSet/${set?.id}`,
 									{ update: true, method: 'PUT' },
 								)) as SetsProps;
 								data && setFavorite(data.favorite);
@@ -118,7 +115,7 @@ export default function ModalSet({
 							boxSize={5}
 							color={'red'}
 							onClick={() => {
-								openOrCloseModal({ whichModal: 'deleteModal', operation: 'open' });
+								// openOrCloseModal({ whichModal: 'deleteModal', operation: 'open' });
 							}}
 						/>
 					</li>
@@ -128,10 +125,11 @@ export default function ModalSet({
 							cursor={'pointer'}
 							boxSize={5}
 							onClick={() => {
-								openOrCloseModal({
-									whichModal: 'changeCategoryModal',
-									operation: 'open',
-								});
+								// openOrCloseModal({
+								// 	whichModal: 'changeCategoryModal',
+								// 	operation: 'open',
+								// });
+								setChangeCategoryModal(set?.id ?? null);
 							}}
 						/>
 					</li>

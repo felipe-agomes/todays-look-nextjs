@@ -1,6 +1,7 @@
 import {
 	ClothesProps,
 	FetcherOptions,
+	ModalId,
 	OpenOrCloseModalProps,
 	SetsProps,
 } from '@/@types';
@@ -16,27 +17,24 @@ type Props = {
 	categories: string[];
 	clotheOrSetId: string;
 	userId: string;
-	clothesOrSets: 'clothes' | 'sets';
+	isClothe?: boolean;
+	setModal: (newValue: ModalId | null) => void;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
-	openOrCloseModal: (
-		{ whichModal, operation }: OpenOrCloseModalProps,
-		clotheId?: string,
-	) => void;
 	handleSetLoading: (boolean: boolean) => void;
 };
 
 export default function ChoseCategory({
-	clothesOrSets,
 	categories,
 	clotheOrSetId,
+	isClothe,
+	setModal,
 	userId,
 	fetcher,
-	openOrCloseModal,
 	handleSetLoading,
 }: Props) {
 	const formikExistingCategory = useFormik({
@@ -60,9 +58,8 @@ export default function ChoseCategory({
 		category?: String;
 	}) {
 		handleSetLoading(true);
-		const path =
-			clothesOrSets === 'clothes' ? 'updateCategory' : 'updateCategorySet';
-		const response = await fetcher(
+		const path = isClothe ? 'updateCategory' : 'updateCategorySet';
+		await fetcher(
 			`/api/protected/user/${userId}/clothe/${path}/${clotheOrSetId}`,
 			{
 				method: 'PUT',
@@ -74,7 +71,7 @@ export default function ChoseCategory({
 				update: true,
 			},
 		);
-		openOrCloseModal({ whichModal: 'clotheModal', operation: 'close' });
+		setModal(null);
 		handleSetLoading(false);
 	}
 

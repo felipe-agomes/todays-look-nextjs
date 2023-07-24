@@ -179,7 +179,6 @@ export default function Home({ serverSession }: Props) {
 								<ContainerPage>
 									<GridSets
 										fetcher={fetcher}
-										modal={modal}
 										openOrCloseModal={openOrCloseModal}
 									/>
 								</ContainerPage>
