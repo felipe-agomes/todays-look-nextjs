@@ -11,6 +11,7 @@ import { useFormik } from 'formik';
 import { validateNewCategory } from '@/utils/validate';
 import Style from './WorkbenchSet.module.css';
 import useAppContext from '@/hooks/useAppContext';
+import useWorkBench from '@/hooks/useWorkBench';
 
 type Props = {
 	fetcher: (
@@ -19,10 +20,10 @@ type Props = {
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
-	resetWorkbench: () => void;
 };
 
-export default function WorkbenchSet({ fetcher, resetWorkbench }: Props) {
+export default function WorkbenchSet({ fetcher }: Props) {
+	const { resetWorkbench } = useWorkBench();
 	const { workbench } = useAppContext();
 	const [clothesPosition, setClothesPosition] = useState<ClothePosition[] | []>(
 		[],

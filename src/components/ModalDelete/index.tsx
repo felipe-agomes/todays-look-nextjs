@@ -4,11 +4,11 @@ import { Button, ButtonGroup, Spinner } from '@chakra-ui/react';
 import { useState } from 'react';
 import { findOneClotheOrSet } from '@/functions/findOneClotheOrSet';
 import useAppContext from '@/hooks/useAppContext';
+import useModaisController from '@/hooks/useModaisController';
 
 type Props = {
 	isClothe?: boolean;
 	modalId: ModalId | null;
-	setModal: (newValue: ModalId | null) => void;
 	deleteSet?: () => Promise<void>;
 	fetcher: (
 		url: string,
@@ -18,13 +18,9 @@ type Props = {
 	>;
 };
 
-export default function ModalDelete({
-	setModal,
-	modalId,
-	fetcher,
-	isClothe,
-}: Props) {
+export default function ModalDelete({ modalId, fetcher, isClothe }: Props) {
 	const { clothes, sets } = useAppContext();
+	const { closeAllModais } = useModaisController();
 	const [loading, setLoading] = useState<boolean>(false);
 	const clotheOrSet = isClothe
 		? findOneClotheOrSet<ClothesProps>(clothes, modalId)
@@ -41,7 +37,7 @@ export default function ModalDelete({
 			<h1>Deseja realmente remover a roupa?</h1>
 			<ButtonGroup gap={4}>
 				<Button
-					onClick={() => setModal(null)}
+					onClick={() => closeAllModais()}
 					colorScheme={'gray'}
 				>
 					Não
@@ -57,7 +53,7 @@ export default function ModalDelete({
 							}/${clotheOrSet?.id}`,
 							{ method: 'DELETE', update: true },
 						);
-						setModal(null);
+						closeAllModais();
 						setLoading(false);
 					}}
 				>

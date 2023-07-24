@@ -9,26 +9,24 @@ import {
 import { CloseIcon } from '@chakra-ui/icons';
 import Image from 'next/image';
 import SetImages from '../SetImages';
+import useModaisContext from '@/hooks/useModaisContext';
+import useModaisController from '@/hooks/useModaisController';
 
 type Props = {
 	set?: SetsProps | null;
 	clothes?: ClothesProps | null;
 	workbench?: ClothesProps[] | [];
 	children: JSX.Element;
-	setModalId: (newValue: ModalId | null) => void;
 };
 
-export default function ModalBase({
-	set,
-	clothes,
-	children,
-	setModalId,
-}: Props) {
+export default function ModalBase({ set, clothes, children }: Props) {
+	const { closeAllModais } = useModaisController();
+
 	return (
 		<>
 			<CloseIcon
 				onClick={() => {
-					setModalId(null);
+					closeAllModais();
 				}}
 				cursor={'pointer'}
 				position={'absolute'}

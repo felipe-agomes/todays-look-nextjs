@@ -12,8 +12,6 @@ import {
 	ClothesProps,
 	ExtendedSession,
 	FetcherOptions,
-	ModalState,
-	OpenOrCloseModalProps,
 	SessionProps,
 	SetsProps,
 } from '@/@types';
@@ -26,17 +24,16 @@ import style from './home.module.css';
 import WorkbenchSet from '@/components/WorkbenchSet';
 import GridSets from '@/components/GridSets';
 import ContainerPage from '@/components/ContainerPage';
-import Header from '@/components/Header';
 import Head from 'next/head';
 import useAppContext from '@/hooks/useAppContext';
+import { Header } from '@/components/Header';
 
 type Props = {
 	serverSession: SessionProps;
 };
 
 export default function Home({ serverSession }: Props) {
-	const { clothes, setClothes, setSets, workbench, setWorkbench } =
-		useAppContext();
+	const { setClothes, setSets } = useAppContext();
 
 	async function updateClothesAndSets() {
 		const dataClothes = (await fetcher(
@@ -92,27 +89,6 @@ export default function Home({ serverSession }: Props) {
 		return clotheOrSet;
 	}
 
-	function addToWorkbench(clotheId: string) {
-		const alreadyExists = workbench.find((clothe) => clothe.id === clotheId);
-
-		if (alreadyExists) return;
-
-		const newWorkbench = [
-			...workbench,
-			{ ...clothes.filter((clothe) => clothe.id === clotheId)[0], x: 0, y: 0 },
-		];
-		setWorkbench(newWorkbench);
-	}
-
-	function resetWorkbench() {
-		setWorkbench([]);
-	}
-
-	function removeItemWorkbench(clotheId: string) {
-		const newWorkbench = workbench.filter((clothe) => clothe.id !== clotheId);
-		setWorkbench(newWorkbench);
-	}
-
 	return (
 		<>
 			<Head>
@@ -127,28 +103,23 @@ export default function Home({ serverSession }: Props) {
 					<main>
 						<TabPanels>
 							<TabPanel className={style.page}>
-								<Header
-									title='Conjuntos'
-								/>
+								<Header.Root title='Conjuntos'>
+									<Header.Category />
+								</Header.Root>
 								<ContainerPage>
 									<GridSets fetcher={fetcher} />
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>
-								<Header
-									title='Roupas'
-									isClothe
-								/>
+								<Header.Root title='Roupas'>
+									<Header.Category isClothe />
+								</Header.Root>
 								<ContainerPage>
-									<GridClothes
-										addToWorkbench={addToWorkbench}
-										fetcher={fetcher}
-										removeItemWorkbench={removeItemWorkbench}
-									/>
+									<GridClothes fetcher={fetcher} />
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>
-								<Header title='Adicionar Roupa' />
+								<Header.Root title='Adicionar Roupa' />
 								<ContainerPage>
 									<AddClothe
 										userId={serverSession.user.id}
@@ -157,16 +128,13 @@ export default function Home({ serverSession }: Props) {
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>
-								<Header title='Criar Conjunto' />
+								<Header.Root title='Criar Conjunto' />
 								<ContainerPage>
-									<WorkbenchSet
-										resetWorkbench={resetWorkbench}
-										fetcher={fetcher}
-									/>
+									<WorkbenchSet fetcher={fetcher} />
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>
-								<Header title='Perfil' />
+								<Header.Root title='Perfil' />
 								<ContainerPage>
 									<ProfilePage userName={serverSession.user.name} />
 								</ContainerPage>

@@ -21,27 +21,22 @@ import ModalChangeCategory from '../ModalChangeCategory';
 import ModalBase from '../ModalBase';
 import useAppContext from '@/hooks/useAppContext';
 import useModaisContext from '@/hooks/useModaisContext';
+import useWorkBench from '@/hooks/useWorkBench';
+import useModaisController from '@/hooks/useModaisController';
 
 type Props = {
 	modalId: ModalId | null;
-	setModalId: (newValue: ModalId | null) => void;
-	removeItemWorkbench: (clotheId: string) => void;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions,
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
-	addToWorkbench: (clotheId: string) => void;
 };
 
-export default function ModalClothe({
-	fetcher,
-	addToWorkbench,
-	removeItemWorkbench,
-	modalId,
-	setModalId,
-}: Props) {
+export default function ModalClothe({ fetcher, modalId }: Props) {
+	const { addClotheToWorkbench, removeClotheFromWorkbench } = useWorkBench();
+	const { closeAllModais } = useModaisController();
 	const { workbench, clothes } = useAppContext();
 	const {
 		changeCategoryModal,
@@ -72,7 +67,6 @@ export default function ModalClothe({
 					{deleteModal && (
 						<ModalDelete
 							modalId={deleteModal}
-							setModal={setDeleteModal}
 							fetcher={fetcher}
 							isClothe
 						/>
@@ -83,10 +77,7 @@ export default function ModalClothe({
 							className={Style.spinner}
 						/>
 					)}
-					<ModalBase
-						clothes={clothe}
-						setModalId={setModalId}
-					>
+					<ModalBase clothes={clothe}>
 						<>
 							<h1>Roupa categoria: {clothe?.category}</h1>
 							<ul>
@@ -102,7 +93,7 @@ export default function ModalClothe({
 														{ method: 'PUT', update: true },
 													)) as ClothesProps;
 													data && setFavorite(data.favorite);
-													setModalId(null);
+													closeAllModais();
 													setLoading(false);
 												}}
 												cursor={'pointer'}
@@ -149,7 +140,7 @@ export default function ModalClothe({
 												(workbenchClothe) => workbenchClothe.id === clothe?.id,
 											) ? (
 												<SmallCloseIcon
-													onClick={() => removeItemWorkbench(clothe?.id!)}
+													onClick={() => removeClotheFromWorkbench(clothe?.id ?? '')}
 													color={'red.500'}
 													cursor={'pointer'}
 													boxSize={5}
@@ -158,7 +149,7 @@ export default function ModalClothe({
 												<SmallAddIcon
 													color={'green.500'}
 													onClick={() => {
-														addToWorkbench(clothe?.id!);
+														addClotheToWorkbench(clothe?.id ?? '');
 													}}
 													cursor={'pointer'}
 													boxSize={5}

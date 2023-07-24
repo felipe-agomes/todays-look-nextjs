@@ -1,23 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import Image from 'next/image';
 import Style from './GridClothes.module.css';
-import {
-	ClothePosition,
-	ClothesProps,
-	FetcherOptions,
-	ModalId,
-	OpenOrCloseModalProps,
-	SetsProps,
-} from '@/@types';
+import { ClothesProps, FetcherOptions, SetsProps } from '@/@types';
 import ModalClothe from '../ModalClothe';
 import useAppContext from '@/hooks/useAppContext';
 import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
-import { useState } from 'react';
 import useModaisContext from '@/hooks/useModaisContext';
 
 type Props = {
-	addToWorkbench: (clotheId: string) => void;
-	removeItemWorkbench: (clotheId: string) => void;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions | undefined,
@@ -26,11 +15,7 @@ type Props = {
 	>;
 };
 
-export default function GridClothes({
-	fetcher,
-	addToWorkbench,
-	removeItemWorkbench,
-}: Props) {
+export default function GridClothes({ fetcher }: Props) {
 	const { clothes, currentCategoryClothes } = useAppContext();
 	const { mainModal, setMainModal } = useModaisContext();
 	const filteredClotheByCategory: ClothesProps[] =
@@ -40,10 +25,7 @@ export default function GridClothes({
 		<>
 			{mainModal && (
 				<ModalClothe
-					removeItemWorkbench={removeItemWorkbench}
-					addToWorkbench={addToWorkbench}
 					modalId={mainModal}
-					setModalId={setMainModal}
 					fetcher={fetcher}
 				/>
 			)}
