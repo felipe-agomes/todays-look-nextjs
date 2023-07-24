@@ -35,17 +35,8 @@ type Props = {
 };
 
 export default function Home({ serverSession }: Props) {
-	const { clothes, setClothes, sets, setSets, workbench, setWorkbench } =
+	const { clothes, setClothes, setSets, workbench, setWorkbench } =
 		useAppContext();
-
-	const [modal, setModal] = useState<ModalState>({
-		changeCategoryModal: false,
-		setModal: false,
-		deleteModal: false,
-		clotheModal: false,
-		clothe: null,
-		set: null,
-	});
 
 	async function updateClothesAndSets() {
 		const dataClothes = (await fetcher(
@@ -101,42 +92,6 @@ export default function Home({ serverSession }: Props) {
 		return clotheOrSet;
 	}
 
-	function openOrCloseModal(
-		{ whichModal, operation }: OpenOrCloseModalProps,
-		clotheId: string | null = null,
-		setId: string | null = null,
-	) {
-		const resetModal: ModalState = {
-			changeCategoryModal: false,
-			clothe: null,
-			clotheModal: false,
-			deleteModal: false,
-			set: null,
-			setModal: false,
-		};
-		let newModal = { ...modal };
-		if (whichModal === 'clotheModal') {
-			const newClothe = clothes.filter((clothe) => clothe.id === clotheId)[0];
-			newModal.clothe = operation === 'open' ? newClothe : null;
-			if (!newModal.clothe) {
-				setModal(resetModal);
-				return;
-			}
-			newModal.clotheModal = operation === 'open';
-		} else if (whichModal === 'setModal') {
-			const newSet = sets.filter((set) => set.id === setId)[0];
-			newModal.set = operation === 'open' ? newSet : null;
-			newModal.setModal = operation === 'open';
-			if (!newModal.set) {
-				setModal(resetModal);
-				return;
-			}
-		} else {
-			newModal[whichModal] = operation === 'open';
-		}
-		setModal(newModal);
-	}
-
 	function addToWorkbench(clotheId: string) {
 		const alreadyExists = workbench.find((clothe) => clothe.id === clotheId);
 
@@ -174,27 +129,20 @@ export default function Home({ serverSession }: Props) {
 							<TabPanel className={style.page}>
 								<Header
 									title='Conjuntos'
-									openOrCloseModal={openOrCloseModal}
 								/>
 								<ContainerPage>
-									<GridSets
-										fetcher={fetcher}
-										openOrCloseModal={openOrCloseModal}
-									/>
+									<GridSets fetcher={fetcher} />
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>
 								<Header
 									title='Roupas'
 									isClothe
-									openOrCloseModal={openOrCloseModal}
 								/>
 								<ContainerPage>
 									<GridClothes
-										openOrCloseModal={openOrCloseModal}
 										addToWorkbench={addToWorkbench}
 										fetcher={fetcher}
-										modal={modal}
 										removeItemWorkbench={removeItemWorkbench}
 									/>
 								</ContainerPage>
