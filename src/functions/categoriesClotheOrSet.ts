@@ -1,5 +1,9 @@
 export function categoriesClotheOrSet<ClothePropsOrSetProps>(
 	element: ClothePropsOrSetProps[],
 ) {
-	return [...new Set(element.map((element: any) => element.category))];
+	return [
+		'Favoritos',
+		'Todos',
+		...new Set(element.map((element: any) => element.category)),
+	];
 }
