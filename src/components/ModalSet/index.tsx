@@ -15,9 +15,9 @@ import { DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons';
 import ModalDelete from '../ModalDelete';
 import ModalChangeCategory from '../ModalChangeCategory';
 import useAppContext from '@/hooks/useAppContext';
+import useModaisContext from '@/hooks/useModaisContext';
 
 type Props = {
-	userId: UserId;
 	modalId: ModalId;
 	setModalId: (newValue: ModalId | null) => void;
 	fetcher: (
@@ -28,24 +28,21 @@ type Props = {
 	>;
 };
 
-export default function ModalSet({
-	modalId,
-	userId,
-	fetcher,
-	setModalId,
-}: Props) {
+export default function ModalSet({ modalId, fetcher, setModalId }: Props) {
 	const { sets } = useAppContext();
-	const [changeCategoryModal, setChangeCategoryModal] = useState<ModalId | null>(
-		null,
-	);
+	const {
+		changeCategoryModal,
+		setChangeCategoryModal,
+		deleteModal,
+		setDeleteModal,
+	} = useModaisContext();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [favorite, setFavorite] = useState<boolean>(false);
-
-	// useEffect(() => {
-	// 	setFavorite(modal.set?.favorite!);
-	// }, [modalId]);
-
 	const set = sets.find((set) => set.id === modalId);
+
+	useEffect(() => {
+		setFavorite(set?.favorite ?? false);
+	}, [set]);
 
 	return (
 		<div className={Style.modalContainer}>
@@ -56,15 +53,11 @@ export default function ModalSet({
 					fetcher={fetcher}
 				/>
 			)}
-			{/*{modal.deleteModal && (
+			{deleteModal && (
 				<ModalDelete
-					deleteSet={async () => {
-						await fetcher(`/api/protected/user/${userId}/clothe/deleteSet/${modalId}`, {
-							method: 'DELETE',
-							update: true,
-						});
-					}}
-					openOrCloseModal={openOrCloseModal}
+					modalId={deleteModal}
+					setModal={setDeleteModal}
+					fetcher={fetcher}
 				/>
 			)}
 			{loading && (
@@ -77,7 +70,7 @@ export default function ModalSet({
 						left: '50%',
 					}}
 				/>
-			)} */}
+			)}
 			<h1
 				style={{
 					fontWeight: '500',
@@ -104,6 +97,7 @@ export default function ModalSet({
 									{ update: true, method: 'PUT' },
 								)) as SetsProps;
 								data && setFavorite(data.favorite);
+								setModalId(null);
 								setLoading(false);
 							}}
 						/>
@@ -115,7 +109,7 @@ export default function ModalSet({
 							boxSize={5}
 							color={'red'}
 							onClick={() => {
-								// openOrCloseModal({ whichModal: 'deleteModal', operation: 'open' });
+								setDeleteModal(set?.id ?? null);
 							}}
 						/>
 					</li>

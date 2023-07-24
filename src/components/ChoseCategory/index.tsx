@@ -15,8 +15,8 @@ import Style from './ChoseCategory.module.css';
 
 type Props = {
 	categories: string[];
-	clotheOrSetId: string;
-	userId: string;
+	clotheOrSetId?: string;
+	userId?: string;
 	isClothe?: boolean;
 	setModal: (newValue: ModalId | null) => void;
 	fetcher: (
@@ -25,7 +25,7 @@ type Props = {
 	) => Promise<
 		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
 	>;
-	handleSetLoading: (boolean: boolean) => void;
+	setLoading: (boolean: boolean) => void;
 };
 
 export default function ChoseCategory({
@@ -35,7 +35,7 @@ export default function ChoseCategory({
 	setModal,
 	userId,
 	fetcher,
-	handleSetLoading,
+	setLoading,
 }: Props) {
 	const formikExistingCategory = useFormik({
 		initialValues: {
@@ -57,7 +57,7 @@ export default function ChoseCategory({
 		existingCategory?: String;
 		category?: String;
 	}) {
-		handleSetLoading(true);
+		setLoading(true);
 		const path = isClothe ? 'updateCategory' : 'updateCategorySet';
 		await fetcher(
 			`/api/protected/user/${userId}/clothe/${path}/${clotheOrSetId}`,
@@ -72,7 +72,7 @@ export default function ChoseCategory({
 			},
 		);
 		setModal(null);
-		handleSetLoading(false);
+		setLoading(false);
 	}
 
 	return (

@@ -12,6 +12,7 @@ import { Spinner } from '@chakra-ui/react';
 import { useState } from 'react';
 import useAppContext from '@/hooks/useAppContext';
 import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
+import { findOneClotheOrSet } from '@/functions/findOneClotheOrSet';
 
 type Props = {
 	modalId: ModalId | null;
@@ -33,14 +34,9 @@ export default function ModalChangeCategory({
 }: Props) {
 	const { clothes, sets } = useAppContext();
 	const [loading, setLoading] = useState<boolean>(false);
-
-	function handleSetLoading(boolean: boolean) {
-		setLoading(boolean);
-	}
-
 	const clotheOrSet = isClothe
-		? clothes.find((clothe) => clothe.id === modalId)
-		: sets.find((set) => set.id === modalId);
+		? findOneClotheOrSet<ClothesProps>(clothes, modalId)
+		: findOneClotheOrSet<SetsProps>(sets, modalId);
 	const categories = isClothe
 		? categoriesClotheOrSet<ClothesProps>(clothes)
 		: categoriesClotheOrSet<SetsProps>(sets);
@@ -63,13 +59,13 @@ export default function ModalChangeCategory({
 				top={'20px'}
 			/>
 			<ChoseCategory
-				handleSetLoading={handleSetLoading}
+				setLoading={setLoading}
 				isClothe={isClothe}
 				fetcher={fetcher}
 				setModal={setModal}
 				categories={categories}
-				clotheOrSetId={clotheOrSet?.id ?? ''}
-				userId={clotheOrSet?.userId ?? ''}
+				clotheOrSetId={clotheOrSet?.id}
+				userId={clotheOrSet?.userId}
 			/>
 		</div>
 	);

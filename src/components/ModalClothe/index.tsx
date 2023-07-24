@@ -20,11 +20,12 @@ import ModalDelete from '../ModalDelete';
 import ModalChangeCategory from '../ModalChangeCategory';
 import ModalBase from '../ModalBase';
 import useAppContext from '@/hooks/useAppContext';
+import useModaisContext from '@/hooks/useModaisContext';
 
 type Props = {
 	modalId: ModalId | null;
-	removeItemWorkbench: (clotheId: string) => void;
 	setModalId: (newValue: ModalId | null) => void;
+	removeItemWorkbench: (clotheId: string) => void;
 	fetcher: (
 		url: string,
 		options?: FetcherOptions,
@@ -42,17 +43,19 @@ export default function ModalClothe({
 	setModalId,
 }: Props) {
 	const { workbench, clothes } = useAppContext();
-	const [changeCategoryModal, setChangeCategoryModal] = useState<ModalId | null>(
-		null,
-	);
+	const {
+		changeCategoryModal,
+		setChangeCategoryModal,
+		deleteModal,
+		setDeleteModal,
+	} = useModaisContext();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [favorite, setFavorite] = useState<boolean>(false);
-
-	// useEffect(() => {
-	// 	setFavorite(modal.clothe?.favorite!);
-	// }, [modal]);
-
 	const clothe = clothes.find((clothe) => clothe.id === modalId);
+
+	useEffect(() => {
+		setFavorite(clothe?.favorite ?? false);
+	}, [clothe]);
 
 	return (
 		<>
@@ -66,16 +69,12 @@ export default function ModalClothe({
 							isClothe
 						/>
 					)}
-					{/* {modal.deleteModal && (
+					{deleteModal && (
 						<ModalDelete
-							openOrCloseModal={openOrCloseModal}
-							deleteClothe={async () => {
-								await fetcher(
-									`/api/protected/user/${clothe.userId}/clothe/delete/${clothe.id}`,
-									{ method: 'DELETE', update: true },
-								);
-								openOrCloseModal({ whichModal: 'clotheModal', operation: 'close' });
-							}}
+							modalId={deleteModal}
+							setModal={setDeleteModal}
+							fetcher={fetcher}
+							isClothe
 						/>
 					)}
 					{loading && (
@@ -83,7 +82,7 @@ export default function ModalClothe({
 							color={'cyan'}
 							className={Style.spinner}
 						/>
-					)} */}
+					)}
 					<ModalBase
 						clothes={clothe}
 						setModalId={setModalId}
@@ -103,6 +102,7 @@ export default function ModalClothe({
 														{ method: 'PUT', update: true },
 													)) as ClothesProps;
 													data && setFavorite(data.favorite);
+													setModalId(null);
 													setLoading(false);
 												}}
 												cursor={'pointer'}
@@ -118,7 +118,7 @@ export default function ModalClothe({
 										<span>
 											<DeleteIcon
 												onClick={() => {
-													// openOrCloseModal({ whichModal: 'deleteModal', operation: 'open' });
+													setDeleteModal(clothe?.id ?? null);
 												}}
 												cursor={'pointer'}
 												color={'red'}

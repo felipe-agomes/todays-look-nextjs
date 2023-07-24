@@ -13,6 +13,7 @@ import ModalClothe from '../ModalClothe';
 import useAppContext from '@/hooks/useAppContext';
 import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 import { useState } from 'react';
+import useModaisContext from '@/hooks/useModaisContext';
 
 type Props = {
 	addToWorkbench: (clotheId: string) => void;
@@ -31,18 +32,18 @@ export default function GridClothes({
 	removeItemWorkbench,
 }: Props) {
 	const { clothes, currentCategoryClothes } = useAppContext();
-	const [modalId, setModalId] = useState<ModalId | null>(null);
+	const { mainModal, setMainModal } = useModaisContext();
 	const filteredClotheByCategory: ClothesProps[] =
 		filterClotheOrSetByCategory<ClothesProps>(currentCategoryClothes, clothes);
 
 	return (
 		<>
-			{modalId && (
+			{mainModal && (
 				<ModalClothe
 					removeItemWorkbench={removeItemWorkbench}
 					addToWorkbench={addToWorkbench}
-					modalId={modalId}
-					setModalId={setModalId}
+					modalId={mainModal}
+					setModalId={setMainModal}
 					fetcher={fetcher}
 				/>
 			)}
@@ -57,7 +58,7 @@ export default function GridClothes({
 								src={clothe.image}
 								alt='Roupa'
 								onClick={() => {
-									setModalId(clothe.id);
+									setMainModal(clothe.id);
 								}}
 							/>
 						</li>

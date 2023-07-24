@@ -1,18 +1,10 @@
-import {
-	ClothesProps,
-	FetcherOptions,
-	ModalId,
-	ModalState,
-	OpenOrCloseModalProps,
-	SetsProps,
-	UserId,
-} from '@/@types';
+import { ClothesProps, FetcherOptions, ModalId, SetsProps } from '@/@types';
 import Style from './GridSets.module.css';
 import ModalSet from '../ModalSet';
 import SetImages from '../SetImages';
 import useAppContext from '@/hooks/useAppContext';
 import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
-import { useState } from 'react';
+import useModaisContext from '@/hooks/useModaisContext';
 
 type Props = {
 	fetcher: (
@@ -25,7 +17,7 @@ type Props = {
 
 export default function GridSets({ fetcher }: Props) {
 	const { sets, currentCategorySets } = useAppContext();
-	const [modalId, setModalId] = useState<ModalId | null>(null);
+	const { mainModal, setMainModal } = useModaisContext();
 	const filteredSetsByCategory = filterClotheOrSetByCategory<SetsProps>(
 		currentCategorySets,
 		sets,
@@ -33,12 +25,11 @@ export default function GridSets({ fetcher }: Props) {
 
 	return (
 		<>
-			{modalId && (
+			{mainModal && (
 				<ModalSet
 					fetcher={fetcher}
-					userId={sets[0].userId}
-					modalId={modalId}
-					setModalId={setModalId}
+					modalId={mainModal}
+					setModalId={setMainModal}
 				/>
 			)}
 			<ul className={Style.boxList}>
@@ -55,7 +46,7 @@ export default function GridSets({ fetcher }: Props) {
 							}}
 							key={set.id}
 							onClick={() => {
-								setModalId(set.id);
+								setMainModal(set.id);
 							}}
 						>
 							<SetImages
