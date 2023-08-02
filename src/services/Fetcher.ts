@@ -30,10 +30,16 @@ export class FetcherAxios implements Ifetcher {
 		}
 		return response;
 	}
-	async put({ url, body }: { url: string; body: string }): Promise<any> {
-		await axios.put(url, body, {
-			headers: { 'Content-Type': 'application/json' },
-		});
+	async put({ url, body }: { url: string; body: string }): Promise<Response> {
+		let response: Response;
+		try {
+			response = await axios.put(url, body, {
+				headers: { 'Content-Type': 'application/json' },
+			});
+		} catch (error: any) {
+			response = { status: 'error', message: error.message };
+		}
+		return response;
 	}
 	async delete(data: { url: string }): Promise<any> {}
 }
