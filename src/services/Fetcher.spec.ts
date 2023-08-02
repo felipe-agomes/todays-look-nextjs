@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { FetcherAxios } from './Fetcher';
 import {
+	doDeleteSuccessDataResponse,
 	doGetAndDoDeleteUrl,
 	doGetSuccessDataResponse,
 	doPostRequestString,
@@ -123,6 +124,37 @@ describe('FetcherAxios', () => {
 			const result = await sut.put(doPutRequestString);
 
 			expect(result).toEqual(doPutSuccessDataResponse);
+		});
+	});
+
+	describe('delete()', () => {
+		it('should call axios.delete()', async () => {
+			const { fetcherAxios: sut } = makeSut();
+			const spyDelete = jest.spyOn(axios, 'delete');
+			(spyDelete as jest.SpyInstance).mockResolvedValueOnce(undefined);
+
+			await sut.delete(doGetAndDoDeleteUrl);
+
+			expect(spyDelete).toHaveBeenCalledWith(doGetAndDoDeleteUrl.url);
+			expect(spyDelete).toHaveBeenCalledTimes(1);
+		});
+
+		it('should to throw a error if fetcher throw a error ', async () => {
+			const { fetcherAxios: sut } = makeSut();
+			axios.delete = jest.fn().mockRejectedValueOnce(new Error('erro'));
+
+			const result = await sut.delete(doGetAndDoDeleteUrl);
+
+			expect(result).toEqual(errorMessage);
+		});
+
+		it('should return the data of response', async () => {
+			const { fetcherAxios: sut } = makeSut();
+			axios.delete = jest.fn().mockResolvedValueOnce(doDeleteSuccessDataResponse);
+
+			const result = await sut.delete(doGetAndDoDeleteUrl);
+
+			expect(result).toEqual(doDeleteSuccessDataResponse);
 		});
 	});
 });

@@ -16,6 +16,12 @@ export const doGetSuccessDataResponse = {
 	],
 };
 
+export const doGetSuccessDataResponseString = {
+	status: 'success',
+	message: 'Dados buscados com sucesso',
+	data: JSON.stringify(doGetSuccessDataResponse.data),
+};
+
 export const emptySuccessDataResponse = {
 	status: 'success',
 	message: 'Dados buscados com sucesso',
@@ -32,7 +38,6 @@ export const doDeleteSuccessDataResponse = {
 export const doPutRequest = {
 	url: '/teste',
 	body: {
-		id: '123',
 		toUpdate: { name: 'new-name', email: 'new-email' },
 	},
 };
@@ -150,7 +155,7 @@ describe('FrontController', () => {
 			expect(spyPut).toHaveBeenCalledTimes(1);
 		});
 
-		it('should to throw a error if fetcher throw a error ', async () => {
+		it('should to throw a error if fetcher throw a error', async () => {
 			const { frontController: sut, fetcher } = makeSut();
 			fetcher.put = jest.fn().mockRejectedValueOnce(new Error('erro'));
 

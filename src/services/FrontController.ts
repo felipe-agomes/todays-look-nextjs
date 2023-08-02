@@ -1,9 +1,9 @@
-import { FetcherAxios, Ifetcher } from './Fetcher';
+import { Ifetcher } from './Fetcher';
 
 export type Response = {
 	status: string;
 	message: string;
-	data?: { [key: string]: any };
+	data?: { [key: string]: string };
 };
 
 export class FrontController {
@@ -39,7 +39,7 @@ export class FrontController {
 		body,
 	}: {
 		url: string;
-		body: { [key: string]: any };
+		body?: { toUpdate: { [key: string]: string } };
 	}): Promise<Response> {
 		let response: Response;
 		try {

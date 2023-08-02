@@ -2,10 +2,10 @@ import axios from 'axios';
 import { Response } from './FrontController';
 
 export interface Ifetcher {
-	get(data: { url: string }): Promise<any>;
-	post(data: { url: string; body: string }): Promise<any>;
-	put(data: { url: string; body: string }): Promise<any>;
-	delete(data: { url: string }): Promise<any>;
+	get(data: { url: string }): Promise<Response>;
+	post(data: { url: string; body: string }): Promise<Response>;
+	put(data: { url: string; body: string }): Promise<Response>;
+	delete(data: { url: string }): Promise<Response>;
 }
 
 export class FetcherAxios implements Ifetcher {
@@ -41,5 +41,13 @@ export class FetcherAxios implements Ifetcher {
 		}
 		return response;
 	}
-	async delete(data: { url: string }): Promise<any> {}
+	async delete({ url }: { url: string }): Promise<Response> {
+		let response: Response;
+		try {
+			response = await axios.delete(url);
+		} catch (error: any) {
+			response = { status: 'error', message: error.message };
+		}
+		return response;
+	}
 }
