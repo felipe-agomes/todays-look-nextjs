@@ -59,8 +59,3 @@ export class FrontController {
 		return response;
 	}
 }
-
-const fetcherAxios = new FetcherAxios();
-const frontController = new FrontController(fetcherAxios);
-
-frontController.doGet({ url: '/api/protected/adm/alluser' }).then(console.log);

@@ -27,7 +27,8 @@ import ContainerPage from '@/components/ContainerPage';
 import Head from 'next/head';
 import useAppContext from '@/hooks/useAppContext';
 import { Header } from '@/components/Header';
-import { makeClotheService } from '@/services/Service';
+import { FrontController } from '@/services/FrontController';
+import { FetcherAxios } from '@/services/Fetcher';
 
 type Props = {
 	serverSession: SessionProps;
@@ -36,30 +37,32 @@ type Props = {
 export default function Home({ serverSession }: Props) {
 	const { setClothes, setSets } = useAppContext();
 
-	async function updateClothesAndSets() {
-		const clotheService = makeClotheService();
-		setClothes((await clotheService.getAll(serverSession.user.id)).clothes);
-		// const dataClothes = response.clothes as ClothesProps[] | [];
-		// setClothes(dataClothes.clothes);
-		// const dataSets = (await fetcher(
-		// 	`/api/protected/user/${serverSession.user.id}/clothe/allSets`,
-		// )) as SetsProps[] | SetsProps;
-
-		// if (Array.isArray(dataClothes)) {
-		// 	setClothes(dataClothes);
-		// }
-		// if (Array.isArray(dataSets)) {
-		// 	setSets(dataSets);
-		// }
-	}
-
-	// const updateClothesAndSets = async () => {
+	// async function updateClothesAndSets() {
 	// 	const clotheService = makeClotheService();
-	// 	const response = await clotheService.getAll(serverSession.user.id);
-	// 	setClothes(response.clothes);
-	// };
+	// 	setClothes((await clotheService.getAll(serverSession.user.id)).clothes);
+	// 	const dataClothes = response.clothes as ClothesProps[] | [];
+	// 	setClothes(dataClothes.clothes);
+	// 	const dataSets = (await fetcher(
+	// 		`/api/protected/user/${serverSession.user.id}/clothe/allSets`,
+	// 	)) as SetsProps[] | SetsProps;
+
+	// 	if (Array.isArray(dataClothes)) {
+	// 		setClothes(dataClothes);
+	// 	}
+	// 	if (Array.isArray(dataSets)) {
+	// 		setSets(dataSets);
+	// 	}
+	// }
+
+	const updateClothesAndSets = async () => {};
 
 	useEffect(() => {
+		const fetcherAxios = new FetcherAxios();
+		const frontController = new FrontController(fetcherAxios);
+		frontController
+			.doGet({ url: '/api/protected/adm/alluser' })
+			.then(console.log);
+
 		updateClothesAndSets();
 	}, [serverSession]);
 
