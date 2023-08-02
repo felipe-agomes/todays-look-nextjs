@@ -27,6 +27,7 @@ import ContainerPage from '@/components/ContainerPage';
 import Head from 'next/head';
 import useAppContext from '@/hooks/useAppContext';
 import { Header } from '@/components/Header';
+import { makeClotheService } from '@/services/Service';
 
 type Props = {
 	serverSession: SessionProps;
@@ -36,20 +37,27 @@ export default function Home({ serverSession }: Props) {
 	const { setClothes, setSets } = useAppContext();
 
 	async function updateClothesAndSets() {
-		const dataClothes = (await fetcher(
-			`/api/protected/user/${serverSession.user.id}/clothe/all`,
-		)) as ClothesProps[] | ClothesProps;
-		const dataSets = (await fetcher(
-			`/api/protected/user/${serverSession.user.id}/clothe/allSets`,
-		)) as SetsProps[] | SetsProps;
+		const clotheService = makeClotheService();
+		setClothes((await clotheService.getAll(serverSession.user.id)).clothes);
+		// const dataClothes = response.clothes as ClothesProps[] | [];
+		// setClothes(dataClothes.clothes);
+		// const dataSets = (await fetcher(
+		// 	`/api/protected/user/${serverSession.user.id}/clothe/allSets`,
+		// )) as SetsProps[] | SetsProps;
 
-		if (Array.isArray(dataClothes)) {
-			setClothes(dataClothes);
-		}
-		if (Array.isArray(dataSets)) {
-			setSets(dataSets);
-		}
+		// if (Array.isArray(dataClothes)) {
+		// 	setClothes(dataClothes);
+		// }
+		// if (Array.isArray(dataSets)) {
+		// 	setSets(dataSets);
+		// }
 	}
+
+	// const updateClothesAndSets = async () => {
+	// 	const clotheService = makeClotheService();
+	// 	const response = await clotheService.getAll(serverSession.user.id);
+	// 	setClothes(response.clothes);
+	// };
 
 	useEffect(() => {
 		updateClothesAndSets();

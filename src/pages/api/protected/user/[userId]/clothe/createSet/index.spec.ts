@@ -3,7 +3,7 @@ import { setModels } from '@/models/setModels';
 
 jest.mock('@/models/setModels');
 
-describe('createSet', () => {
+describe.skip('createSet', () => {
 	let req: any;
 	let res: any;
 

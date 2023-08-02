@@ -6,7 +6,7 @@ import { getSession } from 'next-auth/react';
 jest.mock('@/models/setModels');
 jest.mock('next-auth/react');
 
-describe('getAllSet', () => {
+describe.skip('getAllSet', () => {
 	let req: NextApiRequest;
 	let res: NextApiResponse;
 

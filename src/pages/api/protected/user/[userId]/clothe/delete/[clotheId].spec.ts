@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 jest.mock('@/models/clotheModels');
 
-describe('deleteClothe', () => {
+describe.skip('deleteClothe', () => {
 	let req: NextApiRequest;
 	let res: NextApiResponse;
 

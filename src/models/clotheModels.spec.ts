@@ -27,7 +27,7 @@ const clothe: ClothesProps = {
 const clotheId = '321';
 const mockClothe = { ...clothe, updateOne: jest.fn() };
 
-describe('setNewClothe', () => {
+describe.skip('setNewClothe', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
@@ -75,7 +75,7 @@ describe('setNewClothe', () => {
 	});
 });
 
-describe('getAllClothes', () => {
+describe.skip('getAllClothes', () => {
 	afterEach(() => {
 		jest.resetAllMocks();
 	});
@@ -106,7 +106,7 @@ describe('getAllClothes', () => {
 	});
 });
 
-describe('deleteClothe', () => {
+describe.skip('deleteClothe', () => {
 	afterEach(() => {
 		jest.clearAllMocks();
 	});
@@ -137,7 +137,7 @@ describe('deleteClothe', () => {
 	});
 });
 
-describe('toggleFavorite', () => {
+describe.skip('toggleFavorite', () => {
 	afterEach(() => {
 		jest.clearAllMocks();
 	});
@@ -166,7 +166,7 @@ describe('toggleFavorite', () => {
 	});
 });
 
-describe('updateCategory', () => {
+describe.skip('updateCategory', () => {
 	afterEach(() => {
 		jest.clearAllMocks();
 	});

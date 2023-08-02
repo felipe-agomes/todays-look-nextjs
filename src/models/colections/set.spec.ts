@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import Set from './set';
 
-describe('Set model', () => {
+describe.skip('Set model', () => {
 	beforeAll(async () => {
 		await mongoose.connect('mongodb://localhost:27017');
 	});

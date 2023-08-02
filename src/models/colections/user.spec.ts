@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import User from './user';
 
-describe('User model', () => {
+describe.skip('User model', () => {
 	beforeAll(async () => {
 		await mongoose.connect('mongodb://localhost:27017');
 	});

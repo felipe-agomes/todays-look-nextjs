@@ -30,9 +30,9 @@ async function setNewClothe(data: ClotheData) {
 
 async function getAllClothes(userId: string) {
 	await connectDb();
-	const clothe = await Clothe.find({ userId });
+	const clothes = await Clothe.find({ userId });
 
-	if (!clothe) {
+	if (!clothes) {
 		return {
 			error: true,
 			message: 'Nenhuma roupa desse usuario encontrada',
@@ -42,7 +42,7 @@ async function getAllClothes(userId: string) {
 	return {
 		error: false,
 		message: 'Roupas encontradas com sucesso',
-		clothe,
+		clothes,
 	};
 }
 

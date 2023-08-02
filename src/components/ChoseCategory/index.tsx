@@ -59,18 +59,18 @@ export default function ChoseCategory({
 	}) {
 		setLoading(true);
 		const path = isClothe ? 'updateCategory' : 'updateCategorySet';
-		await fetcher(
-			`/api/protected/user/${userId}/clothe/${path}/${clotheOrSetId}`,
-			{
-				method: 'PUT',
-				body: JSON.stringify({
-					toUpdate: values.existingCategory
-						? values.existingCategory
-						: values.category,
-				}),
-				update: true,
-			},
-		);
+		// await fetcher(
+		// 	`/api/protected/user/${userId}/clothe/${path}/${clotheOrSetId}`,
+		// 	{
+		// 		method: 'PUT',
+		// 		body: JSON.stringify({
+		// 			toUpdate: values.existingCategory
+		// 				? values.existingCategory
+		// 				: values.category,
+		// 		}),
+		// 		update: true,
+		// 	},
+		// );
 		setModal(null);
 		setLoading(false);
 	}
