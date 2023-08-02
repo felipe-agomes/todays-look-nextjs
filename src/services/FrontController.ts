@@ -34,7 +34,7 @@ export class FrontController {
 
 		return response;
 	}
-	async doUpdate({
+	async doPut({
 		url,
 		body,
 	}: {
@@ -43,7 +43,7 @@ export class FrontController {
 	}): Promise<Response> {
 		let response: Response;
 		try {
-			response = await this.fetcher.update({ url, body: JSON.stringify(body) });
+			response = await this.fetcher.put({ url, body: JSON.stringify(body) });
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}

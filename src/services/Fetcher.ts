@@ -4,7 +4,7 @@ import { Response } from './FrontController';
 export interface Ifetcher {
 	get(data: { url: string }): Promise<any>;
 	post(data: { url: string; body: string }): Promise<any>;
-	update(data: { url: string; body: string }): Promise<any>;
+	put(data: { url: string; body: string }): Promise<any>;
 	delete(data: { url: string }): Promise<any>;
 }
 
@@ -30,6 +30,10 @@ export class FetcherAxios implements Ifetcher {
 		}
 		return response;
 	}
-	async update(data: { url: string; body: string }): Promise<any> {}
+	async put({ url, body }: { url: string; body: string }): Promise<any> {
+		await axios.put(url, body, {
+			headers: { 'Content-Type': 'application/json' },
+		});
+	}
 	async delete(data: { url: string }): Promise<any> {}
 }

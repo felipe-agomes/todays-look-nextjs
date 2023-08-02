@@ -5,6 +5,8 @@ import {
 	doGetSuccessDataResponse,
 	doPostRequestString,
 	doPostSuccessDataResponse,
+	doPutRequest,
+	doPutRequestString,
 	emptySuccessDataResponse,
 	errorMessage,
 } from './FrontController.spec';
@@ -84,5 +86,44 @@ describe('FetcherAxios', () => {
 
 			expect(result).toEqual(doPostSuccessDataResponse);
 		});
+	});
+
+	describe('put()', () => {
+		it('should call axios.put()', async () => {
+			const { fetcherAxios: sut } = makeSut();
+			const spyPut = jest.spyOn(axios, 'put');
+			(spyPut as jest.SpyInstance).mockResolvedValueOnce(undefined);
+
+			await sut.put(doPutRequestString);
+
+			expect(spyPut).toHaveBeenCalledWith(
+				doPutRequestString.url,
+				doPutRequestString.body,
+				{
+					headers: { 'Content-Type': 'application/json' },
+				},
+			);
+			expect(spyPut).toHaveBeenCalledTimes(1);
+		});
+
+		// it('should to throw a error if fetcher throw a error ', async () => {
+		// 	const { frontController: sut, fetcher } = makeSut();
+		// 	fetcher.update = jest.fn().mockRejectedValueOnce(new Error('erro'));
+
+		// 	const result = await sut.doPut(doPutRequest);
+
+		// 	expect(result).toEqual(errorMessage);
+		// });
+
+		// it('should return the data of response', async () => {
+		// 	const { frontController: sut, fetcher } = makeSut();
+		// 	fetcher.update = jest
+		// 		.fn()
+		// 		.mockResolvedValueOnce(doPutSuccessDataResponse);
+
+		// 	const result = await sut.doPut(doPutRequest);
+
+		// 	expect(result).toEqual(doPutSuccessDataResponse);
+		// });
 	});
 });

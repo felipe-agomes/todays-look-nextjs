@@ -29,7 +29,7 @@ export const doDeleteSuccessDataResponse = {
 	message: 'Sucesso ao deletar usuário',
 };
 
-export const doUpdateRequest = {
+export const doPutRequest = {
 	url: '/teste',
 	body: {
 		id: '123',
@@ -37,15 +37,15 @@ export const doUpdateRequest = {
 	},
 };
 
-export const doUpdateRequestString = {
-	url: doUpdateRequest.url,
-	body: JSON.stringify(doUpdateRequest.body),
+export const doPutRequestString = {
+	url: doPutRequest.url,
+	body: JSON.stringify(doPutRequest.body),
 };
 
-export const doUpdateSuccessDataResponse = {
+export const doPutSuccessDataResponse = {
 	status: 'success',
 	message: 'Dados buscados com sucesso',
-	data: JSON.stringify(doUpdateRequest.body),
+	data: JSON.stringify(doPutRequest.body),
 };
 
 export const doPostRequest = {
@@ -139,35 +139,33 @@ describe('FrontController', () => {
 		});
 	});
 
-	describe('doUpdate()', () => {
-		it('should call fetcher.update({"url": "/teste","body": {"id": "123","toUpdate": { name: "new-name", email: "new-email" }}})', async () => {
+	describe('doPut()', () => {
+		it('should call fetcher.put({"url": "/teste","body": {"id": "123","toPut": { name: "new-name", email: "new-email" }}})', async () => {
 			const { frontController: sut, fetcher } = makeSut();
-			const spyUpdate = jest.spyOn(fetcher, 'update');
+			const spyPut = jest.spyOn(fetcher, 'put');
 
-			await sut.doUpdate(doUpdateRequest);
+			await sut.doPut(doPutRequest);
 
-			expect(spyUpdate).toHaveBeenCalledWith(doUpdateRequestString);
-			expect(spyUpdate).toHaveBeenCalledTimes(1);
+			expect(spyPut).toHaveBeenCalledWith(doPutRequestString);
+			expect(spyPut).toHaveBeenCalledTimes(1);
 		});
 
 		it('should to throw a error if fetcher throw a error ', async () => {
 			const { frontController: sut, fetcher } = makeSut();
-			fetcher.update = jest.fn().mockRejectedValueOnce(new Error('erro'));
+			fetcher.put = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
-			const result = await sut.doUpdate(doUpdateRequest);
+			const result = await sut.doPut(doPutRequest);
 
 			expect(result).toEqual(errorMessage);
 		});
 
 		it('should return the data of response', async () => {
 			const { frontController: sut, fetcher } = makeSut();
-			fetcher.update = jest
-				.fn()
-				.mockResolvedValueOnce(doUpdateSuccessDataResponse);
+			fetcher.put = jest.fn().mockResolvedValueOnce(doPutSuccessDataResponse);
 
-			const result = await sut.doUpdate(doUpdateRequest);
+			const result = await sut.doPut(doPutRequest);
 
-			expect(result).toEqual(doUpdateSuccessDataResponse);
+			expect(result).toEqual(doPutSuccessDataResponse);
 		});
 	});
 
