@@ -177,7 +177,9 @@ describe.skip('updateCategory', () => {
 
 		const newClothe = { category: toUpdate };
 
-		const result = await clotheModels.updateCategory(clotheId, toUpdate);
+		const result = await clotheModels.updateCategory(clotheId, {
+			category: 'teste',
+		});
 
 		expect(mockClotheFindById).toBeCalledWith(clotheId);
 		expect(result).toEqual({
@@ -190,7 +192,9 @@ describe.skip('updateCategory', () => {
 	it('should return an error if no clothe is found for the given id', async () => {
 		mockClotheFindById.mockResolvedValue(null);
 
-		const result = await clotheModels.updateCategory(clotheId, toUpdate);
+		const result = await clotheModels.updateCategory(clotheId, {
+			category: 'teste',
+		});
 
 		expect(mockClotheFindById).toBeCalledWith(clotheId);
 		expect(result).toEqual({ error: true, message: 'Nenhuma roupa encontrada' });

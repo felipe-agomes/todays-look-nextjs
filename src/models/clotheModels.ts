@@ -2,6 +2,7 @@ import { ClotheData } from '@/@types';
 import User from './colections/user';
 import Clothe from './colections/clothe';
 import connectDb from '@/services/connectDb';
+import { Response } from '@/controllers/FrontController';
 
 async function setNewClothe(data: ClotheData) {
 	await connectDb();
@@ -87,23 +88,21 @@ async function toggleFavorite(clotheId: string) {
 	};
 }
 
-async function updateCategory(clotheId: String, toUpdate: String) {
+async function updateCategory(
+	clotheId: String,
+	{ category }: { category: string },
+): Promise<Response> {
 	await connectDb();
 	const clothe = await Clothe.findById(clotheId);
-
 	if (!clothe) {
-		return {
-			error: true,
-			message: 'Nenhuma roupa encontrada',
-		};
+		throw new Error('Nenhuma roupa encontrada');
 	}
-
-	const newClothe = { category: toUpdate };
-	await clothe.updateOne(newClothe);
+	await clothe.updateOne({ category });
+	clothe.category = category;
 	return {
-		error: false,
+		status: 'success',
 		message: 'Categoria alterada com sucesso',
-		clothe: newClothe,
+		data: clothe,
 	};
 }
 
