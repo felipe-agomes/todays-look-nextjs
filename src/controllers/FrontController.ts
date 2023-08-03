@@ -1,9 +1,9 @@
-import { Ifetcher } from './Fetcher';
+import { Ifetcher } from '@/services/Fetcher';
 
 export type Response = {
 	status: string;
 	message: string;
-	data?: { [key: string]: string };
+	data?: any;
 };
 
 export class FrontController {
@@ -36,14 +36,17 @@ export class FrontController {
 	}
 	async doPut({
 		url,
-		body,
+		toUpdate,
 	}: {
 		url: string;
-		body?: { toUpdate: { [key: string]: string } };
+		toUpdate?: { [key: string]: string };
 	}): Promise<Response> {
 		let response: Response;
 		try {
-			response = await this.fetcher.put({ url, body: JSON.stringify(body) });
+			response = await this.fetcher.put({
+				url,
+				body: JSON.stringify({ toUpdate }),
+			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}

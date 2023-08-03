@@ -1,4 +1,4 @@
-import { FetcherAxios } from './Fetcher';
+import { FetcherAxios } from '../services/Fetcher';
 import { FrontController } from './FrontController';
 
 export const makeSut = () => {
@@ -37,20 +37,18 @@ export const doDeleteSuccessDataResponse = {
 
 export const doPutRequest = {
 	url: '/teste',
-	body: {
-		toUpdate: { name: 'new-name', email: 'new-email' },
-	},
+	toUpdate: { name: 'new-name', email: 'new-email' },
 };
 
 export const doPutRequestString = {
 	url: doPutRequest.url,
-	body: JSON.stringify(doPutRequest.body),
+	body: JSON.stringify({ toUpdate: doPutRequest.toUpdate }),
 };
 
 export const doPutSuccessDataResponse = {
 	status: 'success',
 	message: 'Dados buscados com sucesso',
-	data: JSON.stringify(doPutRequest.body),
+	data: JSON.stringify(doPutRequest.toUpdate),
 };
 
 export const doPostRequest = {
