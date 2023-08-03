@@ -1,5 +1,5 @@
+import { Response } from '@/controllers/FrontController';
 import axios from 'axios';
-import { Response } from './FrontController';
 
 export interface Ifetcher {
 	get(data: { url: string }): Promise<Response>;
@@ -13,7 +13,8 @@ export class FetcherAxios implements Ifetcher {
 	async get({ url }: { url: string }): Promise<Response> {
 		let response: Response;
 		try {
-			response = await axios.get(url);
+			const { data } = await axios.get(url);
+			response = data as Response;
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}
@@ -22,9 +23,10 @@ export class FetcherAxios implements Ifetcher {
 	async post({ url, body }: { url: string; body: string }): Promise<Response> {
 		let response: Response;
 		try {
-			response = await axios.post(url, body, {
+			const { data } = await axios.post(url, body, {
 				headers: { 'Content-Type': 'application/json' },
 			});
+			response = data as Response;
 		} catch (error: any) {
 			throw new Error(error.message);
 		}
@@ -33,9 +35,10 @@ export class FetcherAxios implements Ifetcher {
 	async put({ url, body }: { url: string; body: string }): Promise<Response> {
 		let response: Response;
 		try {
-			response = await axios.put(url, body, {
+			const { data } = await axios.put(url, body, {
 				headers: { 'Content-Type': 'application/json' },
 			});
+			response = data as Response;
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}
@@ -44,7 +47,8 @@ export class FetcherAxios implements Ifetcher {
 	async delete({ url }: { url: string }): Promise<Response> {
 		let response: Response;
 		try {
-			response = await axios.delete(url);
+			const { data } = await axios.delete(url);
+			response = data as Response;
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}

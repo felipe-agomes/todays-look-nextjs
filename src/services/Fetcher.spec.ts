@@ -11,11 +11,41 @@ import {
 	doPutSuccessDataResponse,
 	emptySuccessDataResponse,
 	errorMessage,
-} from './FrontController.spec';
+} from '../controllers/FrontController.spec';
 
 const makeSut = () => {
 	const fetcherAxios = new FetcherAxios();
 	return { fetcherAxios };
+};
+
+const doDeleteSuccessDataResponseAxios = {
+	data: {
+		...doDeleteSuccessDataResponse,
+	},
+};
+
+const doPutSuccessDataResponseAxios = {
+	data: {
+		...doPutSuccessDataResponse,
+	},
+};
+
+const doPostSuccessDataResponseAxios = {
+	data: {
+		...doPostSuccessDataResponse,
+	},
+};
+
+const emptySuccessDataResponseAxios = {
+	data: {
+		...emptySuccessDataResponse,
+	},
+};
+
+const doGetSuccessDataResponseAxios = {
+	data: {
+		...doGetSuccessDataResponse,
+	},
 };
 
 describe('FetcherAxios', () => {
@@ -23,7 +53,7 @@ describe('FetcherAxios', () => {
 		it('should call the metodo axios.get()', async () => {
 			const { fetcherAxios: sut } = makeSut();
 			const spyGet = jest.spyOn(axios, 'get');
-			(spyGet as jest.SpyInstance).mockResolvedValue(undefined);
+			(spyGet as jest.SpyInstance).mockResolvedValue({ data: {} });
 
 			await sut.get(doGetAndDoDeleteUrl);
 
@@ -42,7 +72,7 @@ describe('FetcherAxios', () => {
 
 		it('should return the data of response if find the data', async () => {
 			const { fetcherAxios: sut } = makeSut();
-			axios.get = jest.fn().mockResolvedValueOnce(doGetSuccessDataResponse);
+			axios.get = jest.fn().mockResolvedValueOnce(doGetSuccessDataResponseAxios);
 
 			const result = await sut.get(doGetAndDoDeleteUrl);
 
@@ -51,7 +81,7 @@ describe('FetcherAxios', () => {
 
 		it('should return the data of response with the prop data empty if nothing to find', async () => {
 			const { fetcherAxios: sut } = makeSut();
-			axios.get = jest.fn().mockResolvedValueOnce(emptySuccessDataResponse);
+			axios.get = jest.fn().mockResolvedValueOnce(emptySuccessDataResponseAxios);
 
 			const result = await sut.get(doGetAndDoDeleteUrl);
 
@@ -63,7 +93,7 @@ describe('FetcherAxios', () => {
 		it('should call axios.post() with correct params', async () => {
 			const { fetcherAxios: sut } = makeSut();
 			const spyPost = jest.spyOn(axios, 'post');
-			(spyPost as jest.SpyInstance).mockResolvedValueOnce(undefined);
+			(spyPost as jest.SpyInstance).mockResolvedValueOnce({ data: {} });
 
 			await sut.post(doPostRequestString);
 
@@ -82,7 +112,7 @@ describe('FetcherAxios', () => {
 
 		it('should return the data of response', async () => {
 			const { fetcherAxios: sut } = makeSut();
-			axios.post = jest.fn().mockResolvedValueOnce(doPostSuccessDataResponse);
+			axios.post = jest.fn().mockResolvedValueOnce(doPostSuccessDataResponseAxios);
 
 			const result = await sut.post(doPostRequestString);
 
@@ -94,7 +124,7 @@ describe('FetcherAxios', () => {
 		it('should call axios.put()', async () => {
 			const { fetcherAxios: sut } = makeSut();
 			const spyPut = jest.spyOn(axios, 'put');
-			(spyPut as jest.SpyInstance).mockResolvedValueOnce(undefined);
+			(spyPut as jest.SpyInstance).mockResolvedValueOnce({ data: {} });
 
 			await sut.put(doPutRequestString);
 
@@ -119,7 +149,7 @@ describe('FetcherAxios', () => {
 
 		it('should return the data of response', async () => {
 			const { fetcherAxios: sut } = makeSut();
-			axios.put = jest.fn().mockResolvedValueOnce(doPutSuccessDataResponse);
+			axios.put = jest.fn().mockResolvedValueOnce(doPutSuccessDataResponseAxios);
 
 			const result = await sut.put(doPutRequestString);
 
@@ -131,7 +161,7 @@ describe('FetcherAxios', () => {
 		it('should call axios.delete()', async () => {
 			const { fetcherAxios: sut } = makeSut();
 			const spyDelete = jest.spyOn(axios, 'delete');
-			(spyDelete as jest.SpyInstance).mockResolvedValueOnce(undefined);
+			(spyDelete as jest.SpyInstance).mockResolvedValueOnce({ data: {} });
 
 			await sut.delete(doGetAndDoDeleteUrl);
 
@@ -150,7 +180,9 @@ describe('FetcherAxios', () => {
 
 		it('should return the data of response', async () => {
 			const { fetcherAxios: sut } = makeSut();
-			axios.delete = jest.fn().mockResolvedValueOnce(doDeleteSuccessDataResponse);
+			axios.delete = jest
+				.fn()
+				.mockResolvedValueOnce(doDeleteSuccessDataResponseAxios);
 
 			const result = await sut.delete(doGetAndDoDeleteUrl);
 
