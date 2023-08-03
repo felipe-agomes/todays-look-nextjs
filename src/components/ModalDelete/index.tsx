@@ -10,15 +10,9 @@ type Props = {
 	isClothe?: boolean;
 	modalId: ModalId | null;
 	deleteSet?: () => Promise<void>;
-	fetcher: (
-		url: string,
-		options?: FetcherOptions,
-	) => Promise<
-		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
-	>;
 };
 
-export default function ModalDelete({ modalId, fetcher, isClothe }: Props) {
+export default function ModalDelete({ modalId, isClothe }: Props) {
 	const { clothes, sets } = useAppContext();
 	const { closeAllModais } = useModaisController();
 	const [loading, setLoading] = useState<boolean>(false);
@@ -47,12 +41,12 @@ export default function ModalDelete({ modalId, fetcher, isClothe }: Props) {
 					colorScheme={'red'}
 					onClick={async () => {
 						setLoading(true);
-						await fetcher(
-							`/api/protected/user/${clotheOrSet?.userId}/clothe/${
-								isClothe ? 'delete' : 'deleteSet'
-							}/${clotheOrSet?.id}`,
-							{ method: 'DELETE', update: true },
-						);
+						// await fetcher(
+						// 	`/api/protected/user/${clotheOrSet?.userId}/clothe/${
+						// 		isClothe ? 'delete' : 'deleteSet'
+						// 	}/${clotheOrSet?.id}`,
+						// 	{ method: 'DELETE', update: true },
+						// );
 						closeAllModais();
 						setLoading(false);
 					}}

@@ -13,16 +13,7 @@ import Style from './WorkbenchSet.module.css';
 import useAppContext from '@/hooks/useAppContext';
 import useWorkBench from '@/hooks/useWorkBench';
 
-type Props = {
-	fetcher: (
-		url: string,
-		options?: FetcherOptions,
-	) => Promise<
-		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
-	>;
-};
-
-export default function WorkbenchSet({ fetcher }: Props) {
+export default function WorkbenchSet() {
 	const { resetWorkbench } = useWorkBench();
 	const { workbench } = useAppContext();
 	const [clothesPosition, setClothesPosition] = useState<ClothePosition[] | []>(
@@ -60,11 +51,11 @@ export default function WorkbenchSet({ fetcher }: Props) {
 			category: values.category,
 			sets: clothesPosition,
 		};
-		fetcher(`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`, {
-			method: 'POST',
-			body: JSON.stringify(data),
-			update: true,
-		});
+		// fetcher(`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`, {
+		// 	method: 'POST',
+		// 	body: JSON.stringify(data),
+		// 	update: true,
+		// });
 		resetWorkbench();
 		formik.resetForm({ values: { category: '' } });
 	}

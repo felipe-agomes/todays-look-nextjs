@@ -7,9 +7,7 @@ import {
 	SetsProps,
 } from '@/@types';
 import { CloseIcon } from '@chakra-ui/icons';
-import Image from 'next/image';
 import SetImages from '../SetImages';
-import useModaisContext from '@/hooks/useModaisContext';
 import useModaisController from '@/hooks/useModaisController';
 
 type Props = {

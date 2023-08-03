@@ -18,19 +18,12 @@ type Props = {
 	modalId: ModalId | null;
 	isClothe?: boolean;
 	setModal: (newValue: ModalId | null) => void;
-	fetcher: (
-		url: string,
-		options?: FetcherOptions,
-	) => Promise<
-		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
-	>;
 };
 
 export default function ModalChangeCategory({
 	isClothe,
 	modalId,
 	setModal,
-	fetcher,
 }: Props) {
 	const { clothes, sets } = useAppContext();
 	const [loading, setLoading] = useState<boolean>(false);
@@ -61,7 +54,6 @@ export default function ModalChangeCategory({
 			<ChoseCategory
 				setLoading={setLoading}
 				isClothe={isClothe}
-				fetcher={fetcher}
 				setModal={setModal}
 				categories={categories}
 				clotheOrSetId={clotheOrSet?.id}

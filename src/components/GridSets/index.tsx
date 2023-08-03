@@ -6,16 +6,7 @@ import useAppContext from '@/hooks/useAppContext';
 import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 import useModaisContext from '@/hooks/useModaisContext';
 
-type Props = {
-	fetcher: (
-		url: string,
-		options?: FetcherOptions,
-	) => Promise<
-		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
-	>;
-};
-
-export default function GridSets({ fetcher }: Props) {
+export default function GridSets() {
 	const { sets, currentCategorySets } = useAppContext();
 	const { mainModal, setMainModal } = useModaisContext();
 	const filteredSetsByCategory = filterClotheOrSetByCategory<SetsProps>(
@@ -27,7 +18,6 @@ export default function GridSets({ fetcher }: Props) {
 		<>
 			{mainModal && (
 				<ModalSet
-					fetcher={fetcher}
 					modalId={mainModal}
 					setModalId={setMainModal}
 				/>

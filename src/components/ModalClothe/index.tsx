@@ -26,15 +26,9 @@ import useModaisController from '@/hooks/useModaisController';
 
 type Props = {
 	modalId: ModalId | null;
-	fetcher: (
-		url: string,
-		options?: FetcherOptions,
-	) => Promise<
-		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
-	>;
 };
 
-export default function ModalClothe({ fetcher, modalId }: Props) {
+export default function ModalClothe({ modalId }: Props) {
 	const { addClotheToWorkbench, removeClotheFromWorkbench } = useWorkBench();
 	const { closeAllModais } = useModaisController();
 	const { workbench, clothes } = useAppContext();
@@ -60,14 +54,12 @@ export default function ModalClothe({ fetcher, modalId }: Props) {
 						<ModalChangeCategory
 							modalId={changeCategoryModal}
 							setModal={setChangeCategoryModal}
-							fetcher={fetcher}
 							isClothe
 						/>
 					)}
 					{deleteModal && (
 						<ModalDelete
 							modalId={deleteModal}
-							fetcher={fetcher}
 							isClothe
 						/>
 					)}
@@ -88,11 +80,11 @@ export default function ModalClothe({ fetcher, modalId }: Props) {
 											<StarIcon
 												onClick={async () => {
 													setLoading(true);
-													const data = (await fetcher(
-														`/api/protected/user/${clothe?.userId}/clothe/favorite/${clothe?.id}`,
-														{ method: 'PUT', update: true },
-													)) as ClothesProps;
-													data && setFavorite(data.favorite);
+													// const data = (await fetcher(
+													// 	`/api/protected/user/${clothe?.userId}/clothe/favorite/${clothe?.id}`,
+													// 	{ method: 'PUT', update: true },
+													// )) as ClothesProps;
+													// data && setFavorite(data.favorite);
 													closeAllModais();
 													setLoading(false);
 												}}

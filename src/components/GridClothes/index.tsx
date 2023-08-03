@@ -6,16 +6,7 @@ import useAppContext from '@/hooks/useAppContext';
 import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 import useModaisContext from '@/hooks/useModaisContext';
 
-type Props = {
-	fetcher: (
-		url: string,
-		options?: FetcherOptions | undefined,
-	) => Promise<
-		ClothesProps | ClothesProps[] | SetsProps | SetsProps[] | undefined
-	>;
-};
-
-export default function GridClothes({ fetcher }: Props) {
+export default function GridClothes() {
 	const { clothes, currentCategoryClothes } = useAppContext();
 	const { mainModal, setMainModal } = useModaisContext();
 	const filteredClotheByCategory: ClothesProps[] =
@@ -23,12 +14,7 @@ export default function GridClothes({ fetcher }: Props) {
 
 	return (
 		<>
-			{mainModal && (
-				<ModalClothe
-					modalId={mainModal}
-					fetcher={fetcher}
-				/>
-			)}
+			{mainModal && <ModalClothe modalId={mainModal} />}
 			<ul className={Style.boxList}>
 				{filteredClotheByCategory.map((clothe) => {
 					return (

@@ -1,12 +1,4 @@
-import {
-	ClothesProps,
-	FetcherOptions,
-	ModalId,
-	ModalState,
-	OpenOrCloseModalProps,
-	SetsProps,
-	UserId,
-} from '@/@types';
+import { ModalId, SetsProps } from '@/@types';
 import ModalBase from '../ModalBase';
 import Style from './ModalSet.module.css';
 import { Spinner } from '@chakra-ui/react';
@@ -20,15 +12,9 @@ import useModaisContext from '@/hooks/useModaisContext';
 type Props = {
 	modalId: ModalId;
 	setModalId: (newValue: ModalId | null) => void;
-	fetcher: (
-		url: string,
-		options?: FetcherOptions,
-	) => Promise<
-		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
-	>;
 };
 
-export default function ModalSet({ modalId, fetcher, setModalId }: Props) {
+export default function ModalSet({ modalId, setModalId }: Props) {
 	const { sets } = useAppContext();
 	const {
 		changeCategoryModal,
@@ -50,16 +36,9 @@ export default function ModalSet({ modalId, fetcher, setModalId }: Props) {
 				<ModalChangeCategory
 					modalId={changeCategoryModal}
 					setModal={setChangeCategoryModal}
-					fetcher={fetcher}
 				/>
 			)}
-			{deleteModal && (
-				<ModalDelete
-					modalId={deleteModal}
-					setModal={setDeleteModal}
-					fetcher={fetcher}
-				/>
-			)}
+			{deleteModal && <ModalDelete modalId={deleteModal} />}
 			{loading && (
 				<Spinner
 					color='cyan'
@@ -79,10 +58,7 @@ export default function ModalSet({ modalId, fetcher, setModalId }: Props) {
 			>
 				Conjunto: {set?.category}
 			</h1>
-			<ModalBase
-				set={set}
-				setModalId={setModalId}
-			>
+			<ModalBase set={set}>
 				<ul>
 					<li>
 						<p>Favoritar conjunto</p>
@@ -92,11 +68,11 @@ export default function ModalSet({ modalId, fetcher, setModalId }: Props) {
 							color={favorite ? 'gold' : 'whiteAlpha.600'}
 							onClick={async () => {
 								setLoading(true);
-								const data = (await fetcher(
-									`/api/protected/user/${set?.userId}/clothe/favoriteSet/${set?.id}`,
-									{ update: true, method: 'PUT' },
-								)) as SetsProps;
-								data && setFavorite(data.favorite);
+								// const data = (await fetcher(
+								// 	`/api/protected/user/${set?.userId}/clothe/favoriteSet/${set?.id}`,
+								// 	{ update: true, method: 'PUT' },
+								// )) as SetsProps;
+								// data && setFavorite(data.favorite);
 								setModalId(null);
 								setLoading(false);
 							}}

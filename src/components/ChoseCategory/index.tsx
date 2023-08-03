@@ -12,6 +12,10 @@ import {
 import { Button } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import Style from './ChoseCategory.module.css';
+import { clotheService } from '@/services/ClotheService';
+import { setService } from '@/services/SetService';
+import useAppContext from '@/hooks/useAppContext';
+import { Response } from '@/controllers/FrontController';
 
 type Props = {
 	categories: string[];
@@ -19,12 +23,6 @@ type Props = {
 	userId?: string;
 	isClothe?: boolean;
 	setModal: (newValue: ModalId | null) => void;
-	fetcher: (
-		url: string,
-		options?: FetcherOptions,
-	) => Promise<
-		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
-	>;
 	setLoading: (boolean: boolean) => void;
 };
 
@@ -34,9 +32,9 @@ export default function ChoseCategory({
 	isClothe,
 	setModal,
 	userId,
-	fetcher,
 	setLoading,
 }: Props) {
+	const { setClothes, setSets } = useAppContext();
 	const formikExistingCategory = useFormik({
 		initialValues: {
 			existingCategory: '',
@@ -53,12 +51,52 @@ export default function ChoseCategory({
 		onSubmit: handleSubmit,
 	});
 
-	async function handleSubmit(values: {
-		existingCategory?: String;
-		category?: String;
+	async function handleSubmit({
+		existingCategory,
+		category,
+	}: {
+		existingCategory?: string;
+		category?: string;
 	}) {
+		if (!existingCategory && !category) return;
+		if (!clotheOrSetId || !userId) throw new Error('Usuário não conectado');
 		setLoading(true);
-		const path = isClothe ? 'updateCategory' : 'updateCategorySet';
+
+		try {
+			if (isClothe) {
+				const response = await clotheService.changeCategoryById({
+					userId,
+					clotheOrSetId,
+					toUpdate: { category: existingCategory ? existingCategory : category! },
+				});
+				const { data: newClothe } = response;
+				setClothes((clothes) => {
+					return clothes.splice(
+						clothes.findIndex((clothe) => clothe.id === newClothe.id),
+						1,
+						newClothe,
+					);
+				});
+			}
+			if (!isClothe) {
+				const { data: response } = await setService.changeCategoryById({
+					userId,
+					clotheOrSetId,
+					toUpdate: { category: existingCategory ? existingCategory : category! },
+				});
+				const { data: newSet } = response as Response;
+				setClothes((sets) => {
+					return sets.splice(
+						sets.findIndex((clothe) => clothe.id === newSet.id),
+						1,
+						newSet,
+					);
+				});
+			}
+		} catch (error) {
+			throw new Error('Erro ao alterar a categoria');
+		}
+
 		// await fetcher(
 		// 	`/api/protected/user/${userId}/clothe/${path}/${clotheOrSetId}`,
 		// 	{
