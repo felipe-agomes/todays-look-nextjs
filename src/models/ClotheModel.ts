@@ -16,9 +16,9 @@ type ClotheData = {
 
 interface IClotheModel {
 	getAllByUserId(data: { userId: string }): Promise<ClotheData[]>;
+	toggleFavoriteByClotheId(data: { clotheId: string }): Promise<ClotheData>;
 	create(): Promise<void>;
 	deleteByClotheId(): Promise<void>;
-	toggleFavoriteByClotheId(): Promise<void>;
 	changeCategoryByClotheId(): Promise<void>;
 }
 
@@ -34,6 +34,11 @@ export class ClotheModelMongo implements IClotheModel {
 			throw new Error('Erro ao se conectar ao banco de dados');
 		}
 	}
+
+	async disconnectDb() {
+		await mongoose.disconnect();
+	}
+
 	async getAllByUserId({ userId }: { userId: string }): Promise<ClotheData[]> {
 		await this.connectDb();
 		let clothes: any[];
@@ -42,12 +47,30 @@ export class ClotheModelMongo implements IClotheModel {
 		} catch (error) {
 			throw new Error('Erro ao buscar roupas');
 		}
+		await this.disconnectDb();
 		if (!clothes) return [];
 		return clothes;
 	}
+
+	async toggleFavoriteByClotheId({
+		clotheId,
+	}: {
+		clotheId: string;
+	}): Promise<ClotheData> {
+		await this.connectDb();
+		let clothe: any;
+		try {
+			clothe = await Clothe.findById(clotheId);
+			clothe.favorite = !clothe.favorite;
+			await clothe.save();
+		} catch (error) {
+			throw new Error('Erro ao alterar favorito');
+		}
+		await this.disconnectDb();
+		return clothe as ClotheData;
+	}
 	async create(): Promise<void> {}
 	async deleteByClotheId(): Promise<void> {}
-	async toggleFavoriteByClotheId(): Promise<void> {}
 	async changeCategoryByClotheId(): Promise<void> {}
 }
 
