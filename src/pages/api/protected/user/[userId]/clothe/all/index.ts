@@ -8,10 +8,8 @@ export default async function getAllClothes(
 ) {
 	// const session = await getSession({ req });
 	const session = true;
-
 	if (session) {
 		const userId = req.query.userId;
-
 		if (!(typeof userId === 'string')) {
 			res.status(400).json({
 				error: true,
