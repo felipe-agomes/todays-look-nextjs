@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function updateCategory(
 	req: NextApiRequest,
-	res: NextApiResponse
+	res: NextApiResponse,
 ) {
 	// const session = await getSession({ req });
 	const session = true;
@@ -24,8 +24,8 @@ export default async function updateCategory(
 			case 'PUT':
 				const response = await clotheModels.updateCategory(clotheId, toUpdate);
 
-				if (response.error) {
-					res.status(400).json(response.message);
+				if (response.status === 'error') {
+					res.status(400).json(response);
 					return;
 				}
 
