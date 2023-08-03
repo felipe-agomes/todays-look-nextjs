@@ -1,4 +1,4 @@
-import { clotheModels } from '@/models/clotheModels';
+import { clotheModels } from '@/models/clotheModels_legacy';
 import deleteClothe from './[clotheId]';
 import { NextApiRequest, NextApiResponse } from 'next';
 

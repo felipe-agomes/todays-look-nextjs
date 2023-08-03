@@ -1,4 +1,4 @@
-import { clotheModels } from '@/models/clotheModels';
+import { clotheModels } from '@/models/clotheModels_legacy';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function updateCategory(

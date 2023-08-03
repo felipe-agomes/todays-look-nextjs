@@ -1,9 +1,9 @@
-import { clotheModels } from '@/models/clotheModels';
+import { clotheModels } from '@/models/clotheModels_legacy';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function deleteClothe(
 	req: NextApiRequest,
-	res: NextApiResponse
+	res: NextApiResponse,
 ) {
 	// const session = await getSession({ req });
 	const session = true;

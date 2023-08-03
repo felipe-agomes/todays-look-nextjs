@@ -1,14 +1,14 @@
-import { clotheModels } from '@/models/clotheModels';
+import { clotheModels } from '@/models/clotheModels_legacy';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
 export default async function toggleFavorite(
 	req: NextApiRequest,
-	res: NextApiResponse
+	res: NextApiResponse,
 ) {
 	// const session = await getSession({ req });
 	const session = true;
-	
+
 	if (session) {
 		const clotheId = req.query.clotheId;
 
