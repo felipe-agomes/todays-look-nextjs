@@ -28,13 +28,17 @@ import Head from 'next/head';
 import useAppContext from '@/hooks/useAppContext';
 import { Header } from '@/components/Header';
 import { clotheService } from '@/services/ClotheService';
+import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
 
 type Props = {
 	serverSession: SessionProps;
 };
 
 export default function Home({ serverSession }: Props) {
-	const { setClothes, setSets } = useAppContext();
+	const { setClothes, setSets, clothes, sets } = useAppContext();
+	const setsCategories = categoriesClotheOrSet<SetsProps>(sets);
+	const clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
+	console.log({ setsCategories, clothesCategories });
 
 	const updateClothesAndSets = async () => {
 		const response: any = await clotheService.getAllByUserId({
@@ -63,7 +67,7 @@ export default function Home({ serverSession }: Props) {
 						<TabPanels>
 							<TabPanel className={style.page}>
 								<Header.Root title='Conjuntos'>
-									<Header.Category />
+									<Header.Category categories={setsCategories} />
 								</Header.Root>
 								<ContainerPage>
 									<GridSets />
@@ -71,7 +75,10 @@ export default function Home({ serverSession }: Props) {
 							</TabPanel>
 							<TabPanel className={style.page}>
 								<Header.Root title='Roupas'>
-									<Header.Category isClothe />
+									<Header.Category
+										categories={clothesCategories}
+										isClothe
+									/>
 								</Header.Root>
 								<ContainerPage>
 									<GridClothes />

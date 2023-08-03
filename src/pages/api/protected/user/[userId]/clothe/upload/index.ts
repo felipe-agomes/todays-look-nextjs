@@ -1,5 +1,5 @@
 import { ClotheData, ExtendedRequest } from '@/@types';
-import { clotheModels } from '@/models/clotheModels';
+import { clotheModels } from '@/models/clotheModels_legacy';
 import { uploadImage } from '@/utils/middleware';
 import { Request, Response } from 'express';
 import { PageConfig } from 'next';
