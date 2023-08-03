@@ -1,4 +1,4 @@
-import { Ifetcher } from '@/services/Fetcher';
+import { IFetcher } from '@/services/Fetcher';
 
 export type Response = {
 	status: string;
@@ -7,7 +7,7 @@ export type Response = {
 };
 
 export class FrontController {
-	constructor(private fetcher: Ifetcher) {}
+	constructor(private fetcher: IFetcher) {}
 	async doGet({ url }: { url: string }): Promise<Response> {
 		let response: Response;
 		try {

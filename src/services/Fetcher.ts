@@ -1,14 +1,14 @@
 import { Response } from '@/controllers/FrontController';
 import axios from 'axios';
 
-export interface Ifetcher {
+export interface IFetcher {
 	get(data: { url: string }): Promise<Response>;
 	post(data: { url: string; body: string }): Promise<Response>;
 	put(data: { url: string; body: string }): Promise<Response>;
 	delete(data: { url: string }): Promise<Response>;
 }
 
-export class FetcherAxios implements Ifetcher {
+export class FetcherAxios implements IFetcher {
 	constructor() {}
 	async get({ url }: { url: string }): Promise<Response> {
 		let response: Response;
