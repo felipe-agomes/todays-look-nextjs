@@ -1,17 +1,17 @@
 import { ClothePosition, ClothesProps, SetsProps } from '@/@types';
-import { createContext, useState } from 'react';
+import { Dispatch, SetStateAction, createContext, useState } from 'react';
 
 type AppContextType = {
 	workbench: ClothePosition[] | [];
-	setWorkbench: (newValue: ClothePosition[] | []) => void;
+	setWorkbench: Dispatch<SetStateAction<[] | ClothePosition[]>>;
 	clothes: ClothesProps[] | [];
-	setClothes: (newValue: ClothesProps[] | []) => void;
+	setClothes: Dispatch<SetStateAction<ClothesProps[] | []>>;
 	sets: SetsProps[] | [];
-	setSets: (newValue: SetsProps[] | []) => void;
+	setSets: Dispatch<SetStateAction<SetsProps[] | []>>;
 	currentCategoryClothes: string;
-	setCurrentCategoryClothes: (newValue: string) => void;
+	setCurrentCategoryClothes: Dispatch<SetStateAction<string>>;
 	currentCategorySets: string;
-	setCurrentCategorySets: (newValue: string) => void;
+	setCurrentCategorySets: Dispatch<SetStateAction<string>>;
 };
 
 export const AppContext = createContext<AppContextType>({
