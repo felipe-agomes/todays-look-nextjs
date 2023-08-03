@@ -27,8 +27,7 @@ import ContainerPage from '@/components/ContainerPage';
 import Head from 'next/head';
 import useAppContext from '@/hooks/useAppContext';
 import { Header } from '@/components/Header';
-import { FrontController } from '@/services/FrontController';
-import { FetcherAxios } from '@/services/Fetcher';
+import { clotheService } from '@/services/ClotheService';
 
 type Props = {
 	serverSession: SessionProps;
@@ -37,68 +36,17 @@ type Props = {
 export default function Home({ serverSession }: Props) {
 	const { setClothes, setSets } = useAppContext();
 
-	// async function updateClothesAndSets() {
-	// 	const clotheService = makeClotheService();
-	// 	setClothes((await clotheService.getAll(serverSession.user.id)).clothes);
-	// 	const dataClothes = response.clothes as ClothesProps[] | [];
-	// 	setClothes(dataClothes.clothes);
-	// 	const dataSets = (await fetcher(
-	// 		`/api/protected/user/${serverSession.user.id}/clothe/allSets`,
-	// 	)) as SetsProps[] | SetsProps;
-
-	// 	if (Array.isArray(dataClothes)) {
-	// 		setClothes(dataClothes);
-	// 	}
-	// 	if (Array.isArray(dataSets)) {
-	// 		setSets(dataSets);
-	// 	}
-	// }
-
-	const updateClothesAndSets = async () => {};
+	const updateClothesAndSets = async () => {
+		const response: any = await clotheService.getAllByUserId({
+			userId: serverSession.user.id,
+		});
+		console.log(response);
+		setClothes(response.clothes);
+	};
 
 	useEffect(() => {
-		const fetcherAxios = new FetcherAxios();
-		const frontController = new FrontController(fetcherAxios);
-		frontController
-			.doGet({ url: '/api/protected/adm/alluser' })
-			.then(console.log);
-
 		updateClothesAndSets();
 	}, [serverSession]);
-
-	async function fetcher(
-		url: string,
-		options?: FetcherOptions,
-	): Promise<
-		SetsProps | SetsProps[] | ClothesProps | ClothesProps[] | undefined
-	> {
-		const response = await fetch(
-			url,
-			options?.method
-				? {
-						method: options.method,
-						body: options.body,
-						headers: { 'Content-Type': 'application/json' },
-				  }
-				: undefined,
-		);
-
-		const data: any = await response.json();
-
-		let clotheOrSet =
-			(data.clothe as ClothesProps[]) || (data.set as SetsProps[]);
-
-		if (data.error) {
-			console.error('Erro: ', data.message);
-			return;
-		}
-
-		if (options?.update) {
-			await updateClothesAndSets();
-		}
-
-		return clotheOrSet;
-	}
 
 	return (
 		<>
@@ -118,7 +66,7 @@ export default function Home({ serverSession }: Props) {
 									<Header.Category />
 								</Header.Root>
 								<ContainerPage>
-									<GridSets fetcher={fetcher} />
+									<GridSets />
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>
@@ -126,7 +74,7 @@ export default function Home({ serverSession }: Props) {
 									<Header.Category isClothe />
 								</Header.Root>
 								<ContainerPage>
-									<GridClothes fetcher={fetcher} />
+									<GridClothes />
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>
@@ -141,7 +89,7 @@ export default function Home({ serverSession }: Props) {
 							<TabPanel className={style.page}>
 								<Header.Root title='Criar Conjunto' />
 								<ContainerPage>
-									<WorkbenchSet fetcher={fetcher} />
+									<WorkbenchSet />
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>
@@ -200,7 +148,18 @@ export default function Home({ serverSession }: Props) {
 }
 
 export async function getServerSideProps({ req }: { req: NextApiRequest }) {
-	const serverSession = (await getSession({ req })) as ExtendedSession | null;
+	// const serverSession = (await getSession({ req })) as ExtendedSession | null;
+
+	const serverSession = {
+		user: {
+			id: '644c57addf8d27eae6303eb4',
+			name: 'Felipe de Almeida Gomes',
+			email: 'falmeidagomes13@gmail.com',
+			password: '$2b$08$/bTNU54RhkM2uBfN8tTYjeInR.w7Er97dqfeM8lV5iSF6m2dmAHWq',
+			image:
+				'https://lh3.googleusercontent.com/a/AGNmyxbMjhevatxOLBIb0laXHYi8oKUlIXGrn_bNvBmuPg=s96-c',
+		},
+	};
 
 	if (!serverSession) {
 		return {
