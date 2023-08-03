@@ -6,21 +6,17 @@ import useModaisController from '@/hooks/useModaisController';
 
 type Props = {
 	isClothe?: boolean;
+	categories: string[];
 };
 
-export default function HeaderCategory({ isClothe }: Props) {
+export default function HeaderCategory({ isClothe, categories }: Props) {
 	const {
-		sets,
 		setCurrentCategorySets,
 		currentCategorySets,
-		clothes,
 		setCurrentCategoryClothes,
 		currentCategoryClothes,
 	} = useAppContext();
 	const { closeAllModais } = useModaisController();
-	const categories = isClothe
-		? categoriesClotheOrSet<ClothesProps>(clothes)
-		: categoriesClotheOrSet<SetsProps>(sets);
 	const { setCategory, category } = isClothe
 		? { category: currentCategoryClothes, setCategory: setCurrentCategoryClothes }
 		: { category: currentCategorySets, setCategory: setCurrentCategorySets };

@@ -16,6 +16,8 @@ import { clotheService } from '@/services/ClotheService';
 import { setService } from '@/services/SetService';
 import useAppContext from '@/hooks/useAppContext';
 import { Response } from '@/controllers/FrontController';
+import useSetCltohes from '@/hooks/useSetClothes';
+import useSetSets from '@/hooks/useSetSets';
 
 type Props = {
 	categories: string[];
@@ -34,7 +36,8 @@ export default function ChoseCategory({
 	userId,
 	setLoading,
 }: Props) {
-	const { setClothes, setSets } = useAppContext();
+	const { replaceClothes } = useSetCltohes();
+	const { replaceSets } = useSetSets();
 	const formikExistingCategory = useFormik({
 		initialValues: {
 			existingCategory: '',
@@ -61,7 +64,6 @@ export default function ChoseCategory({
 		if (!existingCategory && !category) return;
 		if (!clotheOrSetId || !userId) throw new Error('Usuário não conectado');
 		setLoading(true);
-
 		try {
 			if (isClothe) {
 				const response = await clotheService.changeCategoryById({
@@ -70,13 +72,7 @@ export default function ChoseCategory({
 					toUpdate: { category: existingCategory ? existingCategory : category! },
 				});
 				const { data: newClothe } = response;
-				setClothes((clothes) => {
-					return clothes.splice(
-						clothes.findIndex((clothe) => clothe.id === newClothe.id),
-						1,
-						newClothe,
-					);
-				});
+				replaceClothes(newClothe);
 			}
 			if (!isClothe) {
 				const { data: response } = await setService.changeCategoryById({
@@ -85,30 +81,11 @@ export default function ChoseCategory({
 					toUpdate: { category: existingCategory ? existingCategory : category! },
 				});
 				const { data: newSet } = response as Response;
-				setClothes((sets) => {
-					return sets.splice(
-						sets.findIndex((clothe) => clothe.id === newSet.id),
-						1,
-						newSet,
-					);
-				});
+				replaceSets(newSet);
 			}
 		} catch (error) {
 			throw new Error('Erro ao alterar a categoria');
 		}
-
-		// await fetcher(
-		// 	`/api/protected/user/${userId}/clothe/${path}/${clotheOrSetId}`,
-		// 	{
-		// 		method: 'PUT',
-		// 		body: JSON.stringify({
-		// 			toUpdate: values.existingCategory
-		// 				? values.existingCategory
-		// 				: values.category,
-		// 		}),
-		// 		update: true,
-		// 	},
-		// );
 		setModal(null);
 		setLoading(false);
 	}

@@ -23,6 +23,8 @@ import useAppContext from '@/hooks/useAppContext';
 import useModaisContext from '@/hooks/useModaisContext';
 import useWorkBench from '@/hooks/useWorkBench';
 import useModaisController from '@/hooks/useModaisController';
+import { clotheService } from '@/services/ClotheService';
+import useSetCltohes from '@/hooks/useSetClothes';
 
 type Props = {
 	modalId: ModalId | null;
@@ -31,6 +33,7 @@ type Props = {
 export default function ModalClothe({ modalId }: Props) {
 	const { addClotheToWorkbench, removeClotheFromWorkbench } = useWorkBench();
 	const { closeAllModais } = useModaisController();
+	const { replaceClothes } = useSetCltohes();
 	const { workbench, clothes } = useAppContext();
 	const {
 		changeCategoryModal,
@@ -79,7 +82,16 @@ export default function ModalClothe({ modalId }: Props) {
 										<span>
 											<StarIcon
 												onClick={async () => {
+													if (!clothe) throw new Error('Roupa não encontrada');
 													setLoading(true);
+													const response = await clotheService.toggleFavoriteById({
+														clotheOrSetId: clothe?.id,
+														userId: clothe?.userId,
+													});
+													if (response.status === 'error')
+														throw new Error('Erro ao buscar a ruopa');
+													console.log(response);
+													replaceClothes(response.data);
 													// const data = (await fetcher(
 													// 	`/api/protected/user/${clothe?.userId}/clothe/favorite/${clothe?.id}`,
 													// 	{ method: 'PUT', update: true },
