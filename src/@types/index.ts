@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import mongoose from 'mongoose';
 import { Session } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
 
 export type UserId = string;
 export type ModalId = string;
@@ -77,6 +76,13 @@ export type UserProps = {
 	createdAt?: string;
 	updatedAt?: string;
 	_id?: string;
+};
+
+export type SetData = {
+	userId: string;
+	id: string;
+	category: string;
+	sets: ClothePosition[];
 };
 
 export type ClotheData = {
