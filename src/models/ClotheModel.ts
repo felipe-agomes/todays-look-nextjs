@@ -1,5 +1,21 @@
+import mongoose from 'mongoose';
+import Clothe from './colections/clothe';
+import dotenv from 'dotenv';
+dotenv.config();
+
+type ClotheData = {
+	id: string;
+	category: string;
+	favorite: boolean;
+	key: string;
+	image: string;
+	userId: string;
+	createdAt: string;
+	updatedAt: string;
+};
+
 interface IClotheModel {
-	getAllByUserId(): Promise<void>;
+	getAllByUserId(data: { userId: string }): Promise<ClotheData[]>;
 	create(): Promise<void>;
 	deleteByClotheId(): Promise<void>;
 	toggleFavoriteByClotheId(): Promise<void>;
@@ -7,9 +23,35 @@ interface IClotheModel {
 }
 
 export class ClotheModelMongo implements IClotheModel {
-	async getAllByUserId(): Promise<void> {}
+	constructor() {}
+	async connectDb() {
+		const { MONGODB_URL } = process.env;
+		if (!MONGODB_URL)
+			throw new Error('Erro ao se conectar ao banco de dados, falta credenciais');
+		try {
+			await mongoose.connect(MONGODB_URL);
+		} catch (error) {
+			throw new Error('Erro ao se conectar ao banco de dados');
+		}
+	}
+	async getAllByUserId({ userId }: { userId: string }): Promise<ClotheData[]> {
+		await this.connectDb();
+		let clothes: any[];
+		try {
+			clothes = await Clothe.find({ userId });
+		} catch (error) {
+			throw new Error('Erro ao buscar roupas');
+		}
+		if (!clothes) return [];
+		return clothes;
+	}
 	async create(): Promise<void> {}
 	async deleteByClotheId(): Promise<void> {}
 	async toggleFavoriteByClotheId(): Promise<void> {}
 	async changeCategoryByClotheId(): Promise<void> {}
 }
+
+export const makeClotheModelMongo = () => {
+	const clotheModelMongo = new ClotheModelMongo();
+	return { clotheModelMongo };
+};

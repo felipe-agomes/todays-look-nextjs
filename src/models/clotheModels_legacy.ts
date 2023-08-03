@@ -33,6 +33,8 @@ async function getAllClothes(userId: string) {
 	await connectDb();
 	const clothes = await Clothe.find({ userId });
 
+	console.log({ clothes });
+
 	if (!clothes) {
 		return {
 			error: true,
