@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { FetcherAxios } from './Fetcher';
 import {
 	doDeleteSuccessDataResponse,
 	doGetAndDoDeleteUrl,
@@ -12,6 +11,7 @@ import {
 	emptySuccessDataResponse,
 	errorMessage,
 } from '../controllers/FrontController.spec';
+import { FetcherAxios } from '@/services/Fetcher';
 
 const makeSut = () => {
 	const fetcherAxios = new FetcherAxios();

@@ -8,7 +8,7 @@ import {
 	validateNewCategory,
 } from './validate';
 
-describe.skip('loginValidate', () => {
+describe('loginValidate', () => {
 	it('should return error object with email and password errors', () => {
 		const value = { email: '', password: '' };
 		const result = loginValidate(value);
@@ -35,7 +35,7 @@ describe.skip('loginValidate', () => {
 	});
 });
 
-describe.skip('registerValidate', () => {
+describe('registerValidate', () => {
 	it('should return error object with all property inválid', () => {
 		const values: FormRegisterValues = {
 			email: '',
@@ -158,7 +158,7 @@ describe.skip('registerValidate', () => {
 	});
 });
 
-describe.skip('sendImageValidate', () => {
+describe('sendImageValidate', () => {
 	it('should return error object with category and file errors', () => {
 		const values = { category: '', file: null };
 		const result = sendImageValidate(values);
@@ -201,7 +201,7 @@ describe.skip('sendImageValidate', () => {
 	});
 });
 
-describe.skip('validateExistingCategory', () => {
+describe('validateExistingCategory', () => {
 	it('should return error object with existingCategory error', () => {
 		const values = { existingCategory: '' };
 		const result = validateExistingCategory(values);
@@ -214,7 +214,7 @@ describe.skip('validateExistingCategory', () => {
 		expect(result).toEqual({});
 	});
 });
-describe.skip('validateNewCategory', () => {
+describe('validateNewCategory', () => {
 	it('should return error object with category error', () => {
 		const values = { category: '' };
 		const result = validateNewCategory(values);

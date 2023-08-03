@@ -6,7 +6,7 @@ import getAllClothes from '.';
 jest.mock('@/models/clotheModels');
 jest.mock('next-auth/react');
 
-describe.skip('getAllClothes', () => {
+describe('getAllClothes', () => {
 	let req: NextApiRequest;
 	let res: NextApiResponse;
 

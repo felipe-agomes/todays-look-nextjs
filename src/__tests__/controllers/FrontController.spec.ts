@@ -1,5 +1,5 @@
-import { FetcherAxios } from '../services/Fetcher';
-import { FrontController } from './FrontController';
+import { FetcherAxios } from '../../services/Fetcher';
+import { FrontController } from '../../controllers/FrontController';
 
 export const makeSut = () => {
 	const fetcher = new FetcherAxios();

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { ClotheService } from './ClotheService';
-import { FetcherAxios } from './Fetcher';
+import { ClotheService } from '../../services/ClotheService';
+import { FetcherAxios } from '../../services/Fetcher';
 import {
 	doDeleteSuccessDataResponse,
 	doGetSuccessDataResponseString,

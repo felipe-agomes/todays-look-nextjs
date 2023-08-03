@@ -1,14 +1,13 @@
 import axios from 'axios';
-import { ClotheService } from './ClotheService';
-import { FetcherAxios } from './Fetcher';
 import {
 	doDeleteSuccessDataResponse,
 	doGetSuccessDataResponseString,
 	errorMessage,
 } from '../controllers/FrontController.spec';
 import { FrontController } from '@/controllers/FrontController';
-import { SetService } from './SetService';
 import { SetData } from '@/@types';
+import { FetcherAxios } from '@/services/Fetcher';
+import { SetService } from '@/services/SetService';
 
 const toggleFavoriteByIdResponse = {
 	status: 'success',
