@@ -1,9 +1,6 @@
-import connectDb from '@/services/connectDb';
 import { ClotheModelMongo } from './ClotheModel';
 import Clothe from './colections/clothe';
 import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
-import { JsonSafeFilterValueString } from 'aws-sdk/clients/savingsplans';
 
 const makeSut = () => {
 	const clotheModelMongo = new ClotheModelMongo();
@@ -61,12 +58,12 @@ describe('ClotheModelMongo', () => {
 
 		it('should throw a security message error', async () => {
 			const { clotheModelMongo: sut } = makeSut();
-			spyFind.mockRejectedValueOnce(new Error('erro que o usuário não pode ver'));
+			spyFind.mockRejectedValueOnce(new Error('Erro'));
 
 			try {
 				await sut.getAllByUserId({ userId: 'userId' });
 			} catch (error: any) {
-				expect(error.message).toBe('Erro ao buscar roupas');
+				expect(error.message).toBe('Erro ao buscar roupas: Erro');
 			}
 		});
 
@@ -104,9 +101,10 @@ describe('ClotheModelMongo', () => {
 
 		beforeEach(() => {
 			jest.resetAllMocks();
-			mockFindById = Clothe.findById = jest
+			Clothe.findById = jest
 				.fn()
 				.mockResolvedValueOnce({ favorite: true, save: mockSave });
+			mockFindById = Clothe.findById as jest.Mock;
 		});
 
 		it('should call the clotheModelMongo.connectDb()', async () => {
@@ -146,14 +144,12 @@ describe('ClotheModelMongo', () => {
 
 		it('should throw a security message error', async () => {
 			const { clotheModelMongo: sut } = makeSut();
-			mockFindById.mockRejectedValueOnce(
-				new Error('erro que o usuário não pode ver'),
-			);
+			mockFindById.mockRejectedValueOnce(new Error('Erro'));
 
 			try {
 				await sut.toggleFavoriteByClotheId({ clotheId: 'clotheId' });
 			} catch (error: any) {
-				expect(error.message).toBe('Erro ao alterar favorito');
+				expect(error.message).toBe('Erro ao alterar favorito: Erro');
 			}
 		});
 
