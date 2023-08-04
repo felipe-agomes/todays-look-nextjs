@@ -1,4 +1,4 @@
-import { ClotheModelMongo } from './ClotheModel';
+import { ClotheModelMongo } from './ClotheModelMongo';
 import Clothe from './colections/clothe';
 import mongoose from 'mongoose';
 

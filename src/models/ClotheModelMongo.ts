@@ -10,7 +10,7 @@ type CreateClothe = {
 	userId: string;
 };
 
-type ClotheData = {
+export type ClotheData = {
 	id: string;
 	category: string;
 	favorite: boolean;
@@ -118,7 +118,4 @@ export class ClotheModelMongo implements IClotheModel {
 	}
 }
 
-export const makeClotheModelMongo = () => {
-	const clotheModelMongo = new ClotheModelMongo();
-	return { clotheModelMongo };
-};
+export const clotheModelMongo = new ClotheModelMongo();
