@@ -16,7 +16,7 @@ export class FetcherAxios implements IFetcher {
 			const { data } = await axios.get(url);
 			response = data as Response;
 		} catch (error: any) {
-			response = { status: 'error', message: error.message };
+			throw new Error('Erro ao buscar dados: ' + error.message);
 		}
 		return response;
 	}
@@ -28,7 +28,7 @@ export class FetcherAxios implements IFetcher {
 			});
 			response = data as Response;
 		} catch (error: any) {
-			throw new Error(error.message);
+			throw new Error('Erro ao enviar dados: ' + error.message);
 		}
 		return response;
 	}
@@ -40,7 +40,7 @@ export class FetcherAxios implements IFetcher {
 			});
 			response = data as Response;
 		} catch (error: any) {
-			response = { status: 'error', message: error.message };
+			throw new Error('Erro ao atualizar dados: erro' + error.message);
 		}
 		return response;
 	}
@@ -50,7 +50,7 @@ export class FetcherAxios implements IFetcher {
 			const { data } = await axios.delete(url);
 			response = data as Response;
 		} catch (error: any) {
-			response = { status: 'error', message: error.message };
+			throw new Error('Erro ao deletar dados: ' + error.message);
 		}
 		return response;
 	}

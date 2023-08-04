@@ -20,7 +20,9 @@ const toggleFavoriteByIdResponse = {
 const changeCategoryByIdRequest = {
 	userId: '123',
 	clotheOrSetId: '321',
-	toUpdate: { category: 'new_category' },
+	body: {
+		toUpdate: { category: 'new_category' },
+	},
 };
 
 const changeCategoryByIdResponse = {
@@ -151,7 +153,10 @@ describe('SetService', () => {
 
 			expect(spyDoPut).toHaveBeenCalledWith({
 				url: `/api/protected/user/123/clothe/updateCategorySet/321`,
-				toUpdate: { category: 'new_category' },
+				body: {
+					toUpdate: { category: 'new_category' },
+					operation: 'changeCategory',
+				},
 			});
 			expect(spyDoPut).toHaveBeenCalledTimes(1);
 		});

@@ -19,7 +19,10 @@ const toggleFavoriteByIdResponse = {
 const changeCategoryByIdRequest = {
 	userId: '123',
 	clotheOrSetId: '321',
-	toUpdate: { category: 'new_category' },
+	body: {
+		toUpdate: { category: 'new_category' },
+		operation: 'changeCategory',
+	},
 };
 
 const changeCategoryByIdResponse = {
@@ -62,7 +65,7 @@ describe('ClotheService', () => {
 			await sut.getAllByUserId({ userId: '123' });
 
 			expect(spyDoGet).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/all`,
+				url: `/api/protected/user/123/clothe`,
 			});
 			expect(spyDoGet).toHaveBeenCalledTimes(1);
 		});
@@ -96,7 +99,7 @@ describe('ClotheService', () => {
 			await sut.deleteById({ userId: '123', clotheOrSetId: '321' });
 
 			expect(spyDoDelete).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/delete/321`,
+				url: `/api/protected/user/123/clothe/321`,
 			});
 			expect(spyDoDelete).toHaveBeenCalledTimes(1);
 		});
@@ -138,8 +141,11 @@ describe('ClotheService', () => {
 			await sut.changeCategoryById(changeCategoryByIdRequest);
 
 			expect(spyDoPut).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/updateCategory/321`,
-				toUpdate: { category: 'new_category' },
+				url: `/api/protected/user/123/clothe/321`,
+				body: {
+					toUpdate: { category: 'new_category' },
+					operation: 'changeCategory',
+				},
 			});
 			expect(spyDoPut).toHaveBeenCalledTimes(1);
 		});
@@ -173,7 +179,7 @@ describe('ClotheService', () => {
 			await sut.toggleFavoriteById({ userId: '123', clotheOrSetId: '321' });
 
 			expect(spyDoPut).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/favorite/321`,
+				url: `/api/protected/user/123/clothe/321`,
 			});
 			expect(spyDoPut).toHaveBeenCalledTimes(1);
 		});

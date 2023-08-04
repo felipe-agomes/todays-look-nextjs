@@ -65,9 +65,9 @@ describe('FetcherAxios', () => {
 			const { fetcherAxios: sut } = makeSut();
 			axios.get = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
-			const result = await sut.get(doGetAndDoDeleteUrl);
-
-			expect(result).toEqual(errorMessage);
+			await expect(async () => {
+				await sut.get(doGetAndDoDeleteUrl);
+			}).rejects.toThrowError('Erro ao buscar dados: erro');
 		});
 
 		it('should return the data of response if find the data', async () => {
@@ -107,7 +107,9 @@ describe('FetcherAxios', () => {
 			const { fetcherAxios: sut } = makeSut();
 			axios.post = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
-			await expect(sut.post(doPostRequestString)).rejects.toThrow();
+			await expect(async () => {
+				await sut.post(doPostRequestString);
+			}).rejects.toThrowError('Erro ao enviar dados: erro');
 		});
 
 		it('should return the data of response', async () => {
@@ -142,9 +144,9 @@ describe('FetcherAxios', () => {
 			const { fetcherAxios: sut } = makeSut();
 			axios.put = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
-			const result = await sut.put(doPutRequestString);
-
-			expect(result).toEqual(errorMessage);
+			await expect(async () => {
+				await sut.put(doPutRequestString);
+			}).rejects.toThrowError('Erro ao atualizar dados: erro');
 		});
 
 		it('should return the data of response', async () => {
@@ -173,9 +175,9 @@ describe('FetcherAxios', () => {
 			const { fetcherAxios: sut } = makeSut();
 			axios.delete = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
-			const result = await sut.delete(doGetAndDoDeleteUrl);
-
-			expect(result).toEqual(errorMessage);
+			await expect(async () => {
+				await sut.delete(doGetAndDoDeleteUrl);
+			}).rejects.toThrowError('Erro ao deletar dados: erro');
 		});
 
 		it('should return the data of response', async () => {

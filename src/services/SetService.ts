@@ -34,19 +34,22 @@ export class SetService implements IService {
 		return response;
 	}
 	async changeCategoryById({
-		userId,
+		body,
 		clotheOrSetId,
-		toUpdate,
+		userId,
 	}: {
 		userId: string;
 		clotheOrSetId: string;
-		toUpdate: { [key: string]: string };
+		body: {
+			toUpdate: { [key: string]: string };
+			operation: string;
+		};
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
 				url: `/api/protected/user/${userId}/clothe/updateCategorySet/${clotheOrSetId}`,
-				toUpdate,
+				body: { ...body, operation: 'changeCategory' },
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };

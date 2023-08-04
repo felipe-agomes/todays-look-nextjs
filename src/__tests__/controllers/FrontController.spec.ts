@@ -37,18 +37,21 @@ export const doDeleteSuccessDataResponse = {
 
 export const doPutRequest = {
 	url: '/teste',
-	toUpdate: { name: 'new-name', email: 'new-email' },
+	body: {
+		toUpdate: { name: 'new-name', email: 'new-email' },
+		operation: 'changeCategory',
+	},
 };
 
 export const doPutRequestString = {
 	url: doPutRequest.url,
-	body: JSON.stringify({ toUpdate: doPutRequest.toUpdate }),
+	body: JSON.stringify(doPutRequest.body),
 };
 
 export const doPutSuccessDataResponse = {
 	status: 'success',
 	message: 'Dados buscados com sucesso',
-	data: JSON.stringify(doPutRequest.toUpdate),
+	data: JSON.stringify(doPutRequest.body),
 };
 
 export const doPostRequest = {

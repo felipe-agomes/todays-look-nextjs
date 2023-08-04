@@ -36,16 +36,16 @@ export class FrontController {
 	}
 	async doPut({
 		url,
-		toUpdate,
+		body,
 	}: {
 		url: string;
-		toUpdate?: { [key: string]: string };
+		body?: { [key: string]: any };
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.fetcher.put({
 				url,
-				body: JSON.stringify({ toUpdate }),
+				body: JSON.stringify(body),
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };

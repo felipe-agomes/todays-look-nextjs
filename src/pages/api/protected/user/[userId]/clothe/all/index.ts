@@ -1,42 +1,34 @@
-import { clotheModels } from '@/models/clotheModels_legacy';
+import { Response } from '@/controllers/FrontController';
+import { ClotheData, clotheModelMongo } from '@/models/ClotheModelMongo';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
 
 export default async function getAllClothes(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
-	// const session = await getSession({ req });
-	const session = true;
-	if (session) {
-		const userId = req.query.userId;
-		if (!(typeof userId === 'string')) {
-			res.status(400).json({
-				error: true,
-				message: 'UserId inválido',
-			});
-			return;
-		}
-		switch (req.method) {
-			case 'GET':
-				const response = await clotheModels.getAllClothes(userId);
-
-				if (response.error) {
-					res.status(400).json(response);
-					return;
-				}
-				res.status(200).json(response);
-				break;
-			default:
+	const userId = req.query.userId as string;
+	switch (req.method) {
+		case 'GET':
+			let clothes: ClotheData[];
+			try {
+				clothes = await clotheModelMongo.getAllByUserId({ userId });
+			} catch (error) {
 				res.status(400).json({
-					error: true,
-					message: 'Metodo não permitido',
+					status: 'error',
+					message: 'Erro ao buscar roupas',
 				});
-		}
-	} else {
-		res.status(400).json({
-			error: true,
-			message: 'Usuario precisa estar logado',
-		});
+			}
+
+			res.status(200).json({
+				status: 'success',
+				message: 'Roupas buscadas com sucesso',
+				data: clothes,
+			});
+			break;
+		default:
+			res.status(400).json({
+				status: 'error',
+				message: 'Metodo não permitido',
+			});
 	}
 }

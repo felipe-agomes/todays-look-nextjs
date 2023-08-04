@@ -1,4 +1,4 @@
-import { ClotheData, SetData, SetsProps } from '@/@types';
+import { ClotheData, SetData } from '@/@types';
 import { FetcherAxios } from './Fetcher';
 import { FrontController, Response } from '@/controllers/FrontController';
 
@@ -8,7 +8,10 @@ export interface IService {
 	changeCategoryById(data: {
 		userId: string;
 		clotheOrSetId: string;
-		toUpdate: { [key: string]: string };
+		body: {
+			toUpdate: { [key: string]: string };
+			operation: string;
+		};
 	}): Promise<Response>;
 	toggleFavoriteById(data: {
 		userId: string;
@@ -26,7 +29,7 @@ export class ClotheService implements IService {
 		let response: Response;
 		try {
 			response = await this.frontController.doGet({
-				url: `/api/protected/user/${userId}/clothe/all`,
+				url: `/api/protected/user/${userId}/clothe`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -43,7 +46,7 @@ export class ClotheService implements IService {
 		let response: Response;
 		try {
 			response = await this.frontController.doDelete({
-				url: `/api/protected/user/${userId}/clothe/delete/${clotheOrSetId}`,
+				url: `/api/protected/user/${userId}/clothe/${clotheOrSetId}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -53,17 +56,20 @@ export class ClotheService implements IService {
 	async changeCategoryById({
 		userId,
 		clotheOrSetId,
-		toUpdate,
+		body,
 	}: {
 		userId: string;
 		clotheOrSetId: string;
-		toUpdate: { [key: string]: string };
+		body: {
+			toUpdate: { [key: string]: string };
+			operation: string;
+		};
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
-				url: `/api/protected/user/${userId}/clothe/updateCategory/${clotheOrSetId}`,
-				toUpdate,
+				url: `/api/protected/user/${userId}/clothe/${clotheOrSetId}`,
+				body: { ...body, operation: 'changeCategory' },
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -80,7 +86,7 @@ export class ClotheService implements IService {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
-				url: `/api/protected/user/${userId}/clothe/favorite/${clotheOrSetId}`,
+				url: `/api/protected/user/${userId}/clothe/${clotheOrSetId}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };

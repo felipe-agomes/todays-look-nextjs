@@ -29,6 +29,7 @@ import useAppContext from '@/hooks/useAppContext';
 import { Header } from '@/components/Header';
 import { clotheService } from '@/services/ClotheService';
 import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
+import { Response } from '@/controllers/FrontController';
 
 type Props = {
 	serverSession: SessionProps;
@@ -41,11 +42,11 @@ export default function Home({ serverSession }: Props) {
 	console.log({ setsCategories, clothesCategories });
 
 	const updateClothesAndSets = async () => {
-		const response: any = await clotheService.getAllByUserId({
+		const response: Response = await clotheService.getAllByUserId({
 			userId: serverSession.user.id,
 		});
 		console.log(response);
-		setClothes(response.clothes);
+		setClothes(response.data);
 	};
 
 	useEffect(() => {
