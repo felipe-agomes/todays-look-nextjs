@@ -3,6 +3,13 @@ import Clothe from './colections/clothe';
 import dotenv from 'dotenv';
 dotenv.config();
 
+type CreateClothe = {
+	category: string;
+	key: string;
+	image: string;
+	userId: string;
+};
+
 type ClotheData = {
 	id: string;
 	category: string;
@@ -17,9 +24,12 @@ type ClotheData = {
 interface IClotheModel {
 	getAllByUserId(data: { userId: string }): Promise<ClotheData[]>;
 	toggleFavoriteByClotheId(data: { clotheId: string }): Promise<ClotheData>;
-	create(): Promise<void>;
-	deleteByClotheId(): Promise<void>;
-	changeCategoryByClotheId(): Promise<void>;
+	changeCategoryByClotheId(data: {
+		clotheId: string;
+		category: string;
+	}): Promise<ClotheData>;
+	deleteByClotheId(data: { clotheId: string }): Promise<string>;
+	create(data: CreateClothe): Promise<ClotheData>;
 }
 
 export class ClotheModelMongo implements IClotheModel {
@@ -34,24 +44,21 @@ export class ClotheModelMongo implements IClotheModel {
 			throw new Error('Erro ao se conectar ao banco de dados');
 		}
 	}
-
 	async disconnectDb() {
 		await mongoose.disconnect();
 	}
-
 	async getAllByUserId({ userId }: { userId: string }): Promise<ClotheData[]> {
 		await this.connectDb();
 		let clothes: any[];
 		try {
 			clothes = await Clothe.find({ userId });
 		} catch (error) {
-			throw new Error('Erro ao buscar roupas');
+			throw new Error('Erro ao buscar roupas: ' + error.message);
 		}
 		await this.disconnectDb();
 		if (!clothes) return [];
 		return clothes;
 	}
-
 	async toggleFavoriteByClotheId({
 		clotheId,
 	}: {
@@ -64,14 +71,51 @@ export class ClotheModelMongo implements IClotheModel {
 			clothe.favorite = !clothe.favorite;
 			await clothe.save();
 		} catch (error) {
-			throw new Error('Erro ao alterar favorito');
+			throw new Error('Erro ao alterar favorito: ' + error.message);
 		}
 		await this.disconnectDb();
 		return clothe as ClotheData;
 	}
-	async create(): Promise<void> {}
-	async deleteByClotheId(): Promise<void> {}
-	async changeCategoryByClotheId(): Promise<void> {}
+	async changeCategoryByClotheId({
+		clotheId,
+		category,
+	}: {
+		clotheId: string;
+		category: string;
+	}): Promise<ClotheData> {
+		await this.connectDb();
+		let clothe: any;
+		try {
+			clothe = await Clothe.findById(clotheId);
+			clothe.category = category;
+			await clothe.save();
+		} catch (error) {
+			throw new Error('Erro ao alterar a categoria: ' + error.message);
+		}
+		await this.disconnectDb();
+		return clothe as ClotheData;
+	}
+	async deleteByClotheId({ clotheId }: { clotheId: string }): Promise<string> {
+		await this.connectDb();
+		try {
+			await Clothe.findByIdAndDelete(clotheId);
+		} catch (error) {
+			throw new Error('Erro ao deletar roupa: ' + error.message);
+		}
+		await this.disconnectDb();
+		return 'Roupa deletada com sucesso';
+	}
+	async create(data: CreateClothe): Promise<ClotheData> {
+		await this.connectDb();
+		let clothe: any;
+		try {
+			clothe = await Clothe.create(data);
+		} catch (error) {
+			throw new Error('Erro ao cadastrar roupa: ' + error.message);
+		}
+		await this.disconnectDb();
+		return clothe as ClotheData;
+	}
 }
 
 export const makeClotheModelMongo = () => {
