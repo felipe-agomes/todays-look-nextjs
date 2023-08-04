@@ -42,7 +42,7 @@ export class SetService implements IService {
 		clotheOrSetId: string;
 		body: {
 			toUpdate: { [key: string]: string };
-			operation: string;
+			operation?: string;
 		};
 	}): Promise<Response> {
 		let response: Response;

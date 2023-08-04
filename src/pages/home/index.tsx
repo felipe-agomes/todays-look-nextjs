@@ -39,7 +39,6 @@ export default function Home({ serverSession }: Props) {
 	const { setClothes, setSets, clothes, sets } = useAppContext();
 	const setsCategories = categoriesClotheOrSet<SetsProps>(sets);
 	const clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
-	console.log({ setsCategories, clothesCategories });
 
 	const updateClothesAndSets = async () => {
 		const response: Response = await clotheService.getAllByUserId({
