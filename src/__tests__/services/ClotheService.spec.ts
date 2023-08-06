@@ -179,7 +179,7 @@ describe('ClotheService', () => {
 			await sut.toggleFavoriteById({ userId: '123', clotheOrSetId: '321' });
 
 			expect(spyDoPut).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/321`,
+				url: `/api/protected/user/123/clothe/321`, body: {operation: 'toggleFavorite'}
 			});
 			expect(spyDoPut).toHaveBeenCalledTimes(1);
 		});

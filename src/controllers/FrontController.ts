@@ -6,6 +6,8 @@ export type Response = {
 	data?: any;
 };
 
+export type PutOperation = 'changeCategory' | 'toggleFavorite';
+
 export class FrontController {
 	constructor(private fetcher: IFetcher) {}
 	async doGet({ url }: { url: string }): Promise<Response> {
@@ -39,7 +41,12 @@ export class FrontController {
 		body,
 	}: {
 		url: string;
-		body?: { [key: string]: any };
+		body: {
+			operation: PutOperation;
+			toUpdate?: {
+				[key: string]: string;
+			};
+		};
 	}): Promise<Response> {
 		let response: Response;
 		try {

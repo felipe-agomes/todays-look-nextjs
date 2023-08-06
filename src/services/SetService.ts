@@ -57,8 +57,8 @@ export class SetService implements IService {
 		return response;
 	}
 	async toggleFavoriteById({
-		clotheOrSetId,
 		userId,
+		clotheOrSetId,
 	}: {
 		userId: string;
 		clotheOrSetId: string;
@@ -67,6 +67,7 @@ export class SetService implements IService {
 		try {
 			response = await this.frontController.doPut({
 				url: `/api/protected/user/${userId}/clothe/favoriteSet/${clotheOrSetId}`,
+				body: { operation: 'toggleFavorite' },
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };

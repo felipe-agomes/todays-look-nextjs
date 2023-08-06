@@ -1,5 +1,8 @@
 import { FetcherAxios } from '../../services/Fetcher';
-import { FrontController } from '../../controllers/FrontController';
+import {
+	FrontController,
+	PutOperation,
+} from '../../controllers/FrontController';
 
 export const makeSut = () => {
 	const fetcher = new FetcherAxios();
@@ -39,7 +42,7 @@ export const doPutRequest = {
 	url: '/teste',
 	body: {
 		toUpdate: { name: 'new-name', email: 'new-email' },
-		operation: 'changeCategory',
+		operation: 'changeCategory' as PutOperation,
 	},
 };
 

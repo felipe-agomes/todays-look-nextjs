@@ -1,6 +1,10 @@
 import { ClotheData, SetData } from '@/@types';
 import { FetcherAxios } from './Fetcher';
-import { FrontController, Response } from '@/controllers/FrontController';
+import {
+	FrontController,
+	PutOperation,
+	Response,
+} from '@/controllers/FrontController';
 
 export interface IService {
 	getAllByUserId(data: { userId: string }): Promise<Response>;
@@ -10,7 +14,7 @@ export interface IService {
 		clotheOrSetId: string;
 		body: {
 			toUpdate: { [key: string]: string };
-			operation: string;
+			operation: PutOperation;
 		};
 	}): Promise<Response>;
 	toggleFavoriteById(data: {
@@ -77,8 +81,8 @@ export class ClotheService implements IService {
 		return response;
 	}
 	async toggleFavoriteById({
-		clotheOrSetId,
 		userId,
+		clotheOrSetId,
 	}: {
 		userId: string;
 		clotheOrSetId: string;
@@ -87,6 +91,7 @@ export class ClotheService implements IService {
 		try {
 			response = await this.frontController.doPut({
 				url: `/api/protected/user/${userId}/clothe/${clotheOrSetId}`,
+				body: { operation: 'toggleFavorite' },
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };

@@ -1,12 +1,10 @@
-import { clotheModelMongo } from '@/models/ClotheModelMongo';
+import { clotheModelMongo } from '@/models/Mongo/ClotheModelMongo';
 import handler from './index';
 
-jest.mock('@/models/ClotheModelMongo');
+jest.mock('@/models/Mongo/ClotheModelMongo');
 describe('getAllClothesHandler', () => {
 	const req: any = {
-		query: {
-			userId: 'userId',
-		},
+		query: { userId: 'userId' },
 	};
 	const res: any = {
 		status: jest.fn(function () {
@@ -49,6 +47,7 @@ describe('getAllClothesHandler', () => {
 		);
 
 		await handler(req, res);
+
 		expect(res.status).toHaveBeenCalledWith(400);
 		expect(res.json).toHaveBeenCalledWith({
 			status: 'error',
@@ -56,7 +55,7 @@ describe('getAllClothesHandler', () => {
 		});
 	});
 
-	it('should ', async () => {
+	it('should call the res.status() and res.json() with a success status if clotheModelMongo.getAllByUserId() does right return', async () => {
 		req.method = 'GET';
 		(clotheModelMongo.getAllByUserId as jest.Mock).mockResolvedValueOnce([
 			{ obj1: 'obj1' },

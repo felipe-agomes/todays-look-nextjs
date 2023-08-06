@@ -1,4 +1,4 @@
-import { clotheModelMongo } from '@/models/ClotheModelMongo';
+import { clotheModelMongo } from '@/models/Mongo/ClotheModelMongo';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(

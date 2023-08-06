@@ -191,6 +191,7 @@ describe('SetService', () => {
 
 			expect(spyDoPut).toHaveBeenCalledWith({
 				url: `/api/protected/user/123/clothe/favoriteSet/321`,
+				body: { operation: 'toggleFavorite' },
 			});
 			expect(spyDoPut).toHaveBeenCalledTimes(1);
 		});
