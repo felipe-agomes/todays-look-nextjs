@@ -1,7 +1,7 @@
-import { clotheModelMongo } from '@/models/Mongo/ClotheModelMongo';
+import clotheRepository from '@/models/Postgre/ClotheRepository';
 import handler from './index';
 
-jest.mock('@/models/Mongo/ClotheModelMongo');
+jest.mock('@/models/Postgre/ClotheRepository');
 describe('getAllClothesHandler', () => {
 	const req: any = {
 		query: { userId: 'userId' },
@@ -29,20 +29,20 @@ describe('getAllClothesHandler', () => {
 		});
 	});
 
-	it('should call the clotheModelMongo.getAllByUserId()', async () => {
+	it('should call the clotheRepository.getAllByUserId()', async () => {
 		req.method = 'GET';
 
 		await handler(req, res);
 
-		expect(clotheModelMongo.getAllByUserId).toHaveBeenCalledTimes(1);
-		expect(clotheModelMongo.getAllByUserId).toHaveBeenCalledWith({
+		expect(clotheRepository.getAllByUserId).toHaveBeenCalledTimes(1);
+		expect(clotheRepository.getAllByUserId).toHaveBeenCalledWith({
 			userId: 'userId',
 		});
 	});
 
-	it('should call the res.status() and res.json() with a error status if clotheModelMongo.getAllByUserId() throw a error ', async () => {
+	it('should call the res.status() and res.json() with a error status if clotheRepository.getAllByUserId() throw a error ', async () => {
 		req.method = 'GET';
-		(clotheModelMongo.getAllByUserId as jest.Mock).mockRejectedValueOnce(
+		(clotheRepository.getAllByUserId as jest.Mock).mockRejectedValueOnce(
 			new Error('erro'),
 		);
 
@@ -55,9 +55,9 @@ describe('getAllClothesHandler', () => {
 		});
 	});
 
-	it('should call the res.status() and res.json() with a success status if clotheModelMongo.getAllByUserId() does right return', async () => {
+	it('should call the res.status() and res.json() with a success status if clotheRepository.getAllByUserId() does right return', async () => {
 		req.method = 'GET';
-		(clotheModelMongo.getAllByUserId as jest.Mock).mockResolvedValueOnce([
+		(clotheRepository.getAllByUserId as jest.Mock).mockResolvedValueOnce([
 			{ obj1: 'obj1' },
 			{ obj2: 'obj2' },
 		]);

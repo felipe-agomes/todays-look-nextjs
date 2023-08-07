@@ -1,4 +1,4 @@
-import { clotheModelMongo } from '@/models/Mongo/ClotheModelMongo';
+import clotheRepository from '@/models/Postgre/ClotheRepository';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -14,7 +14,7 @@ export default async function handler(
 	}
 	const userId = req.query.userId as string;
 	try {
-		const clothes = await clotheModelMongo.getAllByUserId({ userId });
+		const clothes = await clotheRepository.getAllByUserId({ userId });
 		res.status(200).json({
 			status: 'success',
 			message: 'Roupas buscadas com sucesso',
