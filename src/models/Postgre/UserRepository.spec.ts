@@ -1,4 +1,3 @@
-import { toEditorSettings } from 'typescript';
 import User from './Tables/User';
 import { UserRepositoryPostgre } from './UserRepository';
 import bcrypt from 'bcrypt';

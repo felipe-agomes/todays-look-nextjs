@@ -66,11 +66,7 @@ export class UserRepositoryPostgre implements IUserRepository {
 		password: string;
 	}): Promise<void> {
 		try {
-			const user: any = await User.findOne({
-				where: {
-					email,
-				},
-			});
+			const user: any = await User.findOne({ where: { email } });
 			if (!user) return null;
 			if (await bcrypt.compare(password, user.password)) {
 				const userJSON = user.toJSON();
