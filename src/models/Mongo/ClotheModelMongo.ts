@@ -11,7 +11,7 @@ type CreateClothe = {
 };
 
 export type ClotheData = {
-	id: string;
+	id: number;
 	category: string;
 	favorite: boolean;
 	key: string;
@@ -21,7 +21,7 @@ export type ClotheData = {
 	updatedAt: string;
 };
 
-interface IClotheRepository {
+export interface IClotheRepository {
 	getAllByUserId(data: { userId: string }): Promise<ClotheData[]>;
 	toggleFavoriteByClotheId(data: { clotheId: string }): Promise<ClotheData>;
 	changeCategoryByClotheId(data: {
