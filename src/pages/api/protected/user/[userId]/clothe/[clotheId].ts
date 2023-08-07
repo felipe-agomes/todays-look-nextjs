@@ -5,9 +5,10 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
+	let clotheId: string;
 	switch (req.method) {
 		case 'PUT':
-			const clotheId = req.query.clotheId as string;
+			clotheId = req.query.clotheId as string;
 			const category = req.body.category as string;
 			if (req.body.operation === 'changeCategory') {
 				try {
@@ -43,6 +44,30 @@ export default async function handler(
 						message: 'Erro alterar a propriedade favorite',
 					});
 				}
+			}
+			break;
+		case 'DELETE':
+			clotheId = req.query.clotheId as string;
+			try {
+				const isNull = await clotheRepository.deleteByClotheId({
+					clotheId,
+				});
+				if (isNull === null) {
+					res.status(400).json({
+						status: 'error',
+						message: 'Erro ao deletar roupa',
+					});
+					return;
+				}
+				res.status(200).json({
+					status: 'success',
+					message: 'Roupa deletada com sucesso',
+				});
+			} catch (error) {
+				res.status(400).json({
+					status: 'error',
+					message: 'Erro ao deletar roupa',
+				});
 			}
 	}
 }

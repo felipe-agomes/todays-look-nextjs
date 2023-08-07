@@ -185,6 +185,12 @@ describe('ClotheRepository', () => {
 			expect(result).toHaveProperty('key');
 			expect(result.favorite).toBeTruthy();
 		});
+
+		// it('should return null, if the user does not exist', () => {
+		// 	const { clotheRepository: sut } = makeSut();
+
+		// 	sut.toggleFavoriteByClotheId({clotheId})
+		// });
 	});
 
 	describe('changeCategoryByClotheId', () => {
