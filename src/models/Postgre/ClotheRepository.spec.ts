@@ -1,10 +1,10 @@
 import { toEditorSettings } from 'typescript';
-import { ClotheRepository } from './ClotheRepository';
 import { Clothe, User } from './Tables';
 import { userNotExist } from './UserRepository.spec';
+import { ClotheRepositoryPostgre } from './ClotheRepository';
 
 const makeSut = () => {
-	const clotheRepository = new ClotheRepository();
+	const clotheRepository = new ClotheRepositoryPostgre();
 	return { clotheRepository };
 };
 

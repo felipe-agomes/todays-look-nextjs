@@ -1,4 +1,4 @@
-import { clotheModelMongo } from '@/models/Mongo/ClotheModelMongo';
+import clotheRepository from '@/models/Postgre/ClotheRepository';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -11,7 +11,7 @@ export default async function handler(
 			const category = req.body.category as string;
 			if (req.body.operation === 'changeCategory') {
 				try {
-					const clothe = await clotheModelMongo.changeCategoryByClotheId({
+					const clothe = await clotheRepository.changeCategoryByClotheId({
 						clotheId,
 						category,
 					});
@@ -29,7 +29,7 @@ export default async function handler(
 			}
 			if (req.body.operation === 'toggleFavorite') {
 				try {
-					const clothe = await clotheModelMongo.toggleFavoriteByClotheId({
+					const clothe = await clotheRepository.toggleFavoriteByClotheId({
 						clotheId,
 					});
 					res.status(200).json({

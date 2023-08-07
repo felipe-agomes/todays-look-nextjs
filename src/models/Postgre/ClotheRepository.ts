@@ -1,7 +1,36 @@
-import { ClotheData, IClotheRepository } from '../Mongo/ClotheModelMongo';
 import { Clothe, User } from './Tables';
 
-export class ClotheRepository implements IClotheRepository {
+type CreateClothe = {
+	category: string;
+	key: string;
+	image: string;
+	userId: string;
+};
+
+export type ClotheData = {
+	id: number;
+	category: string;
+	favorite: boolean;
+	key: string;
+	image: string;
+	userId: string;
+	createdAt: string;
+	updatedAt: string;
+};
+export interface IClotheRepository {
+	getAllByUserId(data: { userId: string }): Promise<ClotheData[]>;
+	toggleFavoriteByClotheId(data: {
+		clotheId: string;
+	}): Promise<ClotheData | null>;
+	changeCategoryByClotheId(data: {
+		clotheId: string;
+		category: string;
+	}): Promise<ClotheData | null>;
+	deleteByClotheId(data: { clotheId: string }): Promise<string | null>;
+	create(data: CreateClothe): Promise<ClotheData | null>;
+}
+
+export class ClotheRepositoryPostgre implements IClotheRepository {
 	constructor() {}
 	async create({
 		category,
@@ -13,9 +42,10 @@ export class ClotheRepository implements IClotheRepository {
 		key: string;
 		image: string;
 		userId: string;
-	}): Promise<ClotheData> {
+	}): Promise<ClotheData | null> {
 		try {
 			const user = await User.findByPk(userId);
+			if (!user) return null;
 			const clothe: any = await Clothe.create({ category, key, image });
 			await clothe.setUser(user);
 			return clothe.toJSON();
@@ -28,6 +58,7 @@ export class ClotheRepository implements IClotheRepository {
 			const user = await User.findByPk(userId, {
 				include: Clothe,
 			});
+			if (!user) return null;
 			return user.toJSON().clothes;
 		} catch (error) {
 			throw new Error('Erro ao buscar roupas: ' + error.message);
@@ -37,7 +68,7 @@ export class ClotheRepository implements IClotheRepository {
 		clotheId,
 	}: {
 		clotheId: string;
-	}): Promise<ClotheData> {
+	}): Promise<ClotheData | null> {
 		try {
 			const clothe: any = await Clothe.findByPk(clotheId);
 			if (!clothe) return null;
@@ -55,7 +86,7 @@ export class ClotheRepository implements IClotheRepository {
 	}: {
 		clotheId: string;
 		category: string;
-	}): Promise<ClotheData> {
+	}): Promise<ClotheData | null> {
 		try {
 			const clothe: any = await Clothe.findByPk(clotheId);
 			if (!clothe) return null;
@@ -67,7 +98,11 @@ export class ClotheRepository implements IClotheRepository {
 			throw new Error('Erro ao alterar a categoria: ' + error.message);
 		}
 	}
-	async deleteByClotheId({ clotheId }: { clotheId: string }): Promise<string> {
+	async deleteByClotheId({
+		clotheId,
+	}: {
+		clotheId: string;
+	}): Promise<string | null> {
 		try {
 			const clothe = await Clothe.findByPk(clotheId);
 			if (!clothe) return null;
@@ -78,3 +113,5 @@ export class ClotheRepository implements IClotheRepository {
 		}
 	}
 }
+const clotheRepository = new ClotheRepositoryPostgre();
+export default clotheRepository;

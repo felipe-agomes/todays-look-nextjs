@@ -1,6 +1,6 @@
-import { clotheModelMongo } from '@/models/Mongo/ClotheModelMongo';
+import clotheRepository from '@/models/Postgre/ClotheRepository';
 import { handlerWrapper } from './test/handleWrapper';
-jest.mock('@/models/Mongo/ClotheModelMongo');
+jest.mock('@/models/Postgre/ClotheRepository');
 describe('postHandler', () => {
 	let req: any;
 	let res: any;
@@ -22,21 +22,21 @@ describe('postHandler', () => {
 			}),
 		};
 	});
-	it('should call the clotheModelMongo.toggleFavoriteByClotheId()', async () => {
+	it('should call the clotheRepository.toggleFavoriteByClotheId()', async () => {
 		req.body.operation = 'toggleFavorite';
 		await handlerWrapper(req, res);
 
-		expect(clotheModelMongo.toggleFavoriteByClotheId).toHaveBeenCalledTimes(1);
-		expect(clotheModelMongo.toggleFavoriteByClotheId).toHaveBeenCalledWith({
+		expect(clotheRepository.toggleFavoriteByClotheId).toHaveBeenCalledTimes(1);
+		expect(clotheRepository.toggleFavoriteByClotheId).toHaveBeenCalledWith({
 			clotheId: 'clotheId',
 		});
 	});
 
-	it('should call the res.status() and res.json() with a error status if clotheModelMongo.toggleFavoriteByClotheId() throw a error ', async () => {
+	it('should call the res.status() and res.json() with a error status if clotheRepository.toggleFavoriteByClotheId() throw a error ', async () => {
 		req.body.operation = 'toggleFavorite';
 		req.method = 'PUT';
 		(
-			clotheModelMongo.toggleFavoriteByClotheId as jest.Mock
+			clotheRepository.toggleFavoriteByClotheId as jest.Mock
 		).mockRejectedValueOnce(new Error('erro'));
 
 		await handlerWrapper(req, res);
@@ -48,11 +48,11 @@ describe('postHandler', () => {
 		});
 	});
 
-	it('should call the res.status() and res.json() with a success status if clotheModelMongo.toggleFavoriteByClotheId() does right return', async () => {
+	it('should call the res.status() and res.json() with a success status if clotheRepository.toggleFavoriteByClotheId() does right return', async () => {
 		req.body.operation = 'toggleFavorite';
 		req.method = 'PUT';
 		(
-			clotheModelMongo.toggleFavoriteByClotheId as jest.Mock
+			clotheRepository.toggleFavoriteByClotheId as jest.Mock
 		).mockResolvedValueOnce({ obj2: 'obj2' });
 
 		await handlerWrapper(req, res);
@@ -65,24 +65,24 @@ describe('postHandler', () => {
 		});
 	});
 
-	it('should call the method clotheModelMongo.changeCategoryByClotheId()', async () => {
+	it('should call the method clotheRepository.changeCategoryByClotheId()', async () => {
 		req.method = 'PUT';
 		req.body.operation = 'changeCategory';
 		req.body.category = 'new_category';
 
 		await handlerWrapper(req, res);
 
-		expect(clotheModelMongo.changeCategoryByClotheId).toHaveBeenCalledWith({
+		expect(clotheRepository.changeCategoryByClotheId).toHaveBeenCalledWith({
 			clotheId: 'clotheId',
 			category: 'new_category',
 		});
 	});
 
-	it('should call the res.status() and res.json() with a error status if clotheModelMongo.changeCategoryByClotheId() throw a error ', async () => {
+	it('should call the res.status() and res.json() with a error status if clotheRepository.changeCategoryByClotheId() throw a error ', async () => {
 		req.body.operation = 'changeCategory';
 		req.method = 'PUT';
 		(
-			clotheModelMongo.changeCategoryByClotheId as jest.Mock
+			clotheRepository.changeCategoryByClotheId as jest.Mock
 		).mockRejectedValueOnce(new Error('erro'));
 
 		await handlerWrapper(req, res);
@@ -94,11 +94,11 @@ describe('postHandler', () => {
 		});
 	});
 
-	it('should call the res.status() and res.json() with a success status if clotheModelMongo.changeCategoryByClotheId() does right return', async () => {
+	it('should call the res.status() and res.json() with a success status if clotheRepository.changeCategoryByClotheId() does right return', async () => {
 		req.body.operation = 'changeCategory';
 		req.method = 'PUT';
 		(
-			clotheModelMongo.changeCategoryByClotheId as jest.Mock
+			clotheRepository.changeCategoryByClotheId as jest.Mock
 		).mockResolvedValueOnce({ obj2: 'obj2' });
 
 		await handlerWrapper(req, res);

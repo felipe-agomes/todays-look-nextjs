@@ -80,3 +80,6 @@ export class UserRepositoryPostgre implements IUserRepository {
 		}
 	}
 }
+
+const userRepository = new UserRepositoryPostgre();
+export default userRepository;
