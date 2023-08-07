@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
-dotenv.config();
+import { config } from 'dotenv';
+config();
 
 const { POSTGRE_PASSWORD, POSTGRE_DATABASE, POSTGRE_USER } = process.env;
 

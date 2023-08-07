@@ -1,5 +1,5 @@
-import User from './Tables/User';
 import bcrypt from 'bcrypt';
+import { User } from './Tables';
 
 type UserData = {
 	email: string;

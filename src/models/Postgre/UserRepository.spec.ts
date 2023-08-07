@@ -1,4 +1,4 @@
-import User from './Tables/User';
+import { User } from './Tables';
 import { UserRepositoryPostgre } from './UserRepository';
 import bcrypt from 'bcrypt';
 
@@ -7,7 +7,7 @@ const makeSut = () => {
 	return { userRepositoryPostgre };
 };
 
-const userNotExist = {
+export const userNotExist = {
 	email: 'user_not_exist@teste.com',
 	image: '/image',
 	password: 'password',
