@@ -21,7 +21,7 @@ export type ClotheData = {
 	updatedAt: string;
 };
 
-interface IClotheModel {
+interface IClotheRepository {
 	getAllByUserId(data: { userId: string }): Promise<ClotheData[]>;
 	toggleFavoriteByClotheId(data: { clotheId: string }): Promise<ClotheData>;
 	changeCategoryByClotheId(data: {
@@ -32,7 +32,7 @@ interface IClotheModel {
 	create(data: CreateClothe): Promise<ClotheData>;
 }
 
-export class ClotheModelMongo implements IClotheModel {
+export class ClotheModelMongo implements IClotheRepository {
 	constructor() {}
 	async connectDb() {
 		const { MONGODB_URL } = process.env;

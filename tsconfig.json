@@ -13,6 +13,8 @@
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"jsx": "preserve",
+		"outDir": "/dist",
+		"rootDir": "./",
 		"incremental": true,
 		"paths": {
 			"@/*": ["./src/*"]
