@@ -9,7 +9,7 @@
 		"lint": "next lint",
 		"api": "node ./src/models/clothe.js",
 		"test": "jest --detectOpenHandles",
-		"test:watch": "npm run test -- --watch"
+		"test:watch": "npm run test -- --watch --coverage"
 	},
 	"dependencies": {
 		"@chakra-ui/icons": "^2.0.18",

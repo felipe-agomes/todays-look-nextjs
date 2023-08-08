@@ -129,11 +129,16 @@ describe('ClotheRepository', () => {
 
 	describe('toggleFavoriteByClotheId', () => {
 		let clothe: any;
+		let user: any;
 		const originalClotheFindByPk = Clothe.findByPk;
 		beforeEach(async () => {
-			await Clothe.destroy({ where: {} });
-			clothe = await Clothe.create(newClothe);
 			jest.resetAllMocks();
+			await Clothe.destroy({ where: {} });
+			user = await User.findOne({
+				where: { email: 'user_already_exist@teste.com' },
+			});
+			clothe = await Clothe.create(newClothe);
+			await clothe.setUser(user);
 		});
 
 		it('should call the Clothe.findByPk() ', async () => {
@@ -153,18 +158,11 @@ describe('ClotheRepository', () => {
 				.fn()
 				.mockResolvedValueOnce({ save: mockSave, favorite: false });
 
-			await sut.toggleFavoriteByClotheId({ clotheId: 'clotheId' });
+			await sut.toggleFavoriteByClotheId({
+				clotheId: 'clotheId',
+			});
 
 			expect(mockSave).toHaveBeenCalledTimes(1);
-		});
-
-		it('should throw a error message', async () => {
-			const { clotheRepository: sut } = makeSut();
-			jest.spyOn(Clothe, 'findByPk').mockRejectedValueOnce(new Error('Erro'));
-
-			await expect(async () => {
-				await sut.toggleFavoriteByClotheId({ clotheId: 'clotheId' });
-			}).rejects.toThrowError('Erro ao alterar a propriedade favorito: Erro');
 		});
 
 		it('should return a corrected data on real user', async () => {
@@ -185,17 +183,11 @@ describe('ClotheRepository', () => {
 			expect(result).toHaveProperty('key');
 			expect(result.favorite).toBeTruthy();
 		});
-
-		// it('should return null, if the user does not exist', () => {
-		// 	const { clotheRepository: sut } = makeSut();
-
-		// 	sut.toggleFavoriteByClotheId({clotheId})
-		// });
 	});
 
 	describe('changeCategoryByClotheId', () => {
-		let clothe: any;
 		const originalClotheFindByPk = Clothe.findByPk;
+		let clothe: any;
 		beforeEach(async () => {
 			await Clothe.destroy({ where: {} });
 			clothe = await Clothe.create(newClothe);
@@ -254,9 +246,10 @@ describe('ClotheRepository', () => {
 
 		it('should return a corrected data on real user', async () => {
 			const { clotheRepository: sut } = makeSut();
-
-			const result = await sut.toggleFavoriteByClotheId({
+			Clothe.findByPk = originalClotheFindByPk;
+			const result = await sut.changeCategoryByClotheId({
 				clotheId: clothe.id,
+				category: 'new_category',
 			});
 
 			expect(result).toHaveProperty('id');

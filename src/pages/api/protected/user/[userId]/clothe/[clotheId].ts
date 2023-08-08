@@ -69,5 +69,10 @@ export default async function handler(
 					message: 'Erro ao deletar roupa',
 				});
 			}
+			break;
+		case 'POST':
+			const clothe = req.body.clothe;
+			const userId = req.query.userId;
+			await clotheRepository.create({ ...clothe, userId });
 	}
 }
