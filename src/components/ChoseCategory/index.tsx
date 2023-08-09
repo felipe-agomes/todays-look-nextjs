@@ -1,10 +1,4 @@
-import {
-	ClothesProps,
-	FetcherOptions,
-	ModalId,
-	OpenOrCloseModalProps,
-	SetsProps,
-} from '@/@types';
+import { ModalId } from '@/@types';
 import {
 	validateExistingCategory,
 	validateNewCategory,
@@ -14,7 +8,6 @@ import { useFormik } from 'formik';
 import Style from './ChoseCategory.module.css';
 import { clotheService } from '@/services/ClotheService';
 import { setService } from '@/services/SetService';
-import useAppContext from '@/hooks/useAppContext';
 import { Response } from '@/controllers/FrontController';
 import useSetCltohes from '@/hooks/useSetClothes';
 import useSetSets from '@/hooks/useSetSets';
@@ -68,16 +61,18 @@ export default function ChoseCategory({
 			if (isClothe) {
 				const response = await clotheService.changeCategoryById({
 					userId,
-					clotheOrSetId,
+					clothe: clotheOrSetId,
 					toUpdate: { category: existingCategory ? existingCategory : category! },
 				});
+				if (response.status === 'error')
+					throw new Error('Erro ao mudar a categoria');
 				const { data: newClothe } = response;
 				replaceClothes(newClothe);
 			}
 			if (!isClothe) {
 				const { data: response } = await setService.changeCategoryById({
 					userId,
-					clotheOrSetId,
+					set: clotheOrSetId,
 					toUpdate: { category: existingCategory ? existingCategory : category! },
 				});
 				const { data: newSet } = response as Response;
@@ -97,7 +92,7 @@ export default function ChoseCategory({
 				<div className={Style.rowBox}>
 					<select
 						onChange={formikExistingCategory.handleChange}
-						value={formikExistingCategory.values.existingCategory}
+						value={formikExistingCategory.values.existingCategory!}
 						name='existingCategory'
 						id='existingCategory'
 					>

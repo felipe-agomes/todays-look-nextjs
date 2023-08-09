@@ -87,7 +87,6 @@ export type SetData = {
 
 export type ClotheData = {
 	category: string;
-	userId: string;
 	image: string;
 	key: string;
 };

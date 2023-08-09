@@ -18,7 +18,7 @@ describe('getAllClothesHandler', () => {
 		jest.clearAllMocks();
 	});
 	it('should call the res.status() and res.json() with a error status if the method is not allowed ', async () => {
-		req.method = 'POST';
+		req.method = 'PUT';
 
 		await handler(req, res);
 

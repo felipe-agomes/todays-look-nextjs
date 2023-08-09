@@ -85,18 +85,11 @@ export default function ModalClothe({ modalId }: Props) {
 													if (!clothe) throw new Error('Roupa não encontrada');
 													setLoading(true);
 													const response = await clotheService.toggleFavoriteById({
-														clotheOrSetId: clothe?.id,
+														clothe: clothe?.id,
 														userId: clothe?.userId,
 													});
-													if (response.status === 'error')
-														throw new Error('Erro ao buscar a ruopa');
-													console.log(response);
+													if (response.status === 'error') return;
 													replaceClothes(response.data);
-													// const data = (await fetcher(
-													// 	`/api/protected/user/${clothe?.userId}/clothe/favorite/${clothe?.id}`,
-													// 	{ method: 'PUT', update: true },
-													// )) as ClothesProps;
-													// data && setFavorite(data.favorite);
 													closeAllModais();
 													setLoading(false);
 												}}

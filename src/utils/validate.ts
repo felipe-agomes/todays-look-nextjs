@@ -78,7 +78,7 @@ export function sendImageValidate(values: FormSendImageValues) {
 }
 
 export function validateNewCategory(value: { category: string }) {
-	const error: { category?: String } = {};
+	const error: { category?: string } = {};
 	if (!value.category) {
 		error.category = 'Categoria deve ser informada';
 	} else if (value.category.length < 2) {
@@ -90,8 +90,8 @@ export function validateNewCategory(value: { category: string }) {
 	return error;
 }
 
-export function validateExistingCategory(value: { existingCategory: String }) {
-	const error: { existingCategory?: String } = {};
+export function validateExistingCategory(value: { existingCategory?: string }) {
+	const error: { existingCategory?: string } = {};
 	if (!value.existingCategory) {
 		error.existingCategory = 'Uma categoria deve ser selecionada';
 	}

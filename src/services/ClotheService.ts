@@ -1,33 +1,26 @@
 import { ClotheData, SetData } from '@/@types';
 import { FetcherAxios } from './Fetcher';
-import {
-	FrontController,
-	PutOperation,
-	Response,
-} from '@/controllers/FrontController';
+import { FrontController, Response } from '@/controllers/FrontController';
 
-export interface IService {
+export interface IClotheService {
 	getAllByUserId(data: { userId: string }): Promise<Response>;
-	deleteById(data: { userId: string; clotheOrSetId: string }): Promise<Response>;
+	deleteById(data: { userId: string; clothe: string }): Promise<Response>;
 	changeCategoryById(data: {
 		userId: string;
-		clotheOrSetId: string;
-		body: {
-			toUpdate: { [key: string]: string };
-			operation: PutOperation;
-		};
+		clothe: string;
+		toUpdate: { category: string };
 	}): Promise<Response>;
 	toggleFavoriteById(data: {
 		userId: string;
-		clotheOrSetId: string;
+		clothe: string;
 	}): Promise<Response>;
 	create(data: {
 		userId: string;
-		toCreate: ClotheData | SetData;
+		clothe: ClotheData | SetData;
 	}): Promise<Response>;
 }
 
-export class ClotheService implements IService {
+export class ClotheService implements IClotheService {
 	constructor(private frontController: FrontController) {}
 	async getAllByUserId({ userId }: { userId: string }): Promise<Response> {
 		let response: Response;
@@ -41,16 +34,16 @@ export class ClotheService implements IService {
 		return response;
 	}
 	async deleteById({
-		clotheOrSetId,
+		clothe,
 		userId,
 	}: {
 		userId: string;
-		clotheOrSetId: string;
+		clothe: string;
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doDelete({
-				url: `/api/protected/user/${userId}/clothe/${clotheOrSetId}`,
+				url: `/api/protected/user/${userId}/clothe/${clothe}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -59,21 +52,18 @@ export class ClotheService implements IService {
 	}
 	async changeCategoryById({
 		userId,
-		clotheOrSetId,
-		body,
+		clothe,
+		toUpdate,
 	}: {
 		userId: string;
-		clotheOrSetId: string;
-		body: {
-			toUpdate: { [key: string]: string };
-			operation: string;
-		};
+		clothe: string;
+		toUpdate: { category: string };
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
-				url: `/api/protected/user/${userId}/clothe/${clotheOrSetId}`,
-				body: { ...body, operation: 'changeCategory' },
+				url: `/api/protected/user/${userId}/clothe/${clothe}`,
+				body: { toUpdate, operation: 'changeCategory' },
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -82,15 +72,15 @@ export class ClotheService implements IService {
 	}
 	async toggleFavoriteById({
 		userId,
-		clotheOrSetId,
+		clothe,
 	}: {
 		userId: string;
-		clotheOrSetId: string;
+		clothe: string;
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
-				url: `/api/protected/user/${userId}/clothe/${clotheOrSetId}`,
+				url: `/api/protected/user/${userId}/clothe/${clothe}`,
 				body: { operation: 'toggleFavorite' },
 			});
 		} catch (error: any) {
@@ -100,16 +90,17 @@ export class ClotheService implements IService {
 	}
 	async create({
 		userId,
-		toCreate,
+		clothe,
 	}: {
 		userId: string;
-		toCreate: ClotheData;
+		clothe: ClotheData;
 	}): Promise<Response> {
 		let response: Response;
+		console.log('aquiiii', { clothe });
 		try {
 			response = await this.frontController.doPost({
-				url: `/api/protected/user/${userId}/clothe/upload`,
-				body: { toCreate },
+				url: `/api/protected/user/${userId}/clothe`,
+				body: { clothe },
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };

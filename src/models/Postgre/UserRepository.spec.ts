@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { User } from './Tables';
 import { UserRepositoryPostgre } from './UserRepository';
 import bcrypt from 'bcrypt';
@@ -24,7 +25,9 @@ describe('ClotheRepository', () => {
 		beforeEach(async () => {
 			jest.resetAllMocks();
 			await User.destroy({
-				where: {},
+				where: {
+					email: ['user_already_exist@teste.com', 'user_not_exist@teste.com'],
+				},
 				truncate: false,
 			});
 			await User.create(userAlreadyExist);
@@ -97,7 +100,9 @@ describe('ClotheRepository', () => {
 		beforeEach(async () => {
 			jest.resetAllMocks();
 			await User.destroy({
-				where: {},
+				where: {
+					email: ['user_already_exist@teste.com', 'user_not_exist@teste.com'],
+				},
 				truncate: false,
 			});
 			await User.create(userAlreadyExist);
@@ -146,7 +151,9 @@ describe('ClotheRepository', () => {
 		beforeEach(async () => {
 			jest.resetAllMocks();
 			await User.destroy({
-				where: {},
+				where: {
+					email: ['user_already_exist@teste.com', 'user_not_exist@teste.com'],
+				},
 				truncate: false,
 			});
 			await User.create(userAlreadyExist);
@@ -186,7 +193,9 @@ describe('ClotheRepository', () => {
 		beforeEach(async () => {
 			jest.resetAllMocks();
 			await User.destroy({
-				where: {},
+				where: {
+					email: ['user_already_exist@teste.com', 'user_not_exist@teste.com'],
+				},
 				truncate: false,
 			});
 			user = await User.create(userAlreadyExist);

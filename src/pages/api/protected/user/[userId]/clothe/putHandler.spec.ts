@@ -11,7 +11,9 @@ describe('postHandler', () => {
 			query: {
 				clotheId: 'clotheId',
 			},
-			body: {},
+			body: {
+				toUpdate: { category: 'new_category' },
+			},
 		};
 		res = {
 			status: jest.fn(function () {
@@ -68,7 +70,7 @@ describe('postHandler', () => {
 	it('should call the method clotheRepository.changeCategoryByClotheId()', async () => {
 		req.method = 'PUT';
 		req.body.operation = 'changeCategory';
-		req.body.category = 'new_category';
+		req.body.toUpdate.category = 'new_category';
 
 		await handlerWrapper(req, res);
 

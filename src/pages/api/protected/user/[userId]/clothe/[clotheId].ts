@@ -9,8 +9,8 @@ export default async function handler(
 	switch (req.method) {
 		case 'PUT':
 			clotheId = req.query.clotheId as string;
-			const category = req.body.category as string;
 			if (req.body.operation === 'changeCategory') {
+				const category = req.body.toUpdate.category as string;
 				try {
 					const clothe = await clotheRepository.changeCategoryByClotheId({
 						clotheId,
@@ -21,7 +21,8 @@ export default async function handler(
 						message: 'Propriedade category alterada com sucesso',
 						data: clothe,
 					});
-				} catch {
+				} catch (error) {
+					console.error(error.message);
 					res.status(400).json({
 						status: 'error',
 						message: 'Erro alterar a propriedade category',
@@ -70,9 +71,5 @@ export default async function handler(
 				});
 			}
 			break;
-		case 'POST':
-			const clothe = req.body.clothe;
-			const userId = req.query.userId;
-			await clotheRepository.create({ ...clothe, userId });
 	}
 }

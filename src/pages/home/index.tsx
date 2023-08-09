@@ -36,7 +36,7 @@ type Props = {
 };
 
 export default function Home({ serverSession }: Props) {
-	const { setClothes, setSets, clothes, sets } = useAppContext();
+	const { setClothes, clothes, sets } = useAppContext();
 	const setsCategories = categoriesClotheOrSet<SetsProps>(sets);
 	const clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
 
@@ -44,7 +44,6 @@ export default function Home({ serverSession }: Props) {
 		const response: Response = await clotheService.getAllByUserId({
 			userId: serverSession.user.id,
 		});
-		console.log(response);
 		setClothes(response.data);
 	};
 
@@ -159,7 +158,7 @@ export async function getServerSideProps({ req }: { req: NextApiRequest }) {
 
 	const serverSession = {
 		user: {
-			id: '4838',
+			id: '7108',
 			name: 'Felipe de Almeida Gomes',
 			email: 'falmeidagomes13@gmail.com',
 			password: '$2b$08$/bTNU54RhkM2uBfN8tTYjeInR.w7Er97dqfeM8lV5iSF6m2dmAHWq',

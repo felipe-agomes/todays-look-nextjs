@@ -46,6 +46,7 @@ export class ClotheRepositoryPostgre implements IClotheRepository {
 		try {
 			const user = await User.findByPk(userId);
 			if (!user) return null;
+			console.log('aquiiiiiiiii', { category, key, image });
 			const clothe: any = await Clothe.create({ category, key, image });
 			await clothe.setUser(user);
 			return clothe.toJSON();
@@ -69,6 +70,7 @@ export class ClotheRepositoryPostgre implements IClotheRepository {
 	}: {
 		clotheId: string;
 	}): Promise<ClotheData | null> {
+		console.log('aquiiiii', { clotheId });
 		try {
 			const clothe: any = await Clothe.findByPk(clotheId);
 			if (!clothe) return null;

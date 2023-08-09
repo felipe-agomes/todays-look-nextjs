@@ -20,7 +20,7 @@ export default function HeaderCategory({ isClothe, categories }: Props) {
 	const { setCategory, category } = isClothe
 		? { category: currentCategoryClothes, setCategory: setCurrentCategoryClothes }
 		: { category: currentCategorySets, setCategory: setCurrentCategorySets };
-	const categoryWithFavoritoAndTodos = ['Favorito', 'Todos', ...categories];
+	const categoryWithFavoritoAndTodos = ['Favoritos', 'Todos', ...categories];
 
 	return (
 		<nav className={Style.navegation}>

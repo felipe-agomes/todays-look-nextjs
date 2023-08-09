@@ -19,7 +19,10 @@ describe('ClotheRepository', () => {
 	describe('create', () => {
 		let user: any;
 		beforeEach(async () => {
-			await Clothe.destroy({ where: {} });
+			// await Clothe.destroy({
+			// 	where: {},
+			// 	truncate: false,
+			// });
 			user = await User.findOne({
 				where: { email: 'user_already_exist@teste.com' },
 			});
@@ -133,7 +136,7 @@ describe('ClotheRepository', () => {
 		const originalClotheFindByPk = Clothe.findByPk;
 		beforeEach(async () => {
 			jest.resetAllMocks();
-			await Clothe.destroy({ where: {} });
+			// await Clothe.destroy({ where: {} });
 			user = await User.findOne({
 				where: { email: 'user_already_exist@teste.com' },
 			});
@@ -189,7 +192,7 @@ describe('ClotheRepository', () => {
 		const originalClotheFindByPk = Clothe.findByPk;
 		let clothe: any;
 		beforeEach(async () => {
-			await Clothe.destroy({ where: {} });
+			// await Clothe.destroy({ where: {} });
 			clothe = await Clothe.create(newClothe);
 			jest.resetAllMocks();
 		});
@@ -267,7 +270,7 @@ describe('ClotheRepository', () => {
 		let clothe: any;
 		const originalClotheFindByPk = Clothe.findByPk;
 		beforeEach(async () => {
-			await Clothe.destroy({ where: {} });
+			// await Clothe.destroy({ where: {} });
 			clothe = await Clothe.create(newClothe);
 			jest.resetAllMocks();
 		});

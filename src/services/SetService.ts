@@ -1,15 +1,32 @@
 import { FrontController, Response } from '@/controllers/FrontController';
-import { IService } from './ClotheService';
 import { ClotheData, SetData, SetsProps } from '@/@types';
 import { FetcherAxios } from './Fetcher';
 
-export class SetService implements IService {
+export interface ISetService {
+	getAllByUserId(data: { userId: string }): Promise<Response>;
+	deleteById(data: { userId: string; set: string }): Promise<Response>;
+	changeCategoryById(data: {
+		userId: string;
+		set: string;
+		toUpdate: { category: string };
+	}): Promise<Response>;
+	toggleFavoriteById(data: {
+		userId: string;
+		set: string;
+	}): Promise<Response>;
+	create(data: {
+		userId: string;
+		clothe: ClotheData | SetData;
+	}): Promise<Response>;
+}
+
+export class SetService implements ISetService {
 	constructor(private frontController: FrontController) {}
 	async getAllByUserId({ userId }: { userId: string }): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doGet({
-				url: `/api/protected/user/${userId}/clothe/allSets`,
+				url: `/api/protected/user/${userId}/set/allSets`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -17,16 +34,16 @@ export class SetService implements IService {
 		return response;
 	}
 	async deleteById({
-		clotheOrSetId,
+		set,
 		userId,
 	}: {
 		userId: string;
-		clotheOrSetId: string;
+		set: string;
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doDelete({
-				url: `/api/protected/user/${userId}/clothe/deleteSet/${clotheOrSetId}`,
+				url: `/api/protected/user/${userId}/set/deleteSet/${set}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -34,22 +51,19 @@ export class SetService implements IService {
 		return response;
 	}
 	async changeCategoryById({
-		body,
-		clotheOrSetId,
+		toUpdate,
+		set,
 		userId,
 	}: {
 		userId: string;
-		clotheOrSetId: string;
-		body: {
-			toUpdate: { [key: string]: string };
-			operation?: string;
-		};
+		set: string;
+		toUpdate: { [key: string]: string };
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
-				url: `/api/protected/user/${userId}/clothe/updateCategorySet/${clotheOrSetId}`,
-				body: { ...body, operation: 'changeCategory' },
+				url: `/api/protected/user/${userId}/set/updateCategorySet/${set}`,
+				body: { toUpdate, operation: 'changeCategory' },
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -58,15 +72,15 @@ export class SetService implements IService {
 	}
 	async toggleFavoriteById({
 		userId,
-		clotheOrSetId,
+		set,
 	}: {
 		userId: string;
-		clotheOrSetId: string;
+		set: string;
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
-				url: `/api/protected/user/${userId}/clothe/favoriteSet/${clotheOrSetId}`,
+				url: `/api/protected/user/${userId}/set/favoriteSet/${set}`,
 				body: { operation: 'toggleFavorite' },
 			});
 		} catch (error: any) {
@@ -76,16 +90,16 @@ export class SetService implements IService {
 	}
 	async create({
 		userId,
-		toCreate,
+		clothe,
 	}: {
 		userId: string;
-		toCreate: SetData;
+		clothe: SetData;
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPost({
-				url: `/api/protected/user/${userId}/clothe/createSet`,
-				body: { toCreate },
+				url: `/api/protected/user/${userId}/set/createSet`,
+				body: { clothe },
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };

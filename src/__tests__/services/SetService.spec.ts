@@ -19,10 +19,8 @@ const toggleFavoriteByIdResponse = {
 
 const changeCategoryByIdRequest = {
 	userId: '123',
-	clotheOrSetId: '321',
-	body: {
-		toUpdate: { category: 'new_category' },
-	},
+	set: '321',
+	toUpdate: { category: 'new_category' },
 };
 
 const changeCategoryByIdResponse = {
@@ -35,7 +33,7 @@ const changeCategoryByIdResponse = {
 
 const createRequest = {
 	userId: '123',
-	toCreate: {
+	clothe: {
 		category: 'category',
 		id: 'id',
 		sets: [
@@ -76,7 +74,7 @@ describe('SetService', () => {
 			await sut.getAllByUserId({ userId: '123' });
 
 			expect(spyDoGet).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/allSets`,
+				url: `/api/protected/user/123/set/allSets`,
 			});
 			expect(spyDoGet).toHaveBeenCalledTimes(1);
 		});
@@ -107,10 +105,10 @@ describe('SetService', () => {
 			const { setService: sut, frontController } = makeSut();
 			const spyDoDelete = jest.spyOn(frontController, 'doDelete');
 
-			await sut.deleteById({ userId: '123', clotheOrSetId: '321' });
+			await sut.deleteById({ userId: '123', set: '321' });
 
 			expect(spyDoDelete).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/deleteSet/321`,
+				url: `/api/protected/user/123/set/deleteSet/321`,
 			});
 			expect(spyDoDelete).toHaveBeenCalledTimes(1);
 		});
@@ -123,7 +121,7 @@ describe('SetService', () => {
 
 			const result = await sut.deleteById({
 				userId: '123',
-				clotheOrSetId: '321',
+				set: '321',
 			});
 
 			expect(result).toEqual(doDeleteSuccessDataResponse);
@@ -137,7 +135,7 @@ describe('SetService', () => {
 
 			const result = await sut.deleteById({
 				userId: '123',
-				clotheOrSetId: '321',
+				set: '321',
 			});
 
 			expect(result).toEqual(errorMessage);
@@ -152,7 +150,7 @@ describe('SetService', () => {
 			await sut.changeCategoryById(changeCategoryByIdRequest);
 
 			expect(spyDoPut).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/updateCategorySet/321`,
+				url: `/api/protected/user/123/set/updateCategorySet/321`,
 				body: {
 					toUpdate: { category: 'new_category' },
 					operation: 'changeCategory',
@@ -187,10 +185,10 @@ describe('SetService', () => {
 			const { setService: sut, frontController } = makeSut();
 			const spyDoPut = jest.spyOn(frontController, 'doPut');
 
-			await sut.toggleFavoriteById({ userId: '123', clotheOrSetId: '321' });
+			await sut.toggleFavoriteById({ userId: '123', set: '321' });
 
 			expect(spyDoPut).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/favoriteSet/321`,
+				url: `/api/protected/user/123/set/favoriteSet/321`,
 				body: { operation: 'toggleFavorite' },
 			});
 			expect(spyDoPut).toHaveBeenCalledTimes(1);
@@ -203,7 +201,7 @@ describe('SetService', () => {
 				.mockResolvedValueOnce({ data: toggleFavoriteByIdResponse });
 
 			const result = await sut.toggleFavoriteById({
-				clotheOrSetId: '321',
+				set: '321',
 				userId: '123',
 			});
 
@@ -215,7 +213,7 @@ describe('SetService', () => {
 			frontController.doPut = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
 			const result = await sut.toggleFavoriteById({
-				clotheOrSetId: '321',
+				set: '321',
 				userId: '123',
 			});
 
@@ -231,9 +229,9 @@ describe('SetService', () => {
 			await sut.create(createRequest);
 
 			expect(spyDoPost).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe/createSet`,
+				url: `/api/protected/user/123/set/createSet`,
 				body: {
-					toCreate: createRequest.toCreate,
+					clothe: createRequest.clothe,
 				},
 			});
 			expect(spyDoPost).toHaveBeenCalledTimes(1);

@@ -2,12 +2,12 @@ import { ClothePosition, ClothesProps, SetsProps } from '@/@types';
 import { Dispatch, SetStateAction, createContext, useState } from 'react';
 
 type AppContextType = {
-	workbench: ClothePosition[] | [];
+	workbench: ClothePosition[];
 	setWorkbench: Dispatch<SetStateAction<[] | ClothePosition[]>>;
-	clothes: ClothesProps[] | [];
-	setClothes: Dispatch<SetStateAction<ClothesProps[] | []>>;
-	sets: SetsProps[] | [];
-	setSets: Dispatch<SetStateAction<SetsProps[] | []>>;
+	clothes: ClothesProps[];
+	setClothes: Dispatch<SetStateAction<ClothesProps[]>>;
+	sets: SetsProps[];
+	setSets: Dispatch<SetStateAction<SetsProps[]>>;
 	currentCategoryClothes: string;
 	setCurrentCategoryClothes: Dispatch<SetStateAction<string>>;
 	currentCategorySets: string;
@@ -32,9 +32,9 @@ export default function ProviderAppContext({
 }: {
 	children: React.ReactNode;
 }) {
-	const [clothes, setClothes] = useState<ClothesProps[] | []>([]);
-	const [workbench, setWorkbench] = useState<ClothePosition[] | []>([]);
-	const [sets, setSets] = useState<SetsProps[] | []>([]);
+	const [clothes, setClothes] = useState<ClothesProps[]>([]);
+	const [workbench, setWorkbench] = useState<ClothePosition[]>([]);
+	const [sets, setSets] = useState<SetsProps[]>([]);
 	const [currentCategoryClothes, setCurrentCategoryClothes] = useState('Todos');
 	const [currentCategorySets, setCurrentCategorySets] = useState('Todos');
 
