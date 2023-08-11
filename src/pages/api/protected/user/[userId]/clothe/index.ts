@@ -1,4 +1,4 @@
-import clotheRepository from '@/models/Postgre/ClotheRepository';
+import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(

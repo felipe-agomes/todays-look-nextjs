@@ -1,4 +1,4 @@
-import clotheRepository from '@/models/Postgre/ClotheRepository';
+import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import handler from '.';
 
 jest.mock('@/models/Postgre/ClotheRepository');

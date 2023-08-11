@@ -1,4 +1,4 @@
-import clotheRepository from '@/models/Postgre/ClotheRepository';
+import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -22,7 +22,6 @@ export default async function handler(
 						data: clothe,
 					});
 				} catch (error) {
-					console.error(error.message);
 					res.status(400).json({
 						status: 'error',
 						message: 'Erro alterar a propriedade category',
