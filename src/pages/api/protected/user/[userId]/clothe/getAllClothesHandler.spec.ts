@@ -1,7 +1,7 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import handler from './index';
 
-jest.mock('@/models/Postgre/ClotheRepository');
+jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
 describe('getAllClothesHandler', () => {
 	const req: any = {
 		query: { userId: 'userId' },

@@ -1,9 +1,18 @@
+import { ClothePosition } from '@/@types';
+import { User } from './Tables';
+
 type CreateSet = {
-	category: string;
-	key: string;
-	image: string;
 	userId: string;
-};
+} & ClothePosition;
+
+// export type ClothesProps = {
+// 	id: string;
+// 	category: string;
+// 	favorite: false;
+// 	image: string;
+// 	key: string;
+// 	userId: string;
+// };
 
 export type SetData = {
 	id: number;
@@ -17,6 +26,7 @@ export type SetData = {
 };
 
 export interface ISetRepository {
+	create(data: CreateSet): Promise<SetData | null>;
 	getAllByUserId(data: { userId: string }): Promise<SetData[]>;
 	toggleFavoriteBySetId(data: { setId: string }): Promise<SetData | null>;
 	changeCategoryBySetId(data: {
@@ -24,11 +34,15 @@ export interface ISetRepository {
 		category: string;
 	}): Promise<SetData | null>;
 	deleteBySetId(data: { setId: string }): Promise<string | null>;
-	create(data: CreateSet): Promise<SetData | null>;
 }
 
 export default class SetRepositoryPostgre implements ISetRepository {
 	async create(data: CreateSet): Promise<SetData> {
+		const teste = await User.create({
+			email: 'teste',
+			password: 'pass',
+			image: 'image',
+		});
 		return '' as any;
 	}
 	async getAllByUserId(data: { userId: string }): Promise<SetData[]> {

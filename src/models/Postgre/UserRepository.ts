@@ -53,7 +53,10 @@ export class UserRepositoryPostgre implements IUserRepository {
 	async getAll(): Promise<UserData[]> {
 		try {
 			const users = await User.findAll();
-			return JSON.stringify(users) as any;
+			return users.map((user: any) => {
+				delete user.password;
+				return user.toJSON();
+			});
 		} catch (error) {
 			throw new Error('Erro ao buscar usuários: ' + error.message);
 		}

@@ -1,42 +1,97 @@
-import { toEditorSettings } from 'typescript';
+import { toEditorSettings, transpileModule } from 'typescript';
 import { Clothe, User } from './Tables';
 import { userNotExist } from './UserRepository.spec';
 import { ClotheRepositoryPostgre } from './ClotheRepositoryPostgre';
+import { mock } from 'node:test';
+import { threadId } from 'worker_threads';
+
+/* instanceof Clothe {
+	favorite: false,
+	id: 3808,
+	category: 'category',
+	key: 'key',
+	image: 'image',
+	updatedAt: 2023-08-11T12:03:01.536Z,
+	createdAt: 2023-08-11T12:03:01.536Z,
+	userId: null
+} */
 
 const makeSut = () => {
 	const clotheRepository = new ClotheRepositoryPostgre();
 	return { clotheRepository };
 };
-
 const newClothe = {
-	userId: null,
+	userId: '1',
 	category: 'category',
 	key: 'key',
 	image: 'image',
 };
-
+const mockClotheObj = {
+	favorite: false,
+	id: '1',
+	category: 'category',
+	key: 'key',
+	image: 'image',
+	updatedAt: '2023-08-11T12:03:01.536Z',
+	createdAt: '2023-08-11T12:03:01.536Z',
+	userId: '1',
+};
+const mockUserObj = {
+	id: '1',
+	email: 'user_already_exist@teste.com',
+	password: 'password',
+	image: 'image',
+	updatedAt: '2023-08-11T11:59:51.268Z',
+	createdAt: '2023-08-11T11:59:51.268Z',
+};
 describe('ClotheRepository', () => {
+	let mockClothe: any;
+	let mockUser: any;
+	beforeEach(() => {
+		jest.resetAllMocks();
+		mockUser = {
+			...mockUserObj,
+			toJSON: jest.fn(function () {
+				return {
+					id: this.id,
+					email: this.email,
+					password: this.password,
+					image: this.image,
+					updatedAt: this.updatedAt,
+					createdAt: this.createdAt,
+				};
+			}),
+		};
+		mockClothe = {
+			...mockClotheObj,
+			save: jest.fn(),
+			setUser: jest.fn(),
+			toJSON: jest.fn(function () {
+				return {
+					favorite: this.favorite,
+					id: this.id,
+					category: this.category,
+					key: this.key,
+					image: this.image,
+					updatedAt: this.updatedAt,
+					createdAt: this.createdAt,
+					userId: this.userId,
+				};
+			}),
+			destroy: jest.fn(),
+		};
+		User.findByPk = jest.fn().mockResolvedValue({ ...mockUser });
+		Clothe.findByPk = jest.fn().mockResolvedValue({ ...mockClothe });
+		Clothe.create = jest.fn().mockResolvedValue({ ...mockClothe });
+	});
 	describe('create', () => {
-		let user: any;
-		beforeEach(async () => {
-			// await Clothe.destroy({
-			// 	where: {},
-			// 	truncate: false,
-			// });
-			user = await User.findOne({
-				where: { email: 'user_already_exist@teste.com' },
-			});
-			newClothe.userId = user.id;
-			jest.resetAllMocks();
-		});
 		it('should call the Clothe.create()', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const spyCreate = jest.spyOn(Clothe, 'create');
 
 			await sut.create(newClothe);
 
-			expect(spyCreate).toHaveBeenCalledTimes(1);
-			expect(spyCreate).toHaveBeenCalledWith({
+			expect(Clothe.create).toHaveBeenCalledTimes(1);
+			expect(Clothe.create).toHaveBeenCalledWith({
 				category: newClothe.category,
 				key: newClothe.key,
 				image: newClothe.image,
@@ -45,17 +100,16 @@ describe('ClotheRepository', () => {
 
 		it('should call the Clothe.findByPk()', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const spyFindByPk = jest.spyOn(User, 'findByPk');
 
 			await sut.create(newClothe);
 
-			expect(spyFindByPk).toHaveBeenCalledTimes(1);
-			expect(spyFindByPk).toHaveBeenCalledWith(newClothe.userId);
+			expect(User.findByPk).toHaveBeenCalledTimes(1);
+			expect(User.findByPk).toHaveBeenCalledWith(newClothe.userId);
 		});
 
 		it('should throw a error if any error occurs', async () => {
 			const { clotheRepository: sut } = makeSut();
-			jest.spyOn(Clothe, 'create').mockRejectedValueOnce(new Error('erro'));
+			Clothe.create = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
 			await expect(async () => {
 				await sut.create(newClothe);
@@ -77,46 +131,45 @@ describe('ClotheRepository', () => {
 	});
 
 	describe('getAllByUserId', () => {
-		let user: any;
-		beforeEach(async () => {
-			user = await User.findOne({
-				where: { email: 'user_already_exist@teste.com' },
-			});
-			jest.clearAllMocks();
-		});
-
 		it('should call the User.findByPk()', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const spyFindByPk = jest.spyOn(User, 'findByPk');
 
-			await sut.getAllByUserId({ userId: user.id });
+			await sut.getAllByUserId({ userId: mockUser.id });
 
-			expect(spyFindByPk).toHaveBeenCalledTimes(1);
+			expect(User.findByPk).toHaveBeenCalledTimes(1);
 		});
 
 		it('should throw a security message error', async () => {
 			const { clotheRepository: sut } = makeSut();
-			jest.spyOn(User, 'findByPk').mockRejectedValueOnce(new Error('Erro'));
+			User.findByPk = jest.fn().mockRejectedValueOnce(new Error('Erro'));
 
 			await expect(async () => {
-				await sut.getAllByUserId({ userId: user.id });
+				await sut.getAllByUserId({ userId: mockUser.id });
 			}).rejects.toThrowError('Erro ao buscar roupas: Erro');
 		});
 
 		it('should return a empty array if user does not have any clothe registered', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const user: any = await User.create(userNotExist);
+			User.findByPk = jest.fn().mockResolvedValueOnce({
+				toJSON: jest.fn().mockReturnValueOnce({ ...mockClotheObj, clothes: [] }),
+			});
 
-			const result = await sut.getAllByUserId({ userId: user.id });
+			const result = await sut.getAllByUserId({ userId: mockUser.id });
 
 			expect(result).toEqual([]);
 		});
 
-		it('should return a corrected data on real user', async () => {
+		it('should return a corrected data', async () => {
 			const { clotheRepository: sut } = makeSut();
+			User.findByPk = jest.fn().mockResolvedValueOnce({
+				toJSON: jest.fn().mockReturnValueOnce({
+					...mockClotheObj,
+					clothes: [{ ...mockClotheObj }],
+				}),
+			});
 
 			const result = await sut.getAllByUserId({
-				userId: user.id,
+				userId: mockUser.id,
 			});
 
 			expect(result[0]).toHaveProperty('id');
@@ -131,49 +184,37 @@ describe('ClotheRepository', () => {
 	});
 
 	describe('toggleFavoriteByClotheId', () => {
-		let clothe: any;
-		let user: any;
-		const originalClotheFindByPk = Clothe.findByPk;
-		beforeEach(async () => {
-			jest.resetAllMocks();
-			// await Clothe.destroy({ where: {} });
-			user = await User.findOne({
-				where: { email: 'user_already_exist@teste.com' },
-			});
-			clothe = await Clothe.create(newClothe);
-			await clothe.setUser(user);
-		});
-
 		it('should call the Clothe.findByPk() ', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const spyFindByPk = jest.spyOn(Clothe, 'findByPk');
 
-			await sut.toggleFavoriteByClotheId({ clotheId: clothe.id });
+			await sut.toggleFavoriteByClotheId({ clotheId: mockClothe.id });
 
-			expect(spyFindByPk).toHaveBeenCalledTimes(1);
-			expect(spyFindByPk).toHaveBeenCalledWith(clothe.id);
+			expect(Clothe.findByPk).toHaveBeenCalledTimes(1);
+			expect(Clothe.findByPk).toHaveBeenCalledWith(mockClothe.id);
 		});
 
 		it('should call the clothe.save())', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const mockSave = jest.fn();
-			Clothe.findByPk = jest
-				.fn()
-				.mockResolvedValueOnce({ save: mockSave, favorite: false });
 
 			await sut.toggleFavoriteByClotheId({
 				clotheId: 'clotheId',
 			});
 
-			expect(mockSave).toHaveBeenCalledTimes(1);
+			expect(mockClothe.save).toHaveBeenCalledTimes(1);
 		});
 
 		it('should return a corrected data on real user', async () => {
 			const { clotheRepository: sut } = makeSut();
-			Clothe.findByPk = originalClotheFindByPk;
+			Clothe.findByPk = jest.fn().mockResolvedValueOnce({
+				...mockClotheObj,
+				toJSON: jest
+					.fn()
+					.mockResolvedValueOnce({ ...mockClotheObj, favorite: transpileModule }),
+				save: jest.fn(),
+			});
 
 			const result = await sut.toggleFavoriteByClotheId({
-				clotheId: clothe.id,
+				clotheId: mockClothe.id,
 			});
 
 			expect(result).toHaveProperty('id');
@@ -189,34 +230,25 @@ describe('ClotheRepository', () => {
 	});
 
 	describe('changeCategoryByClotheId', () => {
-		const originalClotheFindByPk = Clothe.findByPk;
-		let clothe: any;
-		beforeEach(async () => {
-			// await Clothe.destroy({ where: {} });
-			clothe = await Clothe.create(newClothe);
-			jest.resetAllMocks();
-		});
-
 		it('should call the Clothe.findByPk() ', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const spyFindByPk = jest.spyOn(Clothe, 'findByPk');
 
 			await sut.changeCategoryByClotheId({
-				clotheId: clothe.id,
+				clotheId: mockClothe.id,
 				category: 'new_category',
 			});
 
-			expect(spyFindByPk).toHaveBeenCalledTimes(1);
-			expect(spyFindByPk).toHaveBeenCalledWith(clothe.id);
+			expect(Clothe.findByPk).toHaveBeenCalledTimes(1);
+			expect(Clothe.findByPk).toHaveBeenCalledWith(mockClothe.id);
 		});
 
 		it('should throw a security message error', async () => {
 			const { clotheRepository: sut } = makeSut();
-			jest.spyOn(Clothe, 'findByPk').mockRejectedValueOnce(new Error('Erro'));
+			Clothe.findByPk = jest.fn().mockRejectedValueOnce(new Error('Erro'));
 
 			await expect(async () => {
 				await sut.changeCategoryByClotheId({
-					clotheId: clothe.id,
+					clotheId: mockClothe.id,
 					category: 'new_category',
 				});
 			}).rejects.toThrowError('Erro ao alterar a categoria: Erro');
@@ -224,24 +256,19 @@ describe('ClotheRepository', () => {
 
 		it('should call the clothe.save())', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const mockSave = jest.fn();
-			Clothe.findByPk = jest
-				.fn()
-				.mockResolvedValueOnce({ save: mockSave, favorite: false });
 
 			await sut.changeCategoryByClotheId({
-				clotheId: clothe.id,
+				clotheId: mockClothe.id,
 				category: 'new_category',
 			});
 
-			expect(mockSave).toHaveBeenCalledTimes(1);
+			expect(mockClothe.save).toHaveBeenCalledTimes(1);
 		});
 
 		it('should return a updated category', async () => {
 			const { clotheRepository: sut } = makeSut();
-			Clothe.findByPk = originalClotheFindByPk;
 			const result = await sut.changeCategoryByClotheId({
-				clotheId: clothe.id,
+				clotheId: mockClothe.id,
 				category: 'new_category',
 			});
 			expect(result.category).toBe('new_category');
@@ -249,9 +276,9 @@ describe('ClotheRepository', () => {
 
 		it('should return a corrected data on real user', async () => {
 			const { clotheRepository: sut } = makeSut();
-			Clothe.findByPk = originalClotheFindByPk;
+
 			const result = await sut.changeCategoryByClotheId({
-				clotheId: clothe.id,
+				clotheId: mockClothe.id,
 				category: 'new_category',
 			});
 
@@ -267,48 +294,41 @@ describe('ClotheRepository', () => {
 	});
 
 	describe('deleteByClotheId', () => {
-		let clothe: any;
-		const originalClotheFindByPk = Clothe.findByPk;
-		beforeEach(async () => {
-			// await Clothe.destroy({ where: {} });
-			clothe = await Clothe.create(newClothe);
-			jest.resetAllMocks();
-		});
-
 		it('should call the Clothe.findById() ', async () => {
 			const { clotheRepository: sut } = makeSut();
-			const spyFindByPk = jest.spyOn(Clothe, 'findByPk');
 
-			await sut.deleteByClotheId({ clotheId: clothe.id });
+			await sut.deleteByClotheId({ clotheId: mockClothe.id });
 
-			expect(spyFindByPk).toHaveBeenCalledTimes(1);
-			expect(spyFindByPk).toHaveBeenCalledWith(clothe.id);
+			expect(Clothe.findByPk).toHaveBeenCalledTimes(1);
+			expect(Clothe.findByPk).toHaveBeenCalledWith(mockClothe.id);
 		});
 
 		it('should throw a security message error', async () => {
 			const { clotheRepository: sut } = makeSut();
-			jest.spyOn(Clothe, 'findByPk').mockRejectedValueOnce(new Error('Erro'));
+			Clothe.findByPk = jest.fn().mockRejectedValueOnce(new Error('Erro'));
 
 			await expect(async () => {
-				await sut.deleteByClotheId({ clotheId: 'clotheId' });
+				await sut.deleteByClotheId({ clotheId: mockClothe.id });
 			}).rejects.toThrowError('Erro ao deletar roupa: Erro');
 		});
 
 		it('should call the user.destroy()', async () => {
 			const { clotheRepository: sut } = makeSut();
 			const mockDestroy = jest.fn();
-			Clothe.findByPk = jest.fn().mockResolvedValueOnce({ destroy: mockDestroy });
+			Clothe.findByPk = jest.fn().mockResolvedValueOnce({
+				destroy: mockDestroy,
+				...mockClotheObj,
+			});
 
-			await sut.deleteByClotheId({ clotheId: clothe.id });
+			await sut.deleteByClotheId({ clotheId: mockClothe.id });
 
 			expect(mockDestroy).toHaveBeenCalledTimes(1);
 		});
 
 		it('should return a success message', async () => {
 			const { clotheRepository: sut } = makeSut();
-			Clothe.findByPk = originalClotheFindByPk;
 
-			const result = await sut.deleteByClotheId({ clotheId: clothe.id });
+			const result = await sut.deleteByClotheId({ clotheId: mockClothe.id });
 
 			expect(result).toBe('Roupa deletada com sucesso');
 		});

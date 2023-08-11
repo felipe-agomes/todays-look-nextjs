@@ -46,7 +46,6 @@ export class ClotheRepositoryPostgre implements IClotheRepository {
 		try {
 			const user = await User.findByPk(userId);
 			if (!user) return null;
-			console.log('aquiiiiiiiii', { category, key, image });
 			const clothe: any = await Clothe.create({ category, key, image });
 			await clothe.setUser(user);
 			return clothe.toJSON();
@@ -56,7 +55,7 @@ export class ClotheRepositoryPostgre implements IClotheRepository {
 	}
 	async getAllByUserId({ userId }: { userId: string }): Promise<ClotheData[]> {
 		try {
-			const user = await User.findByPk(userId, {
+			const user: any = await User.findByPk(userId, {
 				include: Clothe,
 			});
 			if (!user) return null;
@@ -70,14 +69,12 @@ export class ClotheRepositoryPostgre implements IClotheRepository {
 	}: {
 		clotheId: string;
 	}): Promise<ClotheData | null> {
-		console.log('aquiiiii', { clotheId });
 		try {
 			const clothe: any = await Clothe.findByPk(clotheId);
 			if (!clothe) return null;
 			clothe.favorite = !clothe.favorite;
 			await clothe.save();
-			const clotheJSON = JSON.stringify(clothe) as any;
-			return JSON.parse(clotheJSON);
+			return clothe.toJSON();
 		} catch (error) {
 			throw new Error('Erro ao alterar a propriedade favorito: ' + error.message);
 		}

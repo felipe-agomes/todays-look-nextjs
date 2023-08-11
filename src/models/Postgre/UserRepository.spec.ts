@@ -3,6 +3,15 @@ import { User } from './Tables';
 import { UserRepositoryPostgre } from './UserRepository';
 import bcrypt from 'bcrypt';
 
+/* instanceof User {
+	id: 11681,
+	email: 'test_user@test.com',
+	password: 'password',
+	image: 'image',
+	updatedAt: 2023-08-11T11:59:51.268Z,
+	createdAt: 2023-08-11T11:59:51.268Z
+} */
+
 const makeSut = () => {
 	const userRepositoryPostgre = new UserRepositoryPostgre();
 	return { userRepositoryPostgre };
@@ -20,26 +29,57 @@ const userAlreadyExist = {
 	password: 'password',
 };
 
-describe('ClotheRepository', () => {
-	describe('create', () => {
-		beforeEach(async () => {
-			jest.resetAllMocks();
-			await User.destroy({
-				where: {
-					email: ['user_already_exist@teste.com', 'user_not_exist@teste.com'],
-				},
-				truncate: false,
-			});
-			await User.create(userAlreadyExist);
-		});
+const mockUserObj = {
+	id: '1',
+	email: 'user_already_exist@teste.com',
+	password: 'password',
+	image: 'image',
+	updatedAt: '2023-08-11T11:59:51.268Z',
+	createdAt: '2023-08-11T11:59:51.268Z',
+};
 
+describe('ClotheRepository', () => {
+	let mockUser: any;
+	beforeEach(() => {
+		jest.resetAllMocks();
+		mockUser = {
+			...mockUserObj,
+			toJSON: jest.fn(function () {
+				if (this.password) {
+					return {
+						id: this.id,
+						email: this.email,
+						password: this.password,
+						image: this.image,
+						updatedAt: this.updatedAt,
+						createdAt: this.createdAt,
+					};
+				}
+				return {
+					id: this.id,
+					email: this.email,
+					image: this.image,
+					updatedAt: this.updatedAt,
+					createdAt: this.createdAt,
+				};
+			}),
+			destroy: jest.fn(),
+		};
+		User.findOrCreate = jest.fn().mockResolvedValue([{ ...mockUser }, false]);
+		User.findByPk = jest.fn().mockResolvedValue({ ...mockUser });
+		User.findOne = jest.fn().mockResolvedValue({ ...mockUser });
+		User.findAll = jest
+			.fn()
+			.mockResolvedValue([{ ...mockUser }, { ...mockUser, id: 2 }]);
+	});
+
+	describe('create', () => {
 		it('should call User.findOrCreate() with correct params', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			const spyFindOrCreate = jest.spyOn(User, 'findOrCreate');
 
 			await sut.create(userNotExist);
 
-			expect(spyFindOrCreate).toHaveBeenCalledTimes(1);
+			expect(User.findOrCreate).toHaveBeenCalledTimes(1);
 		});
 
 		it('should create a new user and find him', async () => {
@@ -66,7 +106,7 @@ describe('ClotheRepository', () => {
 
 		it('should throw an error message if any error occurs', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			jest.spyOn(User, 'findOrCreate').mockRejectedValueOnce(new Error('erro'));
+			User.findOrCreate = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
 			await expect(async () => {
 				await sut.create(userNotExist);
@@ -75,6 +115,7 @@ describe('ClotheRepository', () => {
 
 		it('should return a created user', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
+			User.findOrCreate = jest.fn().mockResolvedValueOnce([{ ...mockUser }, true]);
 
 			const result = await sut.create(userNotExist);
 
@@ -95,82 +136,53 @@ describe('ClotheRepository', () => {
 	});
 
 	describe('deleteById', () => {
-		let user: any;
-
-		beforeEach(async () => {
-			jest.resetAllMocks();
-			await User.destroy({
-				where: {
-					email: ['user_already_exist@teste.com', 'user_not_exist@teste.com'],
-				},
-				truncate: false,
-			});
-			await User.create(userAlreadyExist);
-			user = await User.findOne({
-				where: { email: 'user_already_exist@teste.com' },
-			});
-		});
-
 		it('should call the User.findByPk()', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			const spyFindByPk = jest.spyOn(User, 'findByPk');
 
-			await sut.deleteById({ userId: user.id });
+			await sut.deleteById({ userId: mockUser.id });
 
-			expect(spyFindByPk).toHaveBeenCalledTimes(1);
-			expect(spyFindByPk).toHaveBeenCalledWith(user.id);
+			expect(User.findByPk).toHaveBeenCalledTimes(1);
+			expect(User.findByPk).toHaveBeenCalledWith(mockUser.id);
 		});
 
 		it('should throw an error message if any error occurs', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			jest.spyOn(User, 'findByPk').mockRejectedValueOnce(new Error('erro'));
+			User.findByPk = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
 			await expect(async () => {
-				await sut.deleteById(user.id);
+				await sut.deleteById(mockUser.id);
 			}).rejects.toThrowError('Erro ao deletar usuário: erro');
 		});
 
 		it('should delete a user', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
 
-			await sut.deleteById({ userId: user.id });
+			await sut.deleteById({ userId: mockUser.id });
 
-			expect(await User.findByPk(user.id)).toBeFalsy();
+			expect(mockUser.destroy).toHaveBeenCalledTimes(1);
 		});
 
 		it('should delete a user', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
 
-			const result = await sut.deleteById({ userId: user.id });
+			const result = await sut.deleteById({ userId: mockUser.id });
 
 			expect(result).toBe('Usuário deletado com sucesso');
 		});
 	});
 
 	describe('getAll', () => {
-		beforeEach(async () => {
-			jest.resetAllMocks();
-			await User.destroy({
-				where: {
-					email: ['user_already_exist@teste.com', 'user_not_exist@teste.com'],
-				},
-				truncate: false,
-			});
-			await User.create(userAlreadyExist);
-		});
-
 		it('should call User.findAll() ', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			const spyFindAll = jest.spyOn(User, 'findAll');
 
 			await sut.getAll();
 
-			expect(spyFindAll).toHaveBeenCalledTimes(1);
+			expect(User.findAll).toHaveBeenCalledTimes(1);
 		});
 
 		it('should throw an error message if any error occurs', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			jest.spyOn(User, 'findAll').mockRejectedValueOnce(new Error('erro'));
+			User.findAll = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
 			await expect(async () => {
 				await sut.getAll();
@@ -179,48 +191,37 @@ describe('ClotheRepository', () => {
 
 		it('should return all users', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			const expected = await User.findAll();
-			const expectedJSON = JSON.stringify(expected);
 
 			const result = await sut.getAll();
 
-			expect(result).toEqual(expectedJSON);
+			expect(result[0]).toHaveProperty('id');
+			expect(result[0]).toHaveProperty('email');
+			expect(result[0]).toHaveProperty('image');
+			expect(result[0]).not.toHaveProperty('password');
 		});
 	});
 
 	describe('login', () => {
-		let user: any;
-		beforeEach(async () => {
-			jest.resetAllMocks();
-			await User.destroy({
-				where: {
-					email: ['user_already_exist@teste.com', 'user_not_exist@teste.com'],
-				},
-				truncate: false,
-			});
-			user = await User.create(userAlreadyExist);
-		});
-
 		it('should call the User.findOne()', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			const spyFindOne = jest.spyOn(User, 'findOne');
+			bcrypt.compare = jest.fn().mockResolvedValueOnce(true);
 
 			await sut.login({
 				email: userAlreadyExist.email,
 				password: userAlreadyExist.password,
 			});
 
-			expect(spyFindOne).toHaveBeenCalledTimes(1);
-			expect(spyFindOne).toHaveBeenCalledWith({
+			expect(User.findOne).toHaveBeenCalledTimes(1);
+			expect(User.findOne).toHaveBeenCalledWith({
 				where: {
-					email: user.email,
+					email: mockUser.email,
 				},
 			});
 		});
 
 		it('should throw an error message if any error occurs', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			jest.spyOn(User, 'findOne').mockRejectedValueOnce(new Error('erro'));
+			User.findOne = jest.fn().mockRejectedValueOnce(new Error('erro'));
 
 			await expect(async () => {
 				await sut.login({
@@ -243,18 +244,19 @@ describe('ClotheRepository', () => {
 
 		it('should call the bycrypt.compare()', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
-			const spyCompare = jest.spyOn(bcrypt, 'compare');
+			const spyBcryptCompare = jest.spyOn(bcrypt, 'compare');
 
 			await sut.login({
 				email: 'user_already_exist@teste.com',
 				password: 'password',
 			});
 
-			expect(spyCompare).toHaveBeenCalledTimes(1);
+			expect(spyBcryptCompare).toHaveBeenCalledTimes(1);
 		});
 
 		it('should return a user if all is right', async () => {
 			const { userRepositoryPostgre: sut } = makeSut();
+			bcrypt.compare = jest.fn().mockResolvedValueOnce(true);
 
 			const result = await sut.login({
 				email: userAlreadyExist.email,

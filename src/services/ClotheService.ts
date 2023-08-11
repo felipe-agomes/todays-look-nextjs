@@ -96,7 +96,6 @@ export class ClotheService implements IClotheService {
 		clothe: ClotheData;
 	}): Promise<Response> {
 		let response: Response;
-		console.log('aquiiii', { clothe });
 		try {
 			response = await this.frontController.doPost({
 				url: `/api/protected/user/${userId}/clothe`,
