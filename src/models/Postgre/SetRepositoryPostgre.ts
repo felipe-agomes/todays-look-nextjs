@@ -1,26 +1,18 @@
 import { ClothePosition } from '@/@types';
-import { User } from './Tables';
+import { Clothe, Set, User } from './Tables';
 
 type CreateSet = {
 	userId: string;
-} & ClothePosition;
-
-// export type ClothesProps = {
-// 	id: string;
-// 	category: string;
-// 	favorite: false;
-// 	image: string;
-// 	key: string;
-// 	userId: string;
-// };
+	category: string;
+	clothes: ClothePosition[];
+};
 
 export type SetData = {
 	id: number;
 	category: string;
 	favorite: boolean;
 	userId: string;
-	x: number;
-	y: number;
+	set: ClothePosition[];
 	createdAt: string;
 	updatedAt: string;
 };
@@ -36,14 +28,22 @@ export interface ISetRepository {
 	deleteBySetId(data: { setId: string }): Promise<string | null>;
 }
 
-export default class SetRepositoryPostgre implements ISetRepository {
-	async create(data: CreateSet): Promise<SetData> {
-		const teste = await User.create({
-			email: 'teste',
-			password: 'pass',
-			image: 'image',
-		});
-		return '' as any;
+export class SetRepositoryPostgre implements ISetRepository {
+	async create({ category, clothes, userId }: CreateSet): Promise<SetData> {
+		try {
+			const set: any = await Set.create({ category });
+			const user = await User.findByPk(userId);
+			if (!user) return null;
+			await set.setUser(user);
+			clothes.forEach(async (clothe) => {
+				const newClothe = await Clothe.findByPk(clothe.id);
+				await set.addClothes(newClothe, { through: { x: clothe.x, y: clothe.y } });
+			});
+			const arrayClothes = await set.getClothes();
+			return arrayClothes.map((clothe: any) => clothe.toJSON());
+		} catch (error) {
+			throw new Error('Erro ao cadastrar conjunto: ' + error.message);
+		}
 	}
 	async getAllByUserId(data: { userId: string }): Promise<SetData[]> {
 		return '' as any;
@@ -61,3 +61,6 @@ export default class SetRepositoryPostgre implements ISetRepository {
 		return '' as any;
 	}
 }
+
+const setRepository = new SetRepositoryPostgre();
+export default setRepository;

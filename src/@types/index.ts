@@ -55,9 +55,11 @@ export type FormSendImageErrorValues = {
 export type ClothesProps = {
 	id: string;
 	category: string;
-	favorite: false;
+	favorite: boolean;
 	image: string;
 	key: string;
+	createdAt: Date;
+	updatedAt: Date;
 	userId: string;
 };
 
