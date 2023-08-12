@@ -58,8 +58,8 @@ export type ClothesProps = {
 	favorite: boolean;
 	image: string;
 	key: string;
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt: string;
+	updatedAt: string;
 	userId: string;
 };
 

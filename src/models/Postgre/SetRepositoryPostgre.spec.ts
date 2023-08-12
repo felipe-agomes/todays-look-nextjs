@@ -13,8 +13,8 @@ export const clothesObj = [
 		category: 'category',
 		key: 'key',
 		image: 'image',
-		updatedAt: new Date('2023-08-11T12:03:01.536Z'),
-		createdAt: new Date('2023-08-11T12:03:01.536Z'),
+		updatedAt: '2023-08-11T12:03:01.536Z',
+		createdAt: '2023-08-11T12:03:01.536Z',
 		userId: '1',
 	},
 	{
@@ -23,8 +23,8 @@ export const clothesObj = [
 		category: 'category',
 		key: 'key',
 		image: 'image',
-		updatedAt: new Date('2023-08-11T12:03:01.536Z'),
-		createdAt: new Date('2023-08-11T12:03:01.536Z'),
+		updatedAt: '2023-08-11T12:03:01.536Z',
+		createdAt: '2023-08-11T12:03:01.536Z',
 		userId: '1',
 	},
 ];
@@ -82,6 +82,7 @@ describe('SetRepository', () => {
 		Set.findByPk = jest.fn().mockResolvedValue({ ...mockSet });
 		Set.create = jest.fn().mockResolvedValue({ ...mockSet });
 		User.findByPk = jest.fn().mockResolvedValue({ ...mockUser });
+		Set.findAll = jest.fn().mockResolvedValue([{ ...setObj }, { ...setObj }]);
 		Clothe.findByPk = jest
 			.fn()
 			.mockResolvedValueOnce({ ...mockClothe[0] })
@@ -153,12 +154,12 @@ describe('SetRepository', () => {
 				1,
 				{
 					category: 'category',
-					createdAt: new Date('2023-08-11T12:03:01.536Z'),
+					createdAt: '2023-08-11T12:03:01.536Z',
 					favorite: false,
 					id: '1',
 					image: 'image',
 					key: 'key',
-					updatedAt: new Date('2023-08-11T12:03:01.536Z'),
+					updatedAt: '2023-08-11T12:03:01.536Z',
 					userId: '1',
 				},
 				{ through: { x: 1, y: 11 } },
@@ -217,31 +218,22 @@ describe('SetRepository', () => {
 	});
 
 	describe('getAllByUserId', () => {
-		it('should call User.findByPk', async () => {
+		it('should call Set.findAll()', async () => {
 			const { setRepository: sut } = makeSut();
 
 			await sut.getAllByUserId({ userId: userObj.id });
 
-			expect(User.findByPk).toHaveBeenCalledTimes(1);
-			expect(User.findByPk).toHaveBeenCalledWith(userObj.id, {
-				attributes: [],
-				include: { association: 'sets' },
+			expect(Set.findAll).toHaveBeenCalledWith({
+				where: {
+					userId: userObj.id,
+				},
+				include: { model: Clothe },
 			});
-		});
-
-		it('shoud call sets.toJSON()', async () => {
-			const { setRepository: sut } = makeSut();
-
-			await sut.getAllByUserId({ userId: userObj.id });
-
-			expect(mockUser.toJSON).toHaveBeenCalledTimes(1);
+			expect(Set.findAll).toHaveBeenCalledTimes(1);
 		});
 
 		it('should return all sets of specific user', async () => {
 			const { setRepository: sut } = makeSut();
-			mockSet.toJSON = jest
-				.fn()
-				.mockReturnValue({ sets: [{ ...setObj }, { ...setObj }] });
 
 			const result = await sut.getAllByUserId({ userId: userObj.id });
 
@@ -250,7 +242,7 @@ describe('SetRepository', () => {
 
 		it('should throw a error', async () => {
 			const { setRepository: sut } = makeSut();
-			User.findByPk = jest.fn().mockRejectedValueOnce(new Error('Error'));
+			Set.findAll = jest.fn().mockRejectedValueOnce(new Error('Error'));
 
 			await expect(async () => {
 				await sut.getAllByUserId({ userId: userObj.id });
@@ -259,7 +251,7 @@ describe('SetRepository', () => {
 
 		it('should return null if user not exists', async () => {
 			const { setRepository: sut } = makeSut();
-			User.findByPk = jest.fn().mockResolvedValueOnce(null);
+			Set.findAll = jest.fn().mockResolvedValueOnce(null);
 
 			const result = await sut.getAllByUserId({ userId: userObj.id });
 

@@ -3,7 +3,7 @@ import { SetsProps } from '@/@types';
 import Image from 'next/image';
 
 type Pops = {
-	set: SetsProps;
+	set: SetsProps[];
 	proportion?: {
 		x: number;
 		y: number;
@@ -21,7 +21,7 @@ export default function SetImages({
 }: Pops) {
 	return (
 		<>
-			{set.sets.map((subSet) => {
+			{set.map((subSet) => {
 				return (
 					<div
 						style={{

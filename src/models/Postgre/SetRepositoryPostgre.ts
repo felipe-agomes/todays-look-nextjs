@@ -1,5 +1,6 @@
 import { ClothePosition } from '@/@types';
 import { Clothe, Set, User } from './Tables';
+import { Model, where } from 'sequelize';
 
 type CreateSet = {
 	userId: string;
@@ -46,12 +47,14 @@ export class SetRepositoryPostgre implements ISetRepository {
 	}
 	async getAllByUserId({ userId }: { userId: string }): Promise<SetData[]> {
 		try {
-			const sets = await User.findByPk(userId, {
-				attributes: [],
-				include: { association: 'sets' },
+			const sets = await Set.findAll({
+				where: {
+					userId,
+				},
+				include: { model: Clothe },
 			});
 			if (!sets) return null;
-			return sets.toJSON().sets;
+			return JSON.parse(JSON.stringify(sets));
 		} catch (error) {
 			throw new Error('Erro ao encontrar conjuntos: ' + error.message);
 		}
