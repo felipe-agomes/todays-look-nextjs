@@ -3,7 +3,7 @@ import { SetsProps } from '@/@types';
 import Image from 'next/image';
 
 type Pops = {
-	set: SetsProps[];
+	set: SetsProps;
 	proportion?: {
 		x: number;
 		y: number;
@@ -21,7 +21,7 @@ export default function SetImages({
 }: Pops) {
 	return (
 		<>
-			{set.map((subSet) => {
+			{set.clothes.map((clothe) => {
 				return (
 					<div
 						style={{
@@ -30,14 +30,14 @@ export default function SetImages({
 							left: `calc(50% - ${size.width / 2 - 2}px)`,
 							width: `${size.width}px`,
 							height: `${size.height}px`,
-							transform: `translate(${subSet.x * proportion.x}px, ${
-								subSet.y * proportion.y
+							transform: `translate(${clothe.x * proportion.x}px, ${
+								clothe.y * proportion.y
 							}px)`,
 						}}
-						key={subSet.y}
+						key={clothe.y}
 					>
 						<img
-							src={subSet.image}
+							src={clothe.image}
 							alt='Roupa'
 						/>
 					</div>

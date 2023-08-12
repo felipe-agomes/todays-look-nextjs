@@ -68,7 +68,7 @@ export type SetsProps = {
 	id: string;
 	category: string;
 	favorite: boolean;
-	sets: ClothePosition[];
+	clothes: ClothePosition[];
 };
 
 export type UserProps = {
