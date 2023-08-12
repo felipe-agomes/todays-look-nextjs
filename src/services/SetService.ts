@@ -1,6 +1,11 @@
 import { FrontController, Response } from '@/controllers/FrontController';
-import { ClotheData, SetData, SetsProps } from '@/@types';
+import { ClotheData, ClothePosition, SetData, SetsProps } from '@/@types';
 import { FetcherAxios } from './Fetcher';
+
+export type CreateSet = {
+	category: string;
+	clothes: ClothePosition[];
+};
 
 export interface ISetService {
 	getAllByUserId(data: { userId: string }): Promise<Response>;
@@ -10,14 +15,8 @@ export interface ISetService {
 		set: string;
 		toUpdate: { category: string };
 	}): Promise<Response>;
-	toggleFavoriteById(data: {
-		userId: string;
-		set: string;
-	}): Promise<Response>;
-	create(data: {
-		userId: string;
-		clothe: ClotheData | SetData;
-	}): Promise<Response>;
+	toggleFavoriteById(data: { userId: string; set: string }): Promise<Response>;
+	create(data: { userId: string; set: CreateSet }): Promise<Response>;
 }
 
 export class SetService implements ISetService {
@@ -26,7 +25,7 @@ export class SetService implements ISetService {
 		let response: Response;
 		try {
 			response = await this.frontController.doGet({
-				url: `/api/protected/user/${userId}/set/allSets`,
+				url: `/api/protected/user/${userId}/set`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -43,7 +42,7 @@ export class SetService implements ISetService {
 		let response: Response;
 		try {
 			response = await this.frontController.doDelete({
-				url: `/api/protected/user/${userId}/set/deleteSet/${set}`,
+				url: `/api/protected/user/${userId}/set/${set}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -62,7 +61,7 @@ export class SetService implements ISetService {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
-				url: `/api/protected/user/${userId}/set/updateCategorySet/${set}`,
+				url: `/api/protected/user/${userId}/set/${set}`,
 				body: { toUpdate, operation: 'changeCategory' },
 			});
 		} catch (error: any) {
@@ -80,7 +79,7 @@ export class SetService implements ISetService {
 		let response: Response;
 		try {
 			response = await this.frontController.doPut({
-				url: `/api/protected/user/${userId}/set/favoriteSet/${set}`,
+				url: `/api/protected/user/${userId}/set/${set}`,
 				body: { operation: 'toggleFavorite' },
 			});
 		} catch (error: any) {
@@ -90,17 +89,18 @@ export class SetService implements ISetService {
 	}
 	async create({
 		userId,
-		clothe,
+		set,
 	}: {
 		userId: string;
-		clothe: SetData;
+		set: CreateSet;
 	}): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPost({
-				url: `/api/protected/user/${userId}/set/createSet`,
-				body: { clothe },
+				url: `/api/protected/user/${userId}/set`,
+				body: { set },
 			});
+			console.log('setService: ', response);
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}

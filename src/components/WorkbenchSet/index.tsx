@@ -12,6 +12,7 @@ import { validateNewCategory } from '@/utils/validate';
 import Style from './WorkbenchSet.module.css';
 import useAppContext from '@/hooks/useAppContext';
 import useWorkBench from '@/hooks/useWorkBench';
+import { setService } from '@/services/SetService';
 
 export default function WorkbenchSet() {
 	const { resetWorkbench } = useWorkBench();
@@ -43,14 +44,20 @@ export default function WorkbenchSet() {
 		setClothesPosition(newClothesPosition);
 	}
 
-	function handleSubmit(values: { category: string }) {
+	async function handleSubmit(values: { category: string }) {
 		if (clothesPosition.length === 0) {
 			return;
 		}
-		const data = {
+		const set = {
 			category: values.category,
-			sets: clothesPosition,
+			clothes: clothesPosition,
 		};
+
+		const response = await setService.create({
+			userId: clothesPosition[0].userId,
+			set,
+		});
+		console.log('onSubmit: ', response);
 		// fetcher(`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`, {
 		// 	method: 'POST',
 		// 	body: JSON.stringify(data),

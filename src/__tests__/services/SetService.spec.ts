@@ -7,7 +7,7 @@ import {
 import { FrontController } from '@/controllers/FrontController';
 import { SetData } from '@/@types';
 import { FetcherAxios } from '@/services/Fetcher';
-import { SetService } from '@/services/SetService';
+import { CreateSet, SetService } from '@/services/SetService';
 
 const toggleFavoriteByIdResponse = {
 	status: 'success',
@@ -33,10 +33,9 @@ const changeCategoryByIdResponse = {
 
 const createRequest = {
 	userId: '123',
-	clothe: {
+	set: {
 		category: 'category',
-		id: 'id',
-		sets: [
+		clothes: [
 			{
 				category: 'category',
 				favorite: false,
@@ -48,8 +47,7 @@ const createRequest = {
 				y: 0,
 			},
 		],
-		userId: 'userId',
-	} as SetData,
+	} as CreateSet,
 };
 
 const createResponse = {
@@ -74,7 +72,7 @@ describe('SetService', () => {
 			await sut.getAllByUserId({ userId: '123' });
 
 			expect(spyDoGet).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/set/allSets`,
+				url: `/api/protected/user/123/set`,
 			});
 			expect(spyDoGet).toHaveBeenCalledTimes(1);
 		});
@@ -108,7 +106,7 @@ describe('SetService', () => {
 			await sut.deleteById({ userId: '123', set: '321' });
 
 			expect(spyDoDelete).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/set/deleteSet/321`,
+				url: `/api/protected/user/123/set/321`,
 			});
 			expect(spyDoDelete).toHaveBeenCalledTimes(1);
 		});
@@ -150,7 +148,7 @@ describe('SetService', () => {
 			await sut.changeCategoryById(changeCategoryByIdRequest);
 
 			expect(spyDoPut).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/set/updateCategorySet/321`,
+				url: `/api/protected/user/123/set/321`,
 				body: {
 					toUpdate: { category: 'new_category' },
 					operation: 'changeCategory',
@@ -188,7 +186,7 @@ describe('SetService', () => {
 			await sut.toggleFavoriteById({ userId: '123', set: '321' });
 
 			expect(spyDoPut).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/set/favoriteSet/321`,
+				url: `/api/protected/user/123/set/321`,
 				body: { operation: 'toggleFavorite' },
 			});
 			expect(spyDoPut).toHaveBeenCalledTimes(1);
@@ -229,9 +227,9 @@ describe('SetService', () => {
 			await sut.create(createRequest);
 
 			expect(spyDoPost).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/set/createSet`,
+				url: `/api/protected/user/123/set`,
 				body: {
-					clothe: createRequest.clothe,
+					set: createRequest.set,
 				},
 			});
 			expect(spyDoPost).toHaveBeenCalledTimes(1);

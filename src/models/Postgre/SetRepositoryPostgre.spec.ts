@@ -6,7 +6,7 @@ const makeSut = () => {
 	return { setRepository };
 };
 
-const clothesObj = [
+export const clothesObj = [
 	{
 		favorite: false,
 		id: '1',
@@ -29,19 +29,19 @@ const clothesObj = [
 	},
 ];
 
-const clothesRequest = [
+export const clothesRequest = [
 	{ ...clothesObj[0], x: 1, y: 11 },
 	{ ...clothesObj[1], x: 11.3, y: 10.4 },
 ];
 
-const setObj = {
+export const setObj = {
 	id: '1',
 	category: 'categoria',
 	favorite: false,
 	clothes: clothesRequest,
 };
 
-const userObj = {
+export const userObj = {
 	id: '1',
 	email: 'user_already_exist@teste.com',
 	password: 'password',

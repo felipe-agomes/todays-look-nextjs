@@ -119,7 +119,7 @@ describe('FrontController', () => {
 	});
 
 	describe('doPost()', () => {
-		it('should call fetcher.post({url: "/teste", body: {"userName": "user", "email": "email"}})', async () => {
+		it('should call fetcher.post()', async () => {
 			const { frontController: sut, fetcher } = makeSut();
 			const spyPost = jest.spyOn(fetcher, 'post');
 
