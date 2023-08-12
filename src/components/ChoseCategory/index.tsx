@@ -66,20 +66,17 @@ export default function ChoseCategory({
 				});
 				if (response.status === 'error')
 					throw new Error('Erro ao mudar a categoria');
-				const { data: newClothe } = response;
-				replaceClothes(newClothe);
+				replaceClothes(response.data);
 			}
 			if (!isClothe) {
-				const { data: response } = await setService.changeCategoryById({
+				const response = await setService.changeCategoryById({
 					userId,
 					set: clotheOrSetId,
 					toUpdate: { category: existingCategory ? existingCategory : category! },
 				});
 				if (response.status === 'error')
 					throw new Error('Erro ao mudar a categoria');
-				const { data: newSet } = response as Response;
-				console.log(response);
-				replaceSets(newSet);
+				replaceSets(response.data);
 			}
 		} catch (error) {
 			throw new Error('Erro ao alterar a categoria');

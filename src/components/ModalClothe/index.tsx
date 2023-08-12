@@ -88,7 +88,8 @@ export default function ModalClothe({ modalId }: Props) {
 														clothe: clothe?.id,
 														userId: clothe?.userId,
 													});
-													if (response.status === 'error') return;
+													if (response.status === 'error')
+														throw new Error('Erro ao mudar a propriedade favorito');
 													replaceClothes(response.data);
 													closeAllModais();
 													setLoading(false);

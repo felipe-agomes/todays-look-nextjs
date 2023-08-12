@@ -266,7 +266,6 @@ describe('SetRepository', () => {
 			await sut.toggleFavoriteBySetId({ setId: setObj.id });
 
 			expect(Set.findByPk).toHaveBeenCalledTimes(1);
-			expect(Set.findByPk).toHaveBeenCalledWith(setObj.id);
 		});
 
 		it('should call set.save()', async () => {

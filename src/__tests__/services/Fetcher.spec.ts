@@ -151,7 +151,7 @@ describe('FetcherAxios', () => {
 
 		it('should return the data of response', async () => {
 			const { fetcherAxios: sut } = makeSut();
-			axios.put = jest.fn().mockResolvedValueOnce(doPutSuccessDataResponse);
+			axios.put = jest.fn().mockResolvedValueOnce(doPutSuccessDataResponseAxios);
 
 			const result = await sut.put(doPutRequestString);
 

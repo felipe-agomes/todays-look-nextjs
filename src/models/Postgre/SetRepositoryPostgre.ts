@@ -61,7 +61,7 @@ export class SetRepositoryPostgre implements ISetRepository {
 	}
 	async toggleFavoriteBySetId({ setId }: { setId: string }): Promise<SetData> {
 		try {
-			const set: any = await Set.findByPk(setId);
+			const set: any = await Set.findByPk(setId, { include: { model: Clothe } });
 			if (!set) return null;
 			set.favorite = !set.favorite;
 			await set.save();

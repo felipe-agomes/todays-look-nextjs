@@ -53,7 +53,6 @@ export class FrontController {
 				url,
 				body: JSON.stringify(body),
 			});
-			console.log('aquiii', response);
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}

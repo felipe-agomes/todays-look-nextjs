@@ -8,6 +8,8 @@ import ModalDelete from '../ModalDelete';
 import ModalChangeCategory from '../ModalChangeCategory';
 import useAppContext from '@/hooks/useAppContext';
 import useModaisContext from '@/hooks/useModaisContext';
+import { setService } from '@/services/SetService';
+import useSetSets from '@/hooks/useSetSets';
 
 type Props = {
 	modalId: ModalId;
@@ -22,6 +24,7 @@ export default function ModalSet({ modalId, setModalId }: Props) {
 		deleteModal,
 		setDeleteModal,
 	} = useModaisContext();
+	const { replaceSets } = useSetSets();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [favorite, setFavorite] = useState<boolean>(false);
 	const set = sets.find((set) => set.id === modalId);
@@ -68,11 +71,13 @@ export default function ModalSet({ modalId, setModalId }: Props) {
 							color={favorite ? 'gold' : 'whiteAlpha.600'}
 							onClick={async () => {
 								setLoading(true);
-								// const data = (await fetcher(
-								// 	`/api/protected/user/${set?.userId}/clothe/favoriteSet/${set?.id}`,
-								// 	{ update: true, method: 'PUT' },
-								// )) as SetsProps;
-								// data && setFavorite(data.favorite);
+								const response = await setService.toggleFavoriteById({
+									userId: set.userId,
+									set: set.id,
+								});
+								if (response.status === 'error')
+									throw new Error('Erro ao mudar a propriedade favorito');
+								replaceSets(response.data);
 								setModalId(null);
 								setLoading(false);
 							}}
