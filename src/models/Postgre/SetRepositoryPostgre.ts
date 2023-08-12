@@ -45,11 +45,28 @@ export class SetRepositoryPostgre implements ISetRepository {
 			throw new Error('Erro ao cadastrar conjunto: ' + error.message);
 		}
 	}
-	async getAllByUserId(data: { userId: string }): Promise<SetData[]> {
-		return '' as any;
+	async getAllByUserId({ userId }: { userId: string }): Promise<SetData[]> {
+		try {
+			const sets = await User.findByPk(userId, {
+				attributes: [],
+				include: { association: 'sets' },
+			});
+			if (!sets) return null;
+			return sets.toJSON();
+		} catch (error) {
+			throw new Error('Erro ao encontrar conjuntos: ' + error.message);
+		}
 	}
-	async toggleFavoriteBySetId(data: { setId: string }): Promise<SetData> {
-		return '' as any;
+	async toggleFavoriteBySetId({ setId }: { setId: string }): Promise<SetData> {
+		try {
+			const sets: any = await Set.findByPk(setId);
+			if (!sets) return null;
+			sets.favorite = !sets.favorite;
+			await sets.save();
+			return sets.toJSON();
+		} catch (error) {
+			throw new Error('Erro ao alterar a propriedade favorito: ' + error.message);
+		}
 	}
 	async deleteBySetId(data: { setId: string }): Promise<string> {
 		return '' as any;

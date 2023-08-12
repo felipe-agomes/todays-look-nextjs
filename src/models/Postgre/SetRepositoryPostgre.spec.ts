@@ -6,7 +6,7 @@ const makeSut = () => {
 	return { setRepository };
 };
 
-const mockClothesObj = [
+const clothesObj = [
 	{
 		favorite: false,
 		id: '1',
@@ -30,17 +30,18 @@ const mockClothesObj = [
 ];
 
 const clothesRequest = [
-	{ ...mockClothesObj[0], x: 1, y: 11 },
-	{ ...mockClothesObj[1], x: 11.3, y: 10.4 },
+	{ ...clothesObj[0], x: 1, y: 11 },
+	{ ...clothesObj[1], x: 11.3, y: 10.4 },
 ];
 
-const mockSetObj = {
+const setObj = {
 	id: '1',
 	category: 'categoria',
 	favorite: false,
+	clothes: clothesRequest,
 };
 
-const mockUserObj = {
+const userObj = {
 	id: '1',
 	email: 'user_already_exist@teste.com',
 	password: 'password',
@@ -52,25 +53,32 @@ const mockUserObj = {
 describe('SetRepository', () => {
 	let mockSet: any;
 	let mockClothe: any;
+	let mockUser: any;
 	beforeEach(() => {
 		jest.resetAllMocks();
 		mockSet = {
-			...mockSetObj,
+			...setObj,
 			addClothes: jest.fn(),
+			save: jest.fn(),
 			setUser: jest.fn(),
+			toJSON: jest.fn(function () {
+				return { ...setObj, favorite: this.favorite };
+			}),
 			getClothes: jest
 				.fn()
 				.mockResolvedValue([
-					{ toJSON: jest.fn().mockReturnValue({ ...mockClothesObj[0] }) },
-					{ toJSON: jest.fn().mockReturnValue({ ...mockClothesObj[1] }) },
+					{ toJSON: jest.fn().mockReturnValue({ ...clothesObj[0] }) },
+					{ toJSON: jest.fn().mockReturnValue({ ...clothesObj[1] }) },
 				]),
 		};
-		const mockUser = {
-			...mockUserObj,
+		mockUser = {
+			...userObj,
+			toJSON: jest.fn().mockReturnValue({ ...setObj }),
 		};
 		mockClothe = {
-			...mockClothesObj,
+			...clothesObj,
 		};
+		Set.findByPk = jest.fn().mockResolvedValue({ ...mockSet });
 		Set.create = jest.fn().mockResolvedValue({ ...mockSet });
 		User.findByPk = jest.fn().mockResolvedValue({ ...mockUser });
 		Clothe.findByPk = jest
@@ -84,35 +92,35 @@ describe('SetRepository', () => {
 			const { setRepository: sut } = makeSut();
 
 			await sut.create({
-				userId: mockUserObj.id,
+				userId: userObj.id,
 				clothes: clothesRequest,
-				category: mockSetObj.category,
+				category: setObj.category,
 			});
 
 			expect(Set.create).toHaveBeenCalledTimes(1);
-			expect(Set.create).toHaveBeenCalledWith({ category: mockSetObj.category });
+			expect(Set.create).toHaveBeenCalledWith({ category: setObj.category });
 		});
 
 		it('should call the User.findByPk()', async () => {
 			const { setRepository: sut } = makeSut();
 
 			await sut.create({
-				userId: mockUserObj.id,
+				userId: userObj.id,
 				clothes: clothesRequest,
-				category: mockSetObj.category,
+				category: setObj.category,
 			});
 
 			expect(User.findByPk).toHaveBeenCalledTimes(1);
-			expect(User.findByPk).toHaveBeenCalledWith(mockUserObj.id);
+			expect(User.findByPk).toHaveBeenCalledWith(userObj.id);
 		});
 
 		it('should call the result of set, and call the method set.setUser()', async () => {
 			const { setRepository: sut } = makeSut();
 
 			await sut.create({
-				userId: mockUserObj.id,
+				userId: userObj.id,
 				clothes: clothesRequest,
-				category: mockSetObj.category,
+				category: setObj.category,
 			});
 
 			expect(mockSet.setUser).toHaveBeenCalledTimes(1);
@@ -122,9 +130,9 @@ describe('SetRepository', () => {
 			const { setRepository: sut } = makeSut();
 
 			await sut.create({
-				userId: mockUserObj.id,
+				userId: userObj.id,
 				clothes: clothesRequest,
-				category: mockSetObj.category,
+				category: setObj.category,
 			});
 
 			expect(Clothe.findByPk).toHaveBeenCalledTimes(2);
@@ -134,9 +142,9 @@ describe('SetRepository', () => {
 			const { setRepository: sut } = makeSut();
 
 			await sut.create({
-				userId: mockUserObj.id,
+				userId: userObj.id,
 				clothes: clothesRequest,
-				category: mockSetObj.category,
+				category: setObj.category,
 			});
 
 			expect(mockSet.addClothes).toHaveBeenCalledTimes(2);
@@ -160,12 +168,12 @@ describe('SetRepository', () => {
 			const { setRepository: sut } = makeSut();
 
 			const result = await sut.create({
-				userId: mockUserObj.id,
+				userId: userObj.id,
 				clothes: clothesRequest,
-				category: mockSetObj.category,
+				category: setObj.category,
 			});
 
-			expect(result).toEqual(mockClothesObj);
+			expect(result).toEqual(clothesObj);
 		});
 
 		it('should throw a error', async () => {
@@ -174,9 +182,9 @@ describe('SetRepository', () => {
 
 			await expect(async () => {
 				await sut.create({
-					userId: mockUserObj.id,
+					userId: userObj.id,
 					clothes: clothesRequest,
-					category: mockSetObj.category,
+					category: setObj.category,
 				});
 			}).rejects.toThrowError('Erro ao cadastrar conjunto: Error');
 		});
@@ -186,10 +194,111 @@ describe('SetRepository', () => {
 			User.findByPk = jest.fn().mockResolvedValueOnce(null);
 
 			const result = await sut.create({
-				userId: mockUserObj.id,
+				userId: userObj.id,
 				clothes: clothesRequest,
-				category: mockSetObj.category,
+				category: setObj.category,
 			});
+
+			expect(result).toBeNull();
+		});
+	});
+
+	describe('getAllByUserId', () => {
+		it('should call User.findByPk', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.getAllByUserId({ userId: userObj.id });
+
+			expect(User.findByPk).toHaveBeenCalledTimes(1);
+			expect(User.findByPk).toHaveBeenCalledWith(userObj.id, {
+				attributes: [],
+				include: { association: 'sets' },
+			});
+		});
+
+		it('shoud call sets.toJSON()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.getAllByUserId({ userId: userObj.id });
+
+			expect(mockUser.toJSON).toHaveBeenCalledTimes(1);
+		});
+
+		it('should return all sets of specific user', async () => {
+			const { setRepository: sut } = makeSut();
+
+			const result = await sut.getAllByUserId({ userId: userObj.id });
+
+			expect(result).toEqual(setObj);
+		});
+
+		it('should throw a error', async () => {
+			const { setRepository: sut } = makeSut();
+			User.findByPk = jest.fn().mockRejectedValueOnce(new Error('Error'));
+
+			await expect(async () => {
+				await sut.getAllByUserId({ userId: userObj.id });
+			}).rejects.toThrowError('Erro ao encontrar conjuntos: Error');
+		});
+
+		it('should return null if user not exists', async () => {
+			const { setRepository: sut } = makeSut();
+			User.findByPk = jest.fn().mockResolvedValueOnce(null);
+
+			const result = await sut.getAllByUserId({ userId: userObj.id });
+
+			expect(result).toBeNull();
+		});
+	});
+
+	describe('toggleFavoriteBySetId', () => {
+		it('should call Set.findByPk()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.toggleFavoriteBySetId({ setId: setObj.id });
+
+			expect(Set.findByPk).toHaveBeenCalledTimes(1);
+			expect(Set.findByPk).toHaveBeenCalledWith(setObj.id);
+		});
+
+		it('should call set.save()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.toggleFavoriteBySetId({ setId: setObj.id });
+
+			expect(mockSet.save).toHaveBeenCalledTimes(1);
+		});
+
+		it('should call the set.toJSON()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.toggleFavoriteBySetId({ setId: setObj.id });
+
+			expect(mockSet.toJSON).toHaveBeenCalledTimes(1);
+		});
+
+		it('should return a set with the inverse favorite property', async () => {
+			const { setRepository: sut } = makeSut();
+
+			const result = await sut.toggleFavoriteBySetId({ setId: setObj.id });
+
+			expect(result.favorite).toBeTruthy();
+		});
+
+		it('should throw a error', async () => {
+			const { setRepository: sut } = makeSut();
+			Set.findByPk = jest.fn().mockRejectedValueOnce(new Error('Error'));
+
+			await expect(async () => {
+				await sut.toggleFavoriteBySetId({ setId: setObj.id });
+			}).rejects.toThrowError('Erro ao alterar a propriedade favorito: Error');
+		});
+
+		it('should return null, if setId is not exist', async () => {
+			const { setRepository: sut } = makeSut();
+			Set.findByPk = jest.fn().mockResolvedValueOnce(null);
+
+			const result = await sut.toggleFavoriteBySetId({ setId: setObj.id });
 
 			expect(result).toBeNull();
 		});
