@@ -59,23 +59,41 @@ export class SetRepositoryPostgre implements ISetRepository {
 	}
 	async toggleFavoriteBySetId({ setId }: { setId: string }): Promise<SetData> {
 		try {
-			const sets: any = await Set.findByPk(setId);
-			if (!sets) return null;
-			sets.favorite = !sets.favorite;
-			await sets.save();
-			return sets.toJSON();
+			const set: any = await Set.findByPk(setId);
+			if (!set) return null;
+			set.favorite = !set.favorite;
+			await set.save();
+			return set.toJSON();
 		} catch (error) {
 			throw new Error('Erro ao alterar a propriedade favorito: ' + error.message);
 		}
 	}
-	async deleteBySetId(data: { setId: string }): Promise<string> {
-		return '' as any;
+	async deleteBySetId({ setId }: { setId: string }): Promise<string> {
+		try {
+			const set = await Set.findByPk(setId);
+			if (!set) return null;
+			await set.destroy();
+			return 'Sucesso ao deletar o conjunto';
+		} catch (error) {
+			throw new Error('Erro ao deletar conjunto: ' + error.message);
+		}
 	}
-	async changeCategoryBySetId(data: {
+	async changeCategoryBySetId({
+		setId,
+		category,
+	}: {
 		setId: string;
 		category: string;
 	}): Promise<SetData> {
-		return '' as any;
+		try {
+			const set: any = await Set.findByPk(setId);
+			if (!set) return null;
+			set.category = category;
+			await set.save();
+			return set.toJSON();
+		} catch (error) {
+			throw new Error('Erro ao alterar a propriedade categoria: ' + error.message);
+		}
 	}
 }
 

@@ -62,8 +62,9 @@ describe('SetRepository', () => {
 			save: jest.fn(),
 			setUser: jest.fn(),
 			toJSON: jest.fn(function () {
-				return { ...setObj, favorite: this.favorite };
+				return { ...setObj, favorite: this.favorite, category: this.category };
 			}),
+			destroy: jest.fn(),
 			getClothes: jest
 				.fn()
 				.mockResolvedValue([
@@ -301,6 +302,122 @@ describe('SetRepository', () => {
 			const result = await sut.toggleFavoriteBySetId({ setId: setObj.id });
 
 			expect(result).toBeNull();
+		});
+	});
+
+	describe('changeCategoryBySetId', () => {
+		it('should call Set.findByPk()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.changeCategoryBySetId({
+				setId: setObj.id,
+				category: 'new_category',
+			});
+
+			expect(Set.findByPk).toHaveBeenCalledTimes(1);
+			expect(Set.findByPk).toHaveBeenCalledWith(setObj.id);
+		});
+
+		it('should call set.save()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.changeCategoryBySetId({
+				setId: setObj.id,
+				category: 'new_category',
+			});
+
+			expect(mockSet.save).toHaveBeenCalledTimes(1);
+		});
+
+		it('should call the set.toJSON()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.changeCategoryBySetId({
+				setId: setObj.id,
+				category: 'new_category',
+			});
+
+			expect(mockSet.toJSON).toHaveBeenCalledTimes(1);
+		});
+
+		it('should return a set with the new category property', async () => {
+			const { setRepository: sut } = makeSut();
+
+			const result = await sut.changeCategoryBySetId({
+				setId: setObj.id,
+				category: 'new_category',
+			});
+
+			expect(result.category).toBe('new_category');
+		});
+
+		it('should throw a error', async () => {
+			const { setRepository: sut } = makeSut();
+			Set.findByPk = jest.fn().mockRejectedValueOnce(new Error('Error'));
+
+			await expect(async () => {
+				await sut.changeCategoryBySetId({
+					setId: setObj.id,
+					category: 'new_category',
+				});
+			}).rejects.toThrowError('Erro ao alterar a propriedade categoria: Error');
+		});
+
+		it('should return null, if setId is not exist', async () => {
+			const { setRepository: sut } = makeSut();
+			Set.findByPk = jest.fn().mockResolvedValueOnce(null);
+
+			const result = await sut.changeCategoryBySetId({
+				setId: setObj.id,
+				category: 'new_category',
+			});
+
+			expect(result).toBeNull();
+		});
+	});
+
+	describe('deleteBySetId', () => {
+		it('should call Set.findByPk()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.deleteBySetId({ setId: setObj.id });
+
+			expect(Set.findByPk).toHaveBeenCalledTimes(1);
+			expect(Set.findByPk).toHaveBeenCalledWith(setObj.id);
+		});
+
+		it('should call the set.destroy()', async () => {
+			const { setRepository: sut } = makeSut();
+
+			await sut.deleteBySetId({ setId: setObj.id });
+
+			expect(mockSet.destroy).toHaveBeenCalledTimes(1);
+		});
+
+		it('should return a success message', async () => {
+			const { setRepository: sut } = makeSut();
+
+			const result = await sut.deleteBySetId({ setId: setObj.id });
+
+			expect(result).toBe('Sucesso ao deletar o conjunto');
+		});
+
+		it('should return null, if the setId is not exist', async () => {
+			const { setRepository: sut } = makeSut();
+			Set.findByPk = jest.fn().mockResolvedValueOnce(null);
+
+			const result = await sut.deleteBySetId({ setId: setObj.id });
+
+			expect(result).toBeNull();
+		});
+
+		it('should throw a error', async () => {
+			const { setRepository: sut } = makeSut();
+			Set.findByPk = jest.fn().mockRejectedValueOnce(new Error('Error'));
+
+			await expect(async () => {
+				await sut.deleteBySetId({ setId: setObj.id });
+			}).rejects.toThrowError('Erro ao deletar conjunto: Error');
 		});
 	});
 });
