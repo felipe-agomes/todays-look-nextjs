@@ -74,7 +74,7 @@ describe('SetRepository', () => {
 		};
 		mockUser = {
 			...userObj,
-			toJSON: jest.fn().mockReturnValue({ ...setObj }),
+			toJSON: jest.fn().mockReturnValue({ sets: [{ ...setObj }, { ...setObj }] }),
 		};
 		mockClothe = {
 			...clothesObj,
@@ -167,14 +167,14 @@ describe('SetRepository', () => {
 
 		it('should call set.toJSON()', async () => {
 			const { setRepository: sut } = makeSut();
-			
+
 			await sut.create({
 				userId: userObj.id,
 				clothes: clothesRequest,
 				category: setObj.category,
-			})
+			});
 
-			expect(mockSet.toJSON).toHaveBeenCalledTimes(1)
+			expect(mockSet.toJSON).toHaveBeenCalledTimes(1);
 		});
 
 		it('should return a specific set object', async () => {
@@ -239,10 +239,13 @@ describe('SetRepository', () => {
 
 		it('should return all sets of specific user', async () => {
 			const { setRepository: sut } = makeSut();
+			mockSet.toJSON = jest
+				.fn()
+				.mockReturnValue({ sets: [{ ...setObj }, { ...setObj }] });
 
 			const result = await sut.getAllByUserId({ userId: userObj.id });
 
-			expect(result).toEqual(setObj);
+			expect(result).toEqual([{ ...setObj }, { ...setObj }]);
 		});
 
 		it('should throw a error', async () => {

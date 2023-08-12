@@ -30,7 +30,6 @@ export class FrontController {
 		let response: Response;
 		try {
 			response = await this.fetcher.post({ url, body: JSON.stringify(body) });
-			console.log('FrontController: ', response);
 		} catch (error: any) {
 			response = { message: error.message, status: 'error' };
 		}

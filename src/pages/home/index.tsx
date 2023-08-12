@@ -30,22 +30,35 @@ import { Header } from '@/components/Header';
 import { clotheService } from '@/services/ClotheService';
 import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
 import { Response } from '@/controllers/FrontController';
+import { setService } from '@/services/SetService';
 
 type Props = {
 	serverSession: SessionProps;
 };
 
 export default function Home({ serverSession }: Props) {
-	const { setClothes, clothes, sets } = useAppContext();
-	const setsCategories = categoriesClotheOrSet<SetsProps>(sets);
-	const clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
+	const { setClothes, clothes, sets, setSets } = useAppContext();
+	let setsCategories: string[] = [];
+	let clothesCategories: string[] = [];
 
 	const updateClothesAndSets = async () => {
-		const response: Response = await clotheService.getAllByUserId({
+		const clothesResponse: Response = await clotheService.getAllByUserId({
 			userId: serverSession.user.id,
 		});
-		setClothes(response.data);
+		const setsResponse: Response = await setService.getAllByUserId({
+			userId: serverSession.user.id,
+		});
+		console.log(clothesResponse);
+		console.log(setsResponse);
+		setClothes(clothesResponse.data);
+		setSets(setsResponse.data);
 	};
+
+	useEffect(() => {
+		setsCategories = categoriesClotheOrSet<SetsProps>(sets);
+		clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
+		console.log({ setsCategories, clothesCategories });
+	}, [sets, clothes]);
 
 	useEffect(() => {
 		updateClothesAndSets();

@@ -57,7 +57,6 @@ export default function WorkbenchSet() {
 			userId: clothesPosition[0].userId,
 			set,
 		});
-		console.log('onSubmit: ', response);
 		// fetcher(`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`, {
 		// 	method: 'POST',
 		// 	body: JSON.stringify(data),

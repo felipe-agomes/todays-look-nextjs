@@ -51,7 +51,7 @@ export class SetRepositoryPostgre implements ISetRepository {
 				include: { association: 'sets' },
 			});
 			if (!sets) return null;
-			return sets.toJSON();
+			return sets.toJSON().sets;
 		} catch (error) {
 			throw new Error('Erro ao encontrar conjuntos: ' + error.message);
 		}

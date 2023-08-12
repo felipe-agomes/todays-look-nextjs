@@ -100,7 +100,6 @@ export class SetService implements ISetService {
 				url: `/api/protected/user/${userId}/set`,
 				body: { set },
 			});
-			console.log('setService: ', response);
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}
