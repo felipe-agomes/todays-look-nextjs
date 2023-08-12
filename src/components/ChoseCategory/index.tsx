@@ -75,7 +75,10 @@ export default function ChoseCategory({
 					set: clotheOrSetId,
 					toUpdate: { category: existingCategory ? existingCategory : category! },
 				});
+				if (response.status === 'error')
+					throw new Error('Erro ao mudar a categoria');
 				const { data: newSet } = response as Response;
+				console.log(response);
 				replaceSets(newSet);
 			}
 		} catch (error) {

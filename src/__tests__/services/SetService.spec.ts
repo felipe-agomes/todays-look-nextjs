@@ -159,9 +159,7 @@ describe('SetService', () => {
 
 		it('should return the data of response', async () => {
 			const { setService: sut } = makeSut();
-			axios.put = jest
-				.fn()
-				.mockResolvedValueOnce({ data: changeCategoryByIdResponse });
+			axios.put = jest.fn().mockResolvedValueOnce(changeCategoryByIdResponse);
 
 			const result = await sut.changeCategoryById(changeCategoryByIdRequest);
 
@@ -194,9 +192,7 @@ describe('SetService', () => {
 
 		it('should return the data of response', async () => {
 			const { setService: sut } = makeSut();
-			axios.put = jest
-				.fn()
-				.mockResolvedValueOnce({ data: toggleFavoriteByIdResponse });
+			axios.put = jest.fn().mockResolvedValueOnce(toggleFavoriteByIdResponse);
 
 			const result = await sut.toggleFavoriteById({
 				set: '321',

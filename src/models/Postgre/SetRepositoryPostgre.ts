@@ -88,7 +88,7 @@ export class SetRepositoryPostgre implements ISetRepository {
 		category: string;
 	}): Promise<SetData> {
 		try {
-			const set: any = await Set.findByPk(setId);
+			const set: any = await Set.findByPk(setId, { include: { model: Clothe } });
 			if (!set) return null;
 			set.category = category;
 			await set.save();

@@ -35,10 +35,9 @@ export class FetcherAxios implements IFetcher {
 	async put({ url, body }: { url: string; body: string }): Promise<Response> {
 		let response: Response;
 		try {
-			const { data } = await axios.put(url, body, {
+			response = await axios.put(url, body, {
 				headers: { 'Content-Type': 'application/json' },
 			});
-			response = data as Response;
 		} catch (error: any) {
 			throw new Error('Erro ao atualizar dados: erro' + error.message);
 		}

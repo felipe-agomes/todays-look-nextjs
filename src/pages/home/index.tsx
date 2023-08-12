@@ -38,8 +38,8 @@ type Props = {
 
 export default function Home({ serverSession }: Props) {
 	const { setClothes, clothes, sets, setSets } = useAppContext();
-	let setsCategories: string[] = [];
-	let clothesCategories: string[] = [];
+	const setsCategories = categoriesClotheOrSet<SetsProps>(sets);
+	const clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
 
 	const updateClothesAndSets = async () => {
 		const clothesResponse: Response = await clotheService.getAllByUserId({
@@ -48,17 +48,9 @@ export default function Home({ serverSession }: Props) {
 		const setsResponse: Response = await setService.getAllByUserId({
 			userId: serverSession.user.id,
 		});
-		console.log(clothesResponse);
-		console.log(setsResponse);
 		setClothes(clothesResponse.data);
 		setSets(setsResponse.data);
 	};
-
-	useEffect(() => {
-		setsCategories = categoriesClotheOrSet<SetsProps>(sets);
-		clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
-		console.log({ setsCategories, clothesCategories });
-	}, [sets, clothes]);
 
 	useEffect(() => {
 		updateClothesAndSets();

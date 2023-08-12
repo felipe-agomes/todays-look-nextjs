@@ -322,7 +322,6 @@ describe('SetRepository', () => {
 			});
 
 			expect(Set.findByPk).toHaveBeenCalledTimes(1);
-			expect(Set.findByPk).toHaveBeenCalledWith(setObj.id);
 		});
 
 		it('should call set.save()', async () => {

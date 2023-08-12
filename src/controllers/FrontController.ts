@@ -17,7 +17,6 @@ export class FrontController {
 		} catch (error: any) {
 			response = { message: error.message, status: 'error' };
 		}
-
 		return response;
 	}
 	async doPost({
@@ -54,6 +53,7 @@ export class FrontController {
 				url,
 				body: JSON.stringify(body),
 			});
+			console.log('aquiii', response);
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
 		}
