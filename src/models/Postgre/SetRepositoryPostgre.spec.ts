@@ -165,7 +165,19 @@ describe('SetRepository', () => {
 			);
 		});
 
-		it('should return a array with all clothes of specific set', async () => {
+		it('should call set.toJSON()', async () => {
+			const { setRepository: sut } = makeSut();
+			
+			await sut.create({
+				userId: userObj.id,
+				clothes: clothesRequest,
+				category: setObj.category,
+			})
+
+			expect(mockSet.toJSON).toHaveBeenCalledTimes(1)
+		});
+
+		it('should return a specific set object', async () => {
 			const { setRepository: sut } = makeSut();
 
 			const result = await sut.create({
@@ -174,7 +186,7 @@ describe('SetRepository', () => {
 				category: setObj.category,
 			});
 
-			expect(result).toEqual(clothesObj);
+			expect(result).toEqual(setObj);
 		});
 
 		it('should throw a error', async () => {

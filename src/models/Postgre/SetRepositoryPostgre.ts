@@ -39,8 +39,7 @@ export class SetRepositoryPostgre implements ISetRepository {
 				const newClothe = await Clothe.findByPk(clothe.id);
 				await set.addClothes(newClothe, { through: { x: clothe.x, y: clothe.y } });
 			});
-			const arrayClothes = await set.getClothes();
-			return arrayClothes.map((clothe: any) => clothe.toJSON());
+			return set.toJSON();
 		} catch (error) {
 			throw new Error('Erro ao cadastrar conjunto: ' + error.message);
 		}
