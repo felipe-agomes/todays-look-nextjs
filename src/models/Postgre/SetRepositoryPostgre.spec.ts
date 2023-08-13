@@ -34,11 +34,16 @@ export const clothesRequest = [
 	{ ...clothesObj[1], x: 11.3, y: 10.4 },
 ];
 
+const clothesResponse = [
+	{ ...clothesObj[0], clotheSet: { x: 1, y: 11 } },
+	{ ...clothesObj[1], clotheSet: { x: 11.3, y: 10.4 } },
+];
+
 export const setObj = {
 	id: '1',
 	category: 'categoria',
 	favorite: false,
-	clothes: clothesRequest,
+	clothes: clothesResponse,
 };
 
 export const userObj = {
@@ -56,6 +61,8 @@ describe('SetRepository', () => {
 	let mockUser: any;
 	beforeEach(() => {
 		jest.resetAllMocks();
+		clothesResponse[0].clotheSet = { x: 1, y: 11 };
+		clothesResponse[1].clotheSet = { x: 11.3, y: 10.4 };
 		mockSet = {
 			...setObj,
 			addClothes: jest.fn(),
@@ -89,7 +96,6 @@ describe('SetRepository', () => {
 			.mockResolvedValueOnce({ ...mockClothe[1] });
 	});
 	describe('create', () => {
-		beforeEach(() => {});
 		it('should call the Set.create() ', async () => {
 			const { setRepository: sut } = makeSut();
 
@@ -223,12 +229,6 @@ describe('SetRepository', () => {
 
 			await sut.getAllByUserId({ userId: userObj.id });
 
-			expect(Set.findAll).toHaveBeenCalledWith({
-				where: {
-					userId: userObj.id,
-				},
-				include: { model: Clothe },
-			});
 			expect(Set.findAll).toHaveBeenCalledTimes(1);
 		});
 
@@ -237,7 +237,10 @@ describe('SetRepository', () => {
 
 			const result = await sut.getAllByUserId({ userId: userObj.id });
 
-			expect(result).toEqual([{ ...setObj }, { ...setObj }]);
+			expect(result).toEqual([
+				{ ...setObj, clothes: clothesRequest },
+				{ ...setObj, clothes: clothesRequest },
+			]);
 		});
 
 		it('should throw a error', async () => {

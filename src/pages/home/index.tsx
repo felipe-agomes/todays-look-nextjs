@@ -1,20 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
-import { getSession } from 'next-auth/react';
+import { useEffect } from 'react';
 import { NextApiRequest } from 'next';
 
 import { AddIcon } from '@chakra-ui/icons';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { Avatar } from '@chakra-ui/react';
 
-import {
-	ClothesProps,
-	ExtendedSession,
-	FetcherOptions,
-	SessionProps,
-	SetsProps,
-} from '@/@types';
+import { ClothesProps, SessionProps, SetsProps } from '@/@types';
 import AddClothe from '@/components/AddClothe';
 import GridClothes from '@/components/GridClothes';
 

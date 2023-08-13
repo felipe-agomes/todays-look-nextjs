@@ -1,8 +1,4 @@
 import { ModalId } from '@/@types';
-import {
-	validateExistingCategory,
-	validateNewCategory,
-} from '@/utils/validate';
 import { Button } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import Style from './ChoseCategory.module.css';
@@ -35,7 +31,6 @@ export default function ChoseCategory({
 		initialValues: {
 			existingCategory: '',
 		},
-		validate: validateExistingCategory,
 		onSubmit: handleSubmit,
 	});
 
@@ -43,7 +38,6 @@ export default function ChoseCategory({
 		initialValues: {
 			category: '',
 		},
-		validate: validateNewCategory,
 		onSubmit: handleSubmit,
 	});
 

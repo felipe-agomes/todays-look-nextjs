@@ -34,7 +34,7 @@ export default function SetImages({
 								clothe.y * proportion.y
 							}px)`,
 						}}
-						key={clothe.y}
+						key={clothe.id}
 					>
 						<img
 							src={clothe.image}

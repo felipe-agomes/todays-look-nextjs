@@ -1,15 +1,7 @@
 import { Request } from 'express';
-import mongoose from 'mongoose';
-import { Session } from 'next-auth';
 
 export type UserId = string;
 export type ModalId = string;
-
-export type ExtendedSession = {
-	user?: {
-		id: string;
-	};
-} & Session;
 
 export type ExtendedRequest = {
 	file?: {
@@ -139,17 +131,6 @@ export type ModalState = {
 	clotheModal: boolean;
 	clothe: ClothesProps | null;
 	set: SetsProps | null;
-};
-
-export type ClotheSchemaProps = {
-	createdAt: NativeDate;
-	updatedAt: NativeDate;
-} & {
-	favorite: boolean;
-	category?: string | undefined;
-	key?: string | undefined;
-	image?: string | undefined;
-	userId?: mongoose.Types.ObjectId | undefined;
 };
 
 export type SetsResponse = {

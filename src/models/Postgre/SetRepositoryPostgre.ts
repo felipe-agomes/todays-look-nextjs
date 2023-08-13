@@ -1,6 +1,7 @@
 import { ClothePosition } from '@/@types';
 import { Clothe, Set, User } from './Tables';
 import { Model, where } from 'sequelize';
+import ClotheSet from '@/components/ClotheSet';
 
 type CreateSet = {
 	userId: string;
@@ -51,10 +52,19 @@ export class SetRepositoryPostgre implements ISetRepository {
 				where: {
 					userId,
 				},
-				include: { model: Clothe },
+				include: { model: Clothe, through: { attributes: ['x', 'y'] } },
 			});
 			if (!sets) return null;
-			return JSON.parse(JSON.stringify(sets));
+			const formattedSets = JSON.parse(JSON.stringify(sets));
+			for (const set of formattedSets) {
+				for (const clothe of set.clothes) {
+					console.log(clothe);
+					clothe.x = clothe.clotheSet.x;
+					clothe.y = clothe.clotheSet.y;
+					delete clothe.clotheSet;
+				}
+			}
+			return formattedSets;
 		} catch (error) {
 			throw new Error('Erro ao encontrar conjuntos: ' + error.message);
 		}
@@ -65,7 +75,14 @@ export class SetRepositoryPostgre implements ISetRepository {
 			if (!set) return null;
 			set.favorite = !set.favorite;
 			await set.save();
-			return set.toJSON();
+			const formatedSet = set.toJSON();
+			formatedSet.clothes = formatedSet.clothes.map((clothe) => {
+				clothe.x = clothe.clotheSet.x;
+				clothe.y = clothe.clotheSet.y;
+				delete clothe.clotheSet;
+				return clothe;
+			});
+			return formatedSet;
 		} catch (error) {
 			throw new Error('Erro ao alterar a propriedade favorito: ' + error.message);
 		}
@@ -92,7 +109,14 @@ export class SetRepositoryPostgre implements ISetRepository {
 			if (!set) return null;
 			set.category = category;
 			await set.save();
-			return set.toJSON();
+			const formatedSet = set.toJSON();
+			formatedSet.clothes = formatedSet.clothes.map((clothe) => {
+				clothe.x = clothe.clotheSet.x;
+				clothe.y = clothe.clotheSet.y;
+				delete clothe.clotheSet;
+				return clothe;
+			});
+			return formatedSet;
 		} catch (error) {
 			throw new Error('Erro ao alterar a propriedade categoria: ' + error.message);
 		}

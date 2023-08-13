@@ -1,22 +1,18 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
-import { SessionProvider } from 'next-auth/react';
-import { Session } from 'next-auth';
 import ProviderRoot from '@/providers/ProviderRoot';
 
 export default function App({
 	Component,
-	pageProps: { session, ...pageProps },
-}: AppProps<{ session: Session }>) {
+	pageProps: { ...pageProps },
+}: AppProps) {
 	return (
-		<SessionProvider session={session}>
-			<ProviderRoot>
-				<ChakraProvider>
-					<Component {...pageProps} />
-				</ChakraProvider>
-			</ProviderRoot>
-		</SessionProvider>
+		<ProviderRoot>
+			<ChakraProvider>
+				<Component {...pageProps} />
+			</ChakraProvider>
+		</ProviderRoot>
 	);
 }
 

@@ -8,7 +8,6 @@ import {
 } from '@/@types';
 import { Button } from '@chakra-ui/react';
 import { useFormik } from 'formik';
-import { validateNewCategory } from '@/utils/validate';
 import Style from './WorkbenchSet.module.css';
 import useAppContext from '@/hooks/useAppContext';
 import useWorkBench from '@/hooks/useWorkBench';
@@ -25,7 +24,6 @@ export default function WorkbenchSet() {
 			category: '',
 		},
 		onSubmit: handleSubmit,
-		validate: validateNewCategory,
 	});
 
 	useEffect(() => {
@@ -53,15 +51,10 @@ export default function WorkbenchSet() {
 			clothes: clothesPosition,
 		};
 
-		const response = await setService.create({
+		await setService.create({
 			userId: clothesPosition[0].userId,
 			set,
 		});
-		// fetcher(`/api/protected/user/${clothesPosition[0].userId}/clothe/createSet`, {
-		// 	method: 'POST',
-		// 	body: JSON.stringify(data),
-		// 	update: true,
-		// });
 		resetWorkbench();
 		formik.resetForm({ values: { category: '' } });
 	}
