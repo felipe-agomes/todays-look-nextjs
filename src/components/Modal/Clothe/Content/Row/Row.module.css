@@ -1,0 +1,18 @@
+.rowContain {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 10px;
+
+	margin: 10px;
+}
+
+.row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	width: 100%;
+}

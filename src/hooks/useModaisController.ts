@@ -9,5 +9,12 @@ export default function useModaisController() {
 		setDeleteModal(null);
 		setMainModal(null);
 	};
-	return { closeAllModais };
+
+	const closeDeleteModal = () => {
+		setDeleteModal(null);
+	};
+	const closeChangeCategoryModal = () => {
+		setChangeCategoryModal(null);
+	};
+	return { closeAllModais, closeDeleteModal, closeChangeCategoryModal };
 }

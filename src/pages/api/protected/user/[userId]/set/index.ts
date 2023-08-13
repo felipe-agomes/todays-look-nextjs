@@ -52,6 +52,7 @@ export default async function handler(
 					message: 'Erro ao buscar conjuntos',
 				});
 			}
+			break;
 		default:
 			res.status(400).json({
 				status: 'error',

@@ -44,11 +44,6 @@ export default function AddClothe({ userId }: Props) {
 					alt='Imagem'
 				/>
 			</div>
-			{false ? (
-				<span style={{ color: 'red' }}>{'Deve ser enviado uma imagem'}</span>
-			) : (
-				<></>
-			)}
 			<label
 				style={{ alignSelf: 'start' }}
 				htmlFor='category'
@@ -72,13 +67,6 @@ export default function AddClothe({ userId }: Props) {
 				name='category'
 				{...register('category')}
 			/>
-			{false ? (
-				<span style={{ color: 'red' }}>
-					<p>{''}</p>
-				</span>
-			) : (
-				<></>
-			)}
 			<Button
 				type='submit'
 				isLoading={loading}

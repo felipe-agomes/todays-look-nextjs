@@ -1,30 +1,30 @@
-import { ModalId } from '@/@types';
-import { Button } from '@chakra-ui/react';
+import { ClothesProps, ModalId, SetsProps } from '@/@types';
+import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
+import { findOneClotheOrSet } from '@/functions/findOneClotheOrSet';
+import useAppContext from '@/hooks/useAppContext';
+import { useState } from 'react';
+import S from './ChangeCategory.module.css';
+import { Button, Spinner } from '@chakra-ui/react';
+import { CloseIcon } from '@chakra-ui/icons';
+import ChoseCategory from '@/components/ChoseCategory';
+import useModaisController from '@/hooks/useModaisController';
+import useModalLoadingContext from '@/hooks/useModalLoadingContext';
 import { useFormik } from 'formik';
-import Style from './ChoseCategory.module.css';
-import { clotheService } from '@/services/ClotheService';
-import { setService } from '@/services/SetService';
-import { Response } from '@/controllers/FrontController';
-import useSetCltohes from '@/hooks/useSetClothes';
 import useSetSets from '@/hooks/useSetSets';
+import useSetCltohes from '@/hooks/useSetClothes';
+import { clotheService } from '@/services/ClotheService';
 
 type Props = {
-	categories: string[];
-	clotheOrSetId?: string;
-	userId?: string;
+	modalId: ModalId | null;
 	isClothe?: boolean;
 	setModal: (newValue: ModalId | null) => void;
-	setLoading: (boolean: boolean) => void;
 };
 
-export default function ChoseCategory({
-	categories,
-	clotheOrSetId,
-	isClothe,
-	setModal,
-	userId,
-	setLoading,
-}: Props) {
+export default function ChangeCategory({ clothe }: { clothe: ClothesProps }) {
+	const { clothes } = useAppContext();
+	const { closeChangeCategoryModal } = useModaisController();
+	const { setLoading, loading } = useModalLoadingContext();
+	const categories = categoriesClotheOrSet<ClothesProps>(clothes);
 	const { replaceClothes } = useSetCltohes();
 	const { replaceSets } = useSetSets();
 	const formikExistingCategory = useFormik({
@@ -48,42 +48,43 @@ export default function ChoseCategory({
 		existingCategory?: string;
 		category?: string;
 	}) {
-		if (!existingCategory && !category) return;
-		if (!clotheOrSetId || !userId) throw new Error('Usuário não conectado');
 		setLoading(true);
 		try {
-			if (isClothe) {
-				const response = await clotheService.changeCategoryById({
-					userId,
-					clothe: clotheOrSetId,
-					toUpdate: { category: existingCategory ? existingCategory : category! },
-				});
-				if (response.status === 'error')
-					throw new Error('Erro ao mudar a categoria');
-				replaceClothes(response.data);
-			}
-			if (!isClothe) {
-				const response = await setService.changeCategoryById({
-					userId,
-					set: clotheOrSetId,
-					toUpdate: { category: existingCategory ? existingCategory : category! },
-				});
-				if (response.status === 'error')
-					throw new Error('Erro ao mudar a categoria');
-				replaceSets(response.data);
-			}
+			const response = await clotheService.changeCategoryById({
+				userId: clothe.userId,
+				clothe: clothe.id,
+				toUpdate: { category: existingCategory ? existingCategory : category! },
+			});
+			if (response.status === 'error')
+				throw new Error('Erro ao mudar a categoria');
+			replaceClothes(response.data);
 		} catch (error) {
 			throw new Error('Erro ao alterar a categoria');
 		}
-		setModal(null);
+		closeChangeCategoryModal();
 		setLoading(false);
 	}
 
 	return (
-		<>
+		<div className={S.modalContainer}>
+			{loading && (
+				<Spinner
+					color={'cyan'}
+					className={S.spinner}
+				/>
+			)}
+			<CloseIcon
+				onClick={() => {
+					closeChangeCategoryModal();
+				}}
+				cursor={'pointer'}
+				position={'absolute'}
+				right={'20px'}
+				top={'20px'}
+			/>
 			<form onSubmit={formikExistingCategory.handleSubmit}>
 				<h2>Categoria existente</h2>
-				<div className={Style.rowBox}>
+				<div className={S.row}>
 					<select
 						onChange={formikExistingCategory.handleChange}
 						value={formikExistingCategory.values.existingCategory!}
@@ -114,7 +115,7 @@ export default function ChoseCategory({
 			</form>
 			<form onSubmit={formikNewCategory.handleSubmit}>
 				<h2>Nova categoria</h2>
-				<div className={Style.rowBox}>
+				<div className={S.row}>
 					<input
 						type='text'
 						id='category'
@@ -132,6 +133,6 @@ export default function ChoseCategory({
 					</Button>
 				</div>
 			</form>
-		</>
+		</div>
 	);
 }

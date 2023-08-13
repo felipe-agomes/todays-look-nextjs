@@ -58,7 +58,6 @@ export class SetRepositoryPostgre implements ISetRepository {
 			const formattedSets = JSON.parse(JSON.stringify(sets));
 			for (const set of formattedSets) {
 				for (const clothe of set.clothes) {
-					console.log(clothe);
 					clothe.x = clothe.clotheSet.x;
 					clothe.y = clothe.clotheSet.y;
 					delete clothe.clotheSet;

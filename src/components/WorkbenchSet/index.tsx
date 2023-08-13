@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import ClotheSet from '../ClotheSet';
-import {
-	ClothePosition,
-	ClothesProps,
-	FetcherOptions,
-	SetsProps,
-} from '@/@types';
-import { Button } from '@chakra-ui/react';
+import { ClothePosition } from '@/@types';
+import { Button, useModal } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import Style from './WorkbenchSet.module.css';
 import useAppContext from '@/hooks/useAppContext';
 import useWorkBench from '@/hooks/useWorkBench';
 import { setService } from '@/services/SetService';
+import useSetSets from '@/hooks/useSetSets';
+import useModaisContext from '@/hooks/useModaisContext';
+import useModaisController from '@/hooks/useModaisController';
 
 export default function WorkbenchSet() {
 	const { resetWorkbench } = useWorkBench();
 	const { workbench } = useAppContext();
+	const { updateSet } = useSetSets();
+	const { closeAllModais } = useModaisController();
 	const [clothesPosition, setClothesPosition] = useState<ClothePosition[] | []>(
 		[],
 	);
@@ -56,12 +56,14 @@ export default function WorkbenchSet() {
 			set,
 		});
 		resetWorkbench();
+		updateSet(clothesPosition[0].userId);
+		closeAllModais();
 		formik.resetForm({ values: { category: '' } });
 	}
 	return (
 		<div className={Style.container}>
 			<div className={Style.workbench}>
-				{clothesPosition.map((clothe) => {
+				{clothesPosition.map((clothe: ClothePosition) => {
 					return (
 						<ClotheSet
 							updateClothePosition={updateClothePosition}
