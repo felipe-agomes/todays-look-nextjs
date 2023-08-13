@@ -1,5 +1,7 @@
 import { ClothesProps } from '@/@types';
 import useAppContext from './useAppContext';
+import { clotheService } from '@/services/ClotheService';
+import { Response } from '@/controllers/FrontController';
 
 export default function useSetCltohes() {
 	const { clothes, setClothes } = useAppContext();
@@ -13,5 +15,11 @@ export default function useSetCltohes() {
 		const newClothes = [...clothes].filter((clothe) => clothe.id !== clotheId);
 		setClothes(newClothes);
 	};
-	return { replaceClothes, deleteClothe };
+	const updateClothes = async (userId: string) => {
+		const clothesResponse: Response = await clotheService.getAllByUserId({
+			userId: userId,
+		});
+		setClothes(clothesResponse.data);
+	};
+	return { replaceClothes, deleteClothe, updateClothes };
 }

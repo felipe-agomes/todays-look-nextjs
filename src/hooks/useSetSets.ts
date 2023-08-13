@@ -1,5 +1,7 @@
 import { SetsProps } from '@/@types';
 import useAppContext from './useAppContext';
+import { setService } from '@/services/SetService';
+import { Response } from '@/controllers/FrontController';
 
 export default function useSetSets() {
 	const { setSets, sets } = useAppContext();
@@ -13,5 +15,11 @@ export default function useSetSets() {
 		const newSet = [...sets].filter((clothe) => clothe.id !== clotheId);
 		setSets(newSet);
 	};
-	return { replaceSets, deleteSet };
+	const updateSet = async (userId: string) => {
+		const setsResponse: Response = await setService.getAllByUserId({
+			userId: userId,
+		});
+		setSets(setsResponse.data);
+	};
+	return { replaceSets, deleteSet, updateSet };
 }

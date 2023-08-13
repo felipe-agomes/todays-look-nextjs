@@ -24,6 +24,8 @@ import { clotheService } from '@/services/ClotheService';
 import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
 import { Response } from '@/controllers/FrontController';
 import { setService } from '@/services/SetService';
+import useSetCltohes from '@/hooks/useSetClothes';
+import useSetSets from '@/hooks/useSetSets';
 
 type Props = {
 	serverSession: SessionProps;
@@ -31,22 +33,25 @@ type Props = {
 
 export default function Home({ serverSession }: Props) {
 	const { setClothes, clothes, sets, setSets } = useAppContext();
+	const { updateClothes } = useSetCltohes();
+	const { updateSet } = useSetSets();
 	const setsCategories = categoriesClotheOrSet<SetsProps>(sets);
 	const clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
 
-	const updateClothesAndSets = async () => {
-		const clothesResponse: Response = await clotheService.getAllByUserId({
-			userId: serverSession.user.id,
-		});
-		const setsResponse: Response = await setService.getAllByUserId({
-			userId: serverSession.user.id,
-		});
-		setClothes(clothesResponse.data);
-		setSets(setsResponse.data);
-	};
+	// const updateClothesAndSets = async () => {
+	// 	const clothesResponse: Response = await clotheService.getAllByUserId({
+	// 		userId: serverSession.user.id,
+	// 	});
+	// 	const setsResponse: Response = await setService.getAllByUserId({
+	// 		userId: serverSession.user.id,
+	// 	});
+	// 	setSets(setsResponse.data);
+	// 	setClothes(clothesResponse.data);
+	// };
 
 	useEffect(() => {
-		updateClothesAndSets();
+		updateClothes(serverSession.user.id);
+		updateSet(serverSession.user.id);
 	}, [serverSession]);
 
 	return (
@@ -84,10 +89,7 @@ export default function Home({ serverSession }: Props) {
 							<TabPanel className={style.page}>
 								<Header.Root title='Adicionar Roupa' />
 								<ContainerPage>
-									<AddClothe
-										userId={serverSession.user.id}
-										updateClothesAndSets={updateClothesAndSets}
-									/>
+									<AddClothe userId={serverSession.user.id} />
 								</ContainerPage>
 							</TabPanel>
 							<TabPanel className={style.page}>

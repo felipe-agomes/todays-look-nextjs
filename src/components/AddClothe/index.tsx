@@ -4,6 +4,7 @@ import style from './AddClothe.module.css';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { clotheService } from '@/services/ClotheService';
+import useSetCltohes from '@/hooks/useSetClothes';
 
 type FormInput = {
 	category: string;
@@ -12,11 +13,11 @@ type FormInput = {
 
 type Props = {
 	userId: string | null;
-	updateClothesAndSets: () => void;
 };
 
-export default function AddClothe({ userId, updateClothesAndSets }: Props) {
+export default function AddClothe({ userId }: Props) {
 	const [loading, setLoading] = useState<boolean>(false);
+	const { updateClothes } = useSetCltohes();
 	const displayRef = useRef(null);
 	const { register, handleSubmit, watch } = useForm<FormInput>();
 	async function onSubmit({ category, url }: FormInput) {
@@ -27,7 +28,7 @@ export default function AddClothe({ userId, updateClothesAndSets }: Props) {
 		});
 		displayRef.current = null;
 		setLoading(false);
-		updateClothesAndSets();
+		updateClothes(userId);
 	}
 	displayRef.current = watch('url');
 
