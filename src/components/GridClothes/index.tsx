@@ -6,9 +6,9 @@ import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCate
 import useModaisContext from '@/hooks/useModaisContext';
 import { useEffect, useState } from 'react';
 import { Modal } from '../Modal/Clothe';
-import { Content } from '../Modal/Clothe/Content';
+import { Content } from '../Modal/Content';
 import ModalClothe from '../ModalClothe';
-import { Row } from '../Modal/Clothe/Content/Row';
+import { Row } from '../Modal/Row';
 
 export default function GridClothes() {
 	const { clothes, currentCategoryClothes } = useAppContext();
