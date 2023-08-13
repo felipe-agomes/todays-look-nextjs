@@ -9,5 +9,9 @@ export default function useSetSets() {
 		);
 		setSets(copySets);
 	};
-	return { replaceSets };
+	const deleteSet = (clotheId: string) => {
+		const newSet = [...sets].filter((clothe) => clothe.id !== clotheId);
+		setSets(newSet);
+	};
+	return { replaceSets, deleteSet };
 }

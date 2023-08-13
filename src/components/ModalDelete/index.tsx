@@ -7,6 +7,8 @@ import useAppContext from '@/hooks/useAppContext';
 import useModaisController from '@/hooks/useModaisController';
 import { clotheService } from '@/services/ClotheService';
 import useSetCltohes from '@/hooks/useSetClothes';
+import { setService } from '@/services/SetService';
+import useSetSets from '@/hooks/useSetSets';
 
 type Props = {
 	isClothe?: boolean;
@@ -16,6 +18,7 @@ type Props = {
 
 export default function ModalDelete({ modalId, isClothe }: Props) {
 	const { deleteClothe } = useSetCltohes();
+	const { deleteSet } = useSetSets();
 	const { clothes, sets } = useAppContext();
 	const { closeAllModais } = useModaisController();
 	const [loading, setLoading] = useState<boolean>(false);
@@ -44,12 +47,24 @@ export default function ModalDelete({ modalId, isClothe }: Props) {
 					colorScheme={'red'}
 					onClick={async () => {
 						setLoading(true);
-						const response = await clotheService.deleteById({
-							clothe: clotheOrSet.id,
-							userId: clotheOrSet.userId,
-						});
-						if (response.status === 'error') throw new Error('Erro ao deletar roupa');
-						deleteClothe(clotheOrSet.id);
+						if (isClothe) {
+							const response = await clotheService.deleteById({
+								clothe: clotheOrSet.id,
+								userId: clotheOrSet.userId,
+							});
+							if (response.status === 'error')
+								throw new Error('Erro ao deletar roupa');
+							deleteClothe(clotheOrSet.id);
+						}
+						if (!isClothe) {
+							const response = await setService.deleteById({
+								set: clotheOrSet.id,
+								userId: clotheOrSet.userId,
+							});
+							if (response.status === 'error')
+								throw new Error('Erro ao deletar roupa');
+							deleteSet(clotheOrSet.id);
+						}
 						closeAllModais();
 						setLoading(false);
 					}}
