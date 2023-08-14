@@ -1,7 +1,7 @@
 import useAppContext from './useAppContext';
 import { clotheService } from '@/services/ClotheService';
-import { Response } from '@/controllers/FrontController';
 import { ClotheData } from '@/@types/models';
+import { Response } from '@/@types/controller';
 
 export default function useSetCltohes() {
 	const { clothes, setClothes } = useAppContext();

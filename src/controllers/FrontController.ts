@@ -1,12 +1,5 @@
+import { PutOperation, Response } from '@/@types/controller';
 import { IFetcher } from '@/services/Fetcher';
-
-export type Response = {
-	status: string;
-	message: string;
-	data?: any;
-};
-
-export type PutOperation = 'changeCategory' | 'toggleFavorite';
 
 export class FrontController {
 	constructor(private fetcher: IFetcher) {}

@@ -1,15 +1,14 @@
-import { ModalId } from '@/@types';
 import { createContext, useState } from 'react';
 
 type ModaisContext = {
-	clotheModal: ModalId | null;
-	setClotheModal: (newValue: ModalId | null) => void;
-	setModal: ModalId | null;
-	setSetModal: (newValue: ModalId | null) => void;
-	deleteModal: ModalId | null;
-	setDeleteModal: (newValue: ModalId | null) => void;
-	changeCategoryModal: ModalId | null;
-	setChangeCategoryModal: (newValue: ModalId | null) => void;
+	clotheModal: string | null;
+	setClotheModal: (newValue: string | null) => void;
+	setModal: string | null;
+	setSetModal: (newValue: string | null) => void;
+	deleteModal: string | null;
+	setDeleteModal: (newValue: string | null) => void;
+	changeCategoryModal: string | null;
+	setChangeCategoryModal: (newValue: string | null) => void;
 };
 
 export const ModaisContext = createContext<ModaisContext>({
@@ -28,10 +27,10 @@ export default function ProviderModaisContext({
 }: {
 	children: React.ReactNode;
 }) {
-	const [clotheModal, setClotheModal] = useState<ModalId | null>(null);
-	const [setModal, setSetModal] = useState<ModalId | null>(null);
-	const [deleteModal, setDeleteModal] = useState<ModalId | null>(null);
-	const [changeCategoryModal, setChangeCategoryModal] = useState<ModalId | null>(
+	const [clotheModal, setClotheModal] = useState<string | null>(null);
+	const [setModal, setSetModal] = useState<string | null>(null);
+	const [deleteModal, setDeleteModal] = useState<string | null>(null);
+	const [changeCategoryModal, setChangeCategoryModal] = useState<string | null>(
 		null,
 	);
 

@@ -1,14 +1,14 @@
+import { ClotheData, SetData } from '@/@types/models';
 import S from './Row.module.css';
 import useModaisContext from '@/hooks/useModaisContext';
-import { ClothesProps, SetsProps } from '@/@types';
 import { DeleteIcon } from '@chakra-ui/icons';
 
 export default function RowDelete({
 	clothe,
 	set,
 }: {
-	clothe?: ClothesProps;
-	set?: SetsProps;
+	clothe?: ClotheData;
+	set?: SetData;
 }) {
 	const { setDeleteModal } = useModaisContext();
 	const isClothe = !!clothe ? true : false;

@@ -1,14 +1,14 @@
 import S from './Row.module.css';
 import useModaisContext from '@/hooks/useModaisContext';
-import { ClothesProps, SetsProps } from '@/@types';
 import { EditIcon } from '@chakra-ui/icons';
+import { ClotheData, SetData } from '@/@types/models';
 
 export default function RowChangeCategory({
 	clothe,
 	set,
 }: {
-	clothe?: ClothesProps;
-	set?: SetsProps;
+	clothe?: ClotheData;
+	set?: SetData;
 }) {
 	const { setChangeCategoryModal } = useModaisContext();
 	const isClothe = !!clothe ? true : false;

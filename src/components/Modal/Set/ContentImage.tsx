@@ -1,8 +1,8 @@
+import { SetData } from '@/@types/models';
 import SetImages from '@/components/SetImages';
-import { SetsProps } from '@/@types';
 
 /* eslint-disable @next/next/no-img-element */
-export default function ContentImage({ set }: { set: SetsProps }) {
+export default function ContentImage({ set }: { set: SetData }) {
 	return (
 		<div
 			style={{

@@ -5,9 +5,9 @@ import useModaisController from '@/hooks/useModaisController';
 import useModalLoadingContext from '@/hooks/useModalLoadingContext';
 import ChangeCategory from '../ChangeCategory';
 import DeleteModal from '../Delete';
-import { ClothesProps } from '@/@types';
 import { CloseIcon } from '@chakra-ui/icons';
 import { Spinner } from '@chakra-ui/react';
+import { ClotheData } from '@/@types/models';
 
 export default function ClotheRoot({
 	title,
@@ -17,7 +17,7 @@ export default function ClotheRoot({
 }: {
 	title: string;
 	category: string;
-	clothe: ClothesProps;
+	clothe: ClotheData;
 	children: React.ReactNode;
 }) {
 	const { closeAllModais } = useModaisController();

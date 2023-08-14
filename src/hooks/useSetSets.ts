@@ -1,7 +1,7 @@
 import useAppContext from './useAppContext';
 import { setService } from '@/services/SetService';
-import { Response } from '@/controllers/FrontController';
 import { SetData } from '@/@types/models';
+import { Response } from '@/@types/controller';
 
 export default function useSetSets() {
 	const { setSets, sets } = useAppContext();

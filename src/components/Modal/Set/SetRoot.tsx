@@ -5,9 +5,9 @@ import useModaisController from '@/hooks/useModaisController';
 import useModalLoadingContext from '@/hooks/useModalLoadingContext';
 import ChangeCategory from '../ChangeCategory';
 import DeleteModal from '../Delete';
-import { SetsProps } from '@/@types';
 import { CloseIcon } from '@chakra-ui/icons';
 import { Spinner } from '@chakra-ui/react';
+import { SetData } from '@/@types/models';
 
 export default function SetRoot({
 	title,
@@ -17,7 +17,7 @@ export default function SetRoot({
 }: {
 	title: string;
 	category: string;
-	set: SetsProps;
+	set: SetData;
 	children: React.ReactNode;
 }) {
 	const { closeAllModais } = useModaisController();

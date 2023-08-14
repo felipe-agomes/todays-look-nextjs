@@ -1,9 +1,9 @@
+import { ClotheData, SetData } from '@/@types/models';
 import S from './Delete.module.css';
 import useModaisController from '@/hooks/useModaisController';
 import useModalLoadingContext from '@/hooks/useModalLoadingContext';
 import useSetCltohes from '@/hooks/useSetClothes';
 import useSetSets from '@/hooks/useSetSets';
-import { ClothesProps, SetsProps } from '@/@types';
 import { clotheService } from '@/services/ClotheService';
 import { setService } from '@/services/SetService';
 import { Spinner, ButtonGroup, Button } from '@chakra-ui/react';
@@ -12,8 +12,8 @@ export default function DeleteModal({
 	clothe,
 	set,
 }: {
-	clothe?: ClothesProps;
-	set?: SetsProps;
+	clothe?: ClotheData;
+	set?: SetData;
 }) {
 	const { closeAllModais, closeDeleteModal } = useModaisController();
 	const { setLoading, loading } = useModalLoadingContext();
