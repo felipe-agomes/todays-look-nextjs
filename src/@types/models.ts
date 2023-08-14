@@ -40,5 +40,4 @@ export type SetData = {
 	updatedAt: Date;
 	clothes: ClothePosition[];
 };
-
 export type ClothePosition = { x: number; y: number } & ClotheData;
