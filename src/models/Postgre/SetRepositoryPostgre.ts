@@ -1,24 +1,8 @@
-import { ClothePosition } from '@/@types';
+import { SetInput, SetData } from '@/@types/models';
 import { Clothe, Set, User } from './Tables';
 
-type CreateSet = {
-	userId: string;
-	category: string;
-	clothes: ClothePosition[];
-};
-
-export type SetData = {
-	id: number;
-	category: string;
-	favorite: boolean;
-	userId: string;
-	set: ClothePosition[];
-	createdAt: string;
-	updatedAt: string;
-};
-
 export interface ISetRepository {
-	create(data: CreateSet): Promise<SetData | null>;
+	create(data: SetInput): Promise<SetData | null>;
 	getAllByUserId(data: { userId: string }): Promise<SetData[]>;
 	toggleFavoriteBySetId(data: { setId: string }): Promise<SetData | null>;
 	changeCategoryBySetId(data: {
@@ -29,7 +13,7 @@ export interface ISetRepository {
 }
 
 export class SetRepositoryPostgre implements ISetRepository {
-	async create({ category, clothes, userId }: CreateSet): Promise<SetData> {
+	async create({ category, clothes, userId }: SetInput): Promise<SetData> {
 		try {
 			const set: any = await Set.create({ category });
 			const user = await User.findByPk(userId);
@@ -39,7 +23,7 @@ export class SetRepositoryPostgre implements ISetRepository {
 				const newClothe = await Clothe.findByPk(clothe.id);
 				await set.addClothes(newClothe, { through: { x: clothe.x, y: clothe.y } });
 			});
-			return set.toJSON();
+			return set.toJSON() as SetData;
 		} catch (error) {
 			throw new Error('Erro ao cadastrar conjunto: ' + error.message);
 		}
@@ -113,7 +97,7 @@ export class SetRepositoryPostgre implements ISetRepository {
 				delete clothe.clotheSet;
 				return clothe;
 			});
-			return formatedSet;
+			return formatedSet as SetData;
 		} catch (error) {
 			throw new Error('Erro ao alterar a propriedade categoria: ' + error.message);
 		}

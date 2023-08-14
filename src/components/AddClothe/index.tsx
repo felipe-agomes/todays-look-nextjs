@@ -22,10 +22,7 @@ export default function AddClothe({ userId }: Props) {
 	const { register, handleSubmit, watch } = useForm<FormInput>();
 	async function onSubmit({ category, url }: FormInput) {
 		setLoading(true);
-		await clotheService.create({
-			userId,
-			clothe: { category, image: url, key: url },
-		});
+		await clotheService.create({ category, image: url, key: url, userId });
 		displayRef.current = null;
 		setLoading(false);
 		updateClothes(userId);

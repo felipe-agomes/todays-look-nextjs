@@ -4,20 +4,20 @@ import useModaisController from '@/hooks/useModaisController';
 import useModalLoadingContext from '@/hooks/useModalLoadingContext';
 import useSetCltohes from '@/hooks/useSetClothes';
 import useSetSets from '@/hooks/useSetSets';
-import { ClothesProps, SetsProps } from '@/@types';
 import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
 import { clotheService } from '@/services/ClotheService';
 import { setService } from '@/services/SetService';
 import { CloseIcon } from '@chakra-ui/icons';
 import { Spinner, Button } from '@chakra-ui/react';
 import { useFormik } from 'formik';
+import { ClotheData, SetData } from '@/@types/models';
 
 export default function ChangeCategory({
 	clothe,
 	set,
 }: {
-	clothe?: ClothesProps;
-	set?: SetsProps;
+	clothe?: ClotheData;
+	set?: SetData;
 }) {
 	const { clothes, sets } = useAppContext();
 	const { closeChangeCategoryModal } = useModaisController();
@@ -38,8 +38,8 @@ export default function ChangeCategory({
 	});
 	const isClothe = !!clothe ? true : false;
 	const categories = isClothe
-		? categoriesClotheOrSet<ClothesProps>(clothes)
-		: categoriesClotheOrSet<SetsProps>(sets);
+		? categoriesClotheOrSet<ClotheData>(clothes)
+		: categoriesClotheOrSet<SetData>(sets);
 	async function handleSubmit({
 		existingCategory,
 		category,

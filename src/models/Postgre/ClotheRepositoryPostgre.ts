@@ -1,22 +1,6 @@
+import { ClotheData, ClotheInput } from '@/@types/models';
 import { Clothe, User } from './Tables';
 
-type CreateClothe = {
-	category: string;
-	key: string;
-	image: string;
-	userId: string;
-};
-
-export type ClotheData = {
-	id: number;
-	category: string;
-	favorite: boolean;
-	key: string;
-	image: string;
-	userId: string;
-	createdAt: string;
-	updatedAt: string;
-};
 export interface IClotheRepository {
 	getAllByUserId(data: { userId: string }): Promise<ClotheData[]>;
 	toggleFavoriteByClotheId(data: {
@@ -27,7 +11,7 @@ export interface IClotheRepository {
 		category: string;
 	}): Promise<ClotheData | null>;
 	deleteByClotheId(data: { clotheId: string }): Promise<string | null>;
-	create(data: CreateClothe): Promise<ClotheData | null>;
+	create(data: ClotheInput): Promise<ClotheData | null>;
 }
 
 export class ClotheRepositoryPostgre implements IClotheRepository {
@@ -37,12 +21,7 @@ export class ClotheRepositoryPostgre implements IClotheRepository {
 		key,
 		image,
 		userId,
-	}: {
-		category: string;
-		key: string;
-		image: string;
-		userId: string;
-	}): Promise<ClotheData | null> {
+	}: ClotheInput): Promise<ClotheData | null> {
 		try {
 			const user = await User.findByPk(userId);
 			if (!user) return null;

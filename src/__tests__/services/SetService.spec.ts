@@ -5,9 +5,9 @@ import {
 	errorMessage,
 } from '../controllers/FrontController.spec';
 import { FrontController } from '@/controllers/FrontController';
-import { SetData } from '@/@types';
 import { FetcherAxios } from '@/services/Fetcher';
-import { CreateSet, SetService } from '@/services/SetService';
+import { SetInput } from '@/@types/models';
+import { SetService } from '@/services/SetService';
 
 const toggleFavoriteByIdResponse = {
 	status: 'success',
@@ -33,22 +33,20 @@ const changeCategoryByIdResponse = {
 
 const createRequest = {
 	userId: '123',
-	set: {
-		category: 'category',
-		clothes: [
-			{
-				category: 'category',
-				favorite: false,
-				id: 'id',
-				image: 'image',
-				key: 'key',
-				userId: 'userId',
-				x: 0,
-				y: 0,
-			},
-		],
-	} as CreateSet,
-};
+	category: 'category',
+	clothes: [
+		{
+			category: 'category',
+			favorite: false,
+			id: 'id',
+			image: 'image',
+			key: 'key',
+			userId: 'userId',
+			x: 0,
+			y: 0,
+		},
+	],
+} as SetInput;
 
 const createResponse = {
 	status: 'success',
@@ -229,7 +227,7 @@ describe('SetService', () => {
 			expect(spyDoPost).toHaveBeenCalledWith({
 				url: `/api/protected/user/123/set`,
 				body: {
-					set: createRequest.set,
+					set: createRequest,
 				},
 			});
 			expect(spyDoPost).toHaveBeenCalledTimes(1);

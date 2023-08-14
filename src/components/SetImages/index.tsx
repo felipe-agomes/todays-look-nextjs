@@ -1,8 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
-import { SetsProps } from '@/@types';
+import { SetData } from '@/@types/models';
 
+/* eslint-disable @next/next/no-img-element */
 type Pops = {
-	set: SetsProps;
+	set: SetData;
 	proportion?: {
 		x: number;
 		y: number;

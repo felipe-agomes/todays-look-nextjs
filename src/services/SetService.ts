@@ -1,11 +1,6 @@
 import { FrontController, Response } from '@/controllers/FrontController';
-import { ClothePosition } from '@/@types';
 import { FetcherAxios } from './Fetcher';
-
-export type CreateSet = {
-	category: string;
-	clothes: ClothePosition[];
-};
+import { SetInput } from '@/@types/models';
 
 export interface ISetService {
 	getAllByUserId(data: { userId: string }): Promise<Response>;
@@ -16,7 +11,7 @@ export interface ISetService {
 		toUpdate: { category: string };
 	}): Promise<Response>;
 	toggleFavoriteById(data: { userId: string; set: string }): Promise<Response>;
-	create(data: { userId: string; set: CreateSet }): Promise<Response>;
+	create(data: SetInput): Promise<Response>;
 }
 
 export class SetService implements ISetService {
@@ -87,17 +82,11 @@ export class SetService implements ISetService {
 		}
 		return response;
 	}
-	async create({
-		userId,
-		set,
-	}: {
-		userId: string;
-		set: CreateSet;
-	}): Promise<Response> {
+	async create(set: SetInput): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPost({
-				url: `/api/protected/user/${userId}/set`,
+				url: `/api/protected/user/${set.userId}/set`,
 				body: { set },
 			});
 		} catch (error: any) {

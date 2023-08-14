@@ -1,11 +1,11 @@
-import { ClothesProps } from '@/@types';
 import useAppContext from './useAppContext';
 import { clotheService } from '@/services/ClotheService';
 import { Response } from '@/controllers/FrontController';
+import { ClotheData } from '@/@types/models';
 
 export default function useSetCltohes() {
 	const { clothes, setClothes } = useAppContext();
-	const replaceClothes = (newClothe: ClothesProps) => {
+	const replaceClothes = (newClothe: ClotheData) => {
 		const newClothes = [...clothes].map((clothe) =>
 			clothe.id === newClothe.id ? newClothe : clothe,
 		);

@@ -2,16 +2,18 @@ import S from './GridSets.module.css';
 import useAppContext from '@/hooks/useAppContext';
 import useModaisContext from '@/hooks/useModaisContext';
 import SetImages from '../SetImages';
-import { SetsProps } from '@/@types';
 import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 import { ClotheModal } from '../Modal/Clothe';
 import { SetModal } from '../Modal/Set';
+import { SetData } from '@/@types/models';
 
 export default function GridSets() {
 	const { sets, currentCategorySets } = useAppContext();
 	const { setModal, setSetModal } = useModaisContext();
-	const filteredSetByCategory: SetsProps[] =
-		filterClotheOrSetByCategory<SetsProps>(currentCategorySets, sets);
+	const filteredSetByCategory: SetData[] = filterClotheOrSetByCategory<SetData>(
+		currentCategorySets,
+		sets,
+	);
 	const currentSet = sets.find((set) => set.id === setModal);
 
 	return (

@@ -1,6 +1,6 @@
-import { ClotheData, SetData } from '@/@types';
 import { FetcherAxios } from './Fetcher';
 import { FrontController, Response } from '@/controllers/FrontController';
+import { ClotheInput } from '@/@types/models';
 
 export interface IClotheService {
 	getAllByUserId(data: { userId: string }): Promise<Response>;
@@ -14,10 +14,7 @@ export interface IClotheService {
 		userId: string;
 		clothe: string;
 	}): Promise<Response>;
-	create(data: {
-		userId: string;
-		clothe: ClotheData | SetData;
-	}): Promise<Response>;
+	create(data: ClotheInput): Promise<Response>;
 }
 
 export class ClotheService implements IClotheService {
@@ -88,17 +85,11 @@ export class ClotheService implements IClotheService {
 		}
 		return response;
 	}
-	async create({
-		userId,
-		clothe,
-	}: {
-		userId: string;
-		clothe: ClotheData;
-	}): Promise<Response> {
+	async create(clothe: ClotheInput): Promise<Response> {
 		let response: Response;
 		try {
 			response = await this.frontController.doPost({
-				url: `/api/protected/user/${userId}/clothe`,
+				url: `/api/protected/user/${clothe.userId}/clothe`,
 				body: { clothe },
 			});
 		} catch (error: any) {

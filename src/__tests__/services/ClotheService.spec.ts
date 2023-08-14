@@ -7,6 +7,7 @@ import {
 	errorMessage,
 } from '../controllers/FrontController.spec';
 import { FrontController } from '@/controllers/FrontController';
+import { ClotheInput } from '@/@types/models';
 
 const toggleFavoriteByIdResponse = {
 	status: 'success',
@@ -31,14 +32,11 @@ const changeCategoryByIdResponse = {
 };
 
 const createRequest = {
-	userId: '123',
-	clothe: {
-		category: 'category',
-		image: 'image',
-		key: 'key',
-		userId: 'userId',
-	},
-};
+	category: 'category',
+	image: 'image',
+	key: 'key',
+	userId: 'userId',
+} as ClotheInput;
 
 const createResponse = {
 	status: 'success',
@@ -217,7 +215,7 @@ describe('ClotheService', () => {
 			await sut.create(createRequest);
 
 			expect(spyDoPost).toHaveBeenCalledWith({
-				url: `/api/protected/user/123/clothe`,
+				url: `/api/protected/user/userId/clothe`,
 				body: {
 					clothe: {
 						category: 'category',

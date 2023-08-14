@@ -1,4 +1,4 @@
-import { ClothePosition } from '@/@types';
+import { ClothePosition } from '@/@types/models';
 import Draggable, { DraggableEvent, DraggableData } from 'react-draggable';
 
 /* eslint-disable @next/next/no-img-element */

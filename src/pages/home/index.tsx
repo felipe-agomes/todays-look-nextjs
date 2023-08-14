@@ -11,7 +11,6 @@ import useAppContext from '@/hooks/useAppContext';
 import useSetCltohes from '@/hooks/useSetClothes';
 import useSetSets from '@/hooks/useSetSets';
 import Head from 'next/head';
-import { SessionProps, SetsProps, ClothesProps } from '@/@types';
 import { Header } from '@/components/Header';
 import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
 import { AddIcon } from '@chakra-ui/icons';
@@ -25,17 +24,18 @@ import {
 } from '@chakra-ui/react';
 import { NextApiRequest } from 'next';
 import { useEffect } from 'react';
+import { ClotheData, SetData } from '@/@types/models';
 
 type Props = {
-	serverSession: SessionProps;
+	serverSession: any;
 };
 
 export default function Home({ serverSession }: Props) {
 	const { clothes, sets } = useAppContext();
 	const { updateClothes } = useSetCltohes();
 	const { updateSet } = useSetSets();
-	const setsCategories = categoriesClotheOrSet<SetsProps>(sets);
-	const clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
+	const setsCategories = categoriesClotheOrSet<SetData>(sets);
+	const clothesCategories = categoriesClotheOrSet<ClotheData>(clothes);
 
 	useEffect(() => {
 		updateClothes(serverSession.user.id);

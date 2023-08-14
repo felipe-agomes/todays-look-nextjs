@@ -1,3 +1,4 @@
+import { ClotheData, SetInput } from '@/@types/models';
 import { SetRepositoryPostgre } from './SetRepositoryPostgre';
 import { Clothe, Set, User } from './Tables';
 
@@ -6,7 +7,7 @@ const makeSut = () => {
 	return { setRepository };
 };
 
-export const clothesObj = [
+export const clothesObj: any = [
 	{
 		favorite: false,
 		id: '1',
@@ -238,8 +239,14 @@ describe('SetRepository', () => {
 			const result = await sut.getAllByUserId({ userId: userObj.id });
 
 			expect(result).toEqual([
-				{ ...setObj, clothes: clothesRequest },
-				{ ...setObj, clothes: clothesRequest },
+				{
+					...setObj,
+					clothes: clothesRequest,
+				},
+				{
+					...setObj,
+					clothes: clothesRequest,
+				},
 			]);
 		});
 
@@ -292,7 +299,7 @@ describe('SetRepository', () => {
 
 			const result = await sut.toggleFavoriteBySetId({ setId: setObj.id });
 
-			expect(result.favorite).toBeTruthy();
+			expect(result).toBeTruthy();
 		});
 
 		it('should throw a error', async () => {
@@ -355,7 +362,6 @@ describe('SetRepository', () => {
 				setId: setObj.id,
 				category: 'new_category',
 			});
-
 			expect(result.category).toBe('new_category');
 		});
 

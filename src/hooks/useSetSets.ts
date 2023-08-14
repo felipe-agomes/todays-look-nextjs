@@ -1,11 +1,11 @@
 import useAppContext from './useAppContext';
-import { SetsProps } from '@/@types';
 import { setService } from '@/services/SetService';
 import { Response } from '@/controllers/FrontController';
+import { SetData } from '@/@types/models';
 
 export default function useSetSets() {
 	const { setSets, sets } = useAppContext();
-	const replaceSets = (newSet: SetsProps) => {
+	const replaceSets = (newSet: SetData) => {
 		const copySets = [...sets].map((set) =>
 			set.id === newSet.id ? newSet : set,
 		);

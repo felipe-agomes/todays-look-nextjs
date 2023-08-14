@@ -1,30 +1,17 @@
 import bcrypt from 'bcrypt';
 import { User } from './Tables';
-
-type UserData = {
-	email: string;
-	image?: string;
-	id: number;
-};
+import { UserInput, UserData } from '@/@types/models';
 
 interface IUserRepository {
-	create(data: {
-		email: string;
-		password: string;
-		image: string;
-	}): Promise<UserData | null>;
+	create(data: UserInput): Promise<UserData | null>;
 	deleteById(data: { userId: number }): Promise<string>;
 	getAll(): Promise<UserData[]>;
-	login(data: { email: string; password: string }): Promise<void>;
+	login(data: { email: string; password: string }): Promise<UserData>;
 }
 
 export class UserRepositoryPostgre implements IUserRepository {
 	constructor() {}
-	async create(data: {
-		email: string;
-		password: string;
-		image: string;
-	}): Promise<UserData | null> {
+	async create(data: UserInput): Promise<UserData | null> {
 		try {
 			data.password = await bcrypt.hash(data.password, 10);
 			const [user, created] = await User.findOrCreate({
@@ -36,7 +23,7 @@ export class UserRepositoryPostgre implements IUserRepository {
 			if (!created) return null;
 			const userJSON = user.toJSON();
 			delete userJSON.password;
-			return userJSON;
+			return userJSON as UserData;
 		} catch (error) {
 			throw new Error('Erro ao buscar usuário: ' + error.message);
 		}
@@ -67,14 +54,14 @@ export class UserRepositoryPostgre implements IUserRepository {
 	}: {
 		email: string;
 		password: string;
-	}): Promise<void> {
+	}): Promise<UserData> {
 		try {
 			const user: any = await User.findOne({ where: { email } });
 			if (!user) return null;
 			if (await bcrypt.compare(password, user.password)) {
 				const userJSON = user.toJSON();
 				delete userJSON.password;
-				return userJSON;
+				return userJSON as UserData;
 			} else {
 				return null;
 			}

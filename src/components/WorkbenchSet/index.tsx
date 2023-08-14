@@ -4,11 +4,11 @@ import useModaisController from '@/hooks/useModaisController';
 import useSetSets from '@/hooks/useSetSets';
 import useWorkBench from '@/hooks/useWorkBench';
 import ClotheSet from '../ClotheSet';
-import { ClothePosition } from '@/@types';
 import { setService } from '@/services/SetService';
 import { Button } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { useState, useEffect } from 'react';
+import { ClothePosition } from '@/@types/models';
 
 export default function WorkbenchSet() {
 	const { resetWorkbench } = useWorkBench();
@@ -45,14 +45,10 @@ export default function WorkbenchSet() {
 		if (clothesPosition.length === 0) {
 			return;
 		}
-		const set = {
+		await setService.create({
 			category: values.category,
 			clothes: clothesPosition,
-		};
-
-		await setService.create({
 			userId: clothesPosition[0].userId,
-			set,
 		});
 		resetWorkbench();
 		updateSet(clothesPosition[0].userId);

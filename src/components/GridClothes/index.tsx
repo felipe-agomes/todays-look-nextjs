@@ -1,16 +1,16 @@
 import S from './GridClothes.module.css';
 import useAppContext from '@/hooks/useAppContext';
 import useModaisContext from '@/hooks/useModaisContext';
-import { ClothesProps } from '@/@types';
 import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 import { ClotheModal } from '../Modal/Clothe';
+import { ClotheData } from '@/@types/models';
 
 /* eslint-disable @next/next/no-img-element */
 export default function GridClothes() {
 	const { clothes, currentCategoryClothes } = useAppContext();
 	const { clotheModal, setClotheModal } = useModaisContext();
-	const filteredClotheByCategory: ClothesProps[] =
-		filterClotheOrSetByCategory<ClothesProps>(currentCategoryClothes, clothes);
+	const filteredClotheByCategory: ClotheData[] =
+		filterClotheOrSetByCategory<ClotheData>(currentCategoryClothes, clothes);
 	const currentClothe = clothes.find((clothe) => clothe.id === clotheModal);
 
 	return (
