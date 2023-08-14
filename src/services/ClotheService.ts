@@ -1,6 +1,7 @@
+import { Response } from '@/@types/controller';
 import { FetcherAxios } from './Fetcher';
-import { FrontController, Response } from '@/controllers/FrontController';
 import { ClotheInput } from '@/@types/models';
+import { FrontController } from '@/controllers/FrontController';
 
 export interface IClotheService {
 	getAllByUserId(data: { userId: string }): Promise<Response>;

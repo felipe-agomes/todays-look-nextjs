@@ -1,6 +1,7 @@
-import { FrontController, Response } from '@/controllers/FrontController';
+import { Response } from '@/@types/controller';
 import { FetcherAxios } from './Fetcher';
 import { SetInput } from '@/@types/models';
+import { FrontController } from '@/controllers/FrontController';
 
 export interface ISetService {
 	getAllByUserId(data: { userId: string }): Promise<Response>;

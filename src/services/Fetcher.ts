@@ -1,4 +1,4 @@
-import { Response } from '@/controllers/FrontController';
+import { Response } from '@/@types/controller';
 import axios from 'axios';
 
 export interface IFetcher {
