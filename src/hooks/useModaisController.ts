@@ -1,13 +1,14 @@
 import useModaisContext from './useModaisContext';
 
 export default function useModaisController() {
-	const { setChangeCategoryModal, setDeleteModal, setMainModal } =
+	const { setChangeCategoryModal, setDeleteModal, setClotheModal, setSetModal } =
 		useModaisContext();
 
 	const closeAllModais = () => {
 		setChangeCategoryModal(null);
 		setDeleteModal(null);
-		setMainModal(null);
+		setClotheModal(null);
+		setSetModal(null);
 	};
 
 	const closeDeleteModal = () => {

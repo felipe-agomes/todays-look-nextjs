@@ -1,13 +1,13 @@
-import { SmallAddIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import S from './Row.module.css';
 import useAppContext from '@/hooks/useAppContext';
-import { ClothesProps } from '@/@types';
 import useWorkBench from '@/hooks/useWorkBench';
+import { ClothesProps } from '@/@types';
+import { SmallCloseIcon, SmallAddIcon } from '@chakra-ui/icons';
 
 export default function RowAddToWorkbench({
 	clothe,
 }: {
-	clothe: ClothesProps;
+	clothe?: ClothesProps;
 }) {
 	const { workbench } = useAppContext();
 	const { removeClotheFromWorkbench, addClotheToWorkbench } = useWorkBench();

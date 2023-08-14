@@ -1,29 +1,45 @@
-import { ClothesProps, FetcherOptions, ModalId, SetsProps } from '@/@types';
-import Style from './GridSets.module.css';
-import ModalSet from '../ModalSet';
-import SetImages from '../SetImages';
+import S from './GridSets.module.css';
 import useAppContext from '@/hooks/useAppContext';
-import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
 import useModaisContext from '@/hooks/useModaisContext';
+import SetImages from '../SetImages';
+import { SetsProps } from '@/@types';
+import { filterClotheOrSetByCategory } from '@/functions/filterClotheOrSetByCategory';
+import { ClotheModal } from '../Modal/Clothe';
+import { SetModal } from '../Modal/Set';
 
 export default function GridSets() {
 	const { sets, currentCategorySets } = useAppContext();
-	const { mainModal, setMainModal } = useModaisContext();
-	const filteredSetsByCategory = filterClotheOrSetByCategory<SetsProps>(
-		currentCategorySets,
-		sets,
-	);
+	const { setModal, setSetModal } = useModaisContext();
+	const filteredSetByCategory: SetsProps[] =
+		filterClotheOrSetByCategory<SetsProps>(currentCategorySets, sets);
+	const currentSet = sets.find((set) => set.id === setModal);
 
 	return (
 		<>
-			{mainModal && (
+			{setModal && (
+				<SetModal.Root
+					category={currentSet.category}
+					title='Conjunto categoria'
+					set={currentSet}
+				>
+					<SetModal.Content.Root>
+						<SetModal.Content.Image set={currentSet} />
+						<SetModal.Content.Row.Root>
+							<ClotheModal.Content.Row.Favorite set={currentSet} />
+							<ClotheModal.Content.Row.Delete set={currentSet} />
+							<ClotheModal.Content.Row.ChangeCategory set={currentSet} />
+						</SetModal.Content.Row.Root>
+					</SetModal.Content.Root>
+				</SetModal.Root>
+			)}
+			{/* {setModal && (
 				<ModalSet
-					modalId={mainModal}
+					modalId={setModal}
 					setModalId={setMainModal}
 				/>
-			)}
-			<ul className={Style.boxList}>
-				{filteredSetsByCategory.map((set) => {
+			)} */}
+			<ul className={S.boxList}>
+				{filteredSetByCategory.map((set) => {
 					return (
 						<li
 							style={{
@@ -36,7 +52,7 @@ export default function GridSets() {
 							}}
 							key={set.id}
 							onClick={() => {
-								setMainModal(set.id);
+								setSetModal(set.id);
 							}}
 						>
 							<SetImages

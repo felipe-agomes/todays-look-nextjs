@@ -1,30 +1,27 @@
-import { ClothesProps, ModalId, SetsProps } from '@/@types';
-import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
-import { findOneClotheOrSet } from '@/functions/findOneClotheOrSet';
-import useAppContext from '@/hooks/useAppContext';
-import { useState } from 'react';
 import S from './ChangeCategory.module.css';
-import { Button, Spinner } from '@chakra-ui/react';
-import { CloseIcon } from '@chakra-ui/icons';
-import ChoseCategory from '@/components/ChoseCategory';
+import useAppContext from '@/hooks/useAppContext';
 import useModaisController from '@/hooks/useModaisController';
 import useModalLoadingContext from '@/hooks/useModalLoadingContext';
-import { useFormik } from 'formik';
-import useSetSets from '@/hooks/useSetSets';
 import useSetCltohes from '@/hooks/useSetClothes';
+import useSetSets from '@/hooks/useSetSets';
+import { ClothesProps, SetsProps } from '@/@types';
+import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
 import { clotheService } from '@/services/ClotheService';
+import { setService } from '@/services/SetService';
+import { CloseIcon } from '@chakra-ui/icons';
+import { Spinner, Button } from '@chakra-ui/react';
+import { useFormik } from 'formik';
 
-type Props = {
-	modalId: ModalId | null;
-	isClothe?: boolean;
-	setModal: (newValue: ModalId | null) => void;
-};
-
-export default function ChangeCategory({ clothe }: { clothe: ClothesProps }) {
-	const { clothes } = useAppContext();
+export default function ChangeCategory({
+	clothe,
+	set,
+}: {
+	clothe?: ClothesProps;
+	set?: SetsProps;
+}) {
+	const { clothes, sets } = useAppContext();
 	const { closeChangeCategoryModal } = useModaisController();
 	const { setLoading, loading } = useModalLoadingContext();
-	const categories = categoriesClotheOrSet<ClothesProps>(clothes);
 	const { replaceClothes } = useSetCltohes();
 	const { replaceSets } = useSetSets();
 	const formikExistingCategory = useFormik({
@@ -33,14 +30,16 @@ export default function ChangeCategory({ clothe }: { clothe: ClothesProps }) {
 		},
 		onSubmit: handleSubmit,
 	});
-
 	const formikNewCategory = useFormik({
 		initialValues: {
 			category: '',
 		},
 		onSubmit: handleSubmit,
 	});
-
+	const isClothe = !!clothe ? true : false;
+	const categories = isClothe
+		? categoriesClotheOrSet<ClothesProps>(clothes)
+		: categoriesClotheOrSet<SetsProps>(sets);
 	async function handleSubmit({
 		existingCategory,
 		category,
@@ -50,14 +49,26 @@ export default function ChangeCategory({ clothe }: { clothe: ClothesProps }) {
 	}) {
 		setLoading(true);
 		try {
-			const response = await clotheService.changeCategoryById({
-				userId: clothe.userId,
-				clothe: clothe.id,
-				toUpdate: { category: existingCategory ? existingCategory : category! },
-			});
-			if (response.status === 'error')
-				throw new Error('Erro ao mudar a categoria');
-			replaceClothes(response.data);
+			if (isClothe) {
+				const response = await clotheService.changeCategoryById({
+					userId: clothe.userId,
+					clothe: clothe.id,
+					toUpdate: { category: existingCategory ? existingCategory : category! },
+				});
+				if (response.status === 'error')
+					throw new Error('Erro ao mudar a categoria');
+				replaceClothes(response.data);
+			}
+			if (!isClothe) {
+				const response = await setService.changeCategoryById({
+					userId: set.userId,
+					set: set.id,
+					toUpdate: { category: existingCategory ? existingCategory : category! },
+				});
+				if (response.status === 'error')
+					throw new Error('Erro ao mudar a categoria');
+				replaceSets(response.data);
+			}
 		} catch (error) {
 			throw new Error('Erro ao alterar a categoria');
 		}

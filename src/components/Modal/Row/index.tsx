@@ -4,7 +4,7 @@ import RowDelete from './RowDelete';
 import RowFavorite from './RowFavorite';
 import RowRoot from './RowRoot';
 
-export const Row = {
+export const RowModal = {
 	Delete: RowDelete,
 	Favorite: RowFavorite,
 	ChangeCategory: RowChangeCategory,

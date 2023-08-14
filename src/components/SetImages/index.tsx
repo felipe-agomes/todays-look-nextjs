@@ -19,6 +19,7 @@ export default function SetImages({
 	size = { height: 64, width: 64 },
 	proportion = { x: 0.72, y: 0.72 },
 }: Pops) {
+	console.log(set);
 	return (
 		<>
 			{set.clothes.map((clothe) => {

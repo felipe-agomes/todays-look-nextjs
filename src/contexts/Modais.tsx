@@ -2,8 +2,10 @@ import { ModalId } from '@/@types';
 import { createContext, useState } from 'react';
 
 type ModaisContext = {
-	mainModal: ModalId | null;
-	setMainModal: (newValue: ModalId | null) => void;
+	clotheModal: ModalId | null;
+	setClotheModal: (newValue: ModalId | null) => void;
+	setModal: ModalId | null;
+	setSetModal: (newValue: ModalId | null) => void;
 	deleteModal: ModalId | null;
 	setDeleteModal: (newValue: ModalId | null) => void;
 	changeCategoryModal: ModalId | null;
@@ -11,8 +13,10 @@ type ModaisContext = {
 };
 
 export const ModaisContext = createContext<ModaisContext>({
-	mainModal: null,
-	setMainModal() {},
+	clotheModal: null,
+	setClotheModal() {},
+	setModal: null,
+	setSetModal() {},
 	deleteModal: null,
 	setDeleteModal() {},
 	changeCategoryModal: null,
@@ -24,7 +28,8 @@ export default function ProviderModaisContext({
 }: {
 	children: React.ReactNode;
 }) {
-	const [mainModal, setMainModal] = useState<ModalId | null>(null);
+	const [clotheModal, setClotheModal] = useState<ModalId | null>(null);
+	const [setModal, setSetModal] = useState<ModalId | null>(null);
 	const [deleteModal, setDeleteModal] = useState<ModalId | null>(null);
 	const [changeCategoryModal, setChangeCategoryModal] = useState<ModalId | null>(
 		null,
@@ -33,8 +38,10 @@ export default function ProviderModaisContext({
 	return (
 		<ModaisContext.Provider
 			value={{
-				mainModal,
-				setMainModal,
+				clotheModal,
+				setClotheModal,
+				setModal,
+				setSetModal,
 				deleteModal,
 				setDeleteModal,
 				changeCategoryModal,
