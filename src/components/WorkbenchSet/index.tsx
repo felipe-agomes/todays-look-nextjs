@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react';
+import S from './WorkbenchSet.module.css';
+import useAppContext from '@/hooks/useAppContext';
+import useModaisController from '@/hooks/useModaisController';
+import useSetSets from '@/hooks/useSetSets';
+import useWorkBench from '@/hooks/useWorkBench';
 import ClotheSet from '../ClotheSet';
 import { ClothePosition } from '@/@types';
-import { Button, useModal } from '@chakra-ui/react';
-import { useFormik } from 'formik';
-import Style from './WorkbenchSet.module.css';
-import useAppContext from '@/hooks/useAppContext';
-import useWorkBench from '@/hooks/useWorkBench';
 import { setService } from '@/services/SetService';
-import useSetSets from '@/hooks/useSetSets';
-import useModaisContext from '@/hooks/useModaisContext';
-import useModaisController from '@/hooks/useModaisController';
+import { Button } from '@chakra-ui/react';
+import { useFormik } from 'formik';
+import { useState, useEffect } from 'react';
 
 export default function WorkbenchSet() {
 	const { resetWorkbench } = useWorkBench();
@@ -61,8 +60,8 @@ export default function WorkbenchSet() {
 		formik.resetForm({ values: { category: '' } });
 	}
 	return (
-		<div className={Style.container}>
-			<div className={Style.workbench}>
+		<div className={S.container}>
+			<div className={S.workbench}>
 				{clothesPosition.map((clothe: ClothePosition) => {
 					return (
 						<ClotheSet
@@ -74,11 +73,11 @@ export default function WorkbenchSet() {
 				})}
 			</div>
 			<form
-				className={Style.form}
+				className={S.form}
 				onSubmit={formik.handleSubmit}
 			>
 				<input
-					className={Style.input}
+					className={S.input}
 					placeholder='Categoria'
 					type='text'
 					name='category'

@@ -35,7 +35,6 @@ export default function GridClothes() {
 					</ClotheModal.Content.Root>
 				</ClotheModal.Root>
 			)}
-			{/* {mainModal && <ModalClothe modalId={mainModal} />} */}
 			<ul className={S.boxList}>
 				{filteredClotheByCategory.map((clothe) => {
 					return (

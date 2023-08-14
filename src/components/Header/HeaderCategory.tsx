@@ -1,7 +1,5 @@
+import S from './Header.module.css';
 import useAppContext from '@/hooks/useAppContext';
-import Style from './Header.module.css';
-import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
-import { ClothesProps, SetsProps } from '@/@types';
 import useModaisController from '@/hooks/useModaisController';
 
 type Props = {
@@ -23,14 +21,14 @@ export default function HeaderCategory({ isClothe, categories }: Props) {
 	const categoryWithFavoritoAndTodos = ['Favoritos', 'Todos', ...categories];
 
 	return (
-		<nav className={Style.navegation}>
-			<ul className={Style.categories}>
+		<nav className={S.navegation}>
+			<ul className={S.categories}>
 				{categoryWithFavoritoAndTodos.map((categoryMap) => {
 					return (
 						<li
 							key={categoryMap}
 							style={{ cursor: 'pointer' }}
-							className={category === categoryMap ? Style.categoryActive : ''}
+							className={category === categoryMap ? S.categoryActive : ''}
 							onClick={() => {
 								setCategory(categoryMap);
 								closeAllModais();

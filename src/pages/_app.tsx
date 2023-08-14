@@ -15,5 +15,3 @@ export default function App({
 		</ProviderRoot>
 	);
 }
-
-// TODO: Não esquecer de fazer a segurança para administradores

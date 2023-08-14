@@ -1,11 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
-import { Button } from '@chakra-ui/react';
-import style from './AddClothe.module.css';
-import { useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { clotheService } from '@/services/ClotheService';
+import S from './AddClothe.module.css';
 import useSetCltohes from '@/hooks/useSetClothes';
+import { clotheService } from '@/services/ClotheService';
+import { Button } from '@chakra-ui/react';
+import { useState, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 
+/* eslint-disable @next/next/no-img-element */
 type FormInput = {
 	category: string;
 	url: string;
@@ -35,9 +35,9 @@ export default function AddClothe({ userId }: Props) {
 	return (
 		<form
 			onSubmit={handleSubmit(onSubmit)}
-			className={style.boxForm}
+			className={S.boxForm}
 		>
-			<div className={style.inputFile}>
+			<div className={S.inputFile}>
 				<img
 					ref={displayRef}
 					src={displayRef.current}
@@ -51,7 +51,7 @@ export default function AddClothe({ userId }: Props) {
 				URL
 			</label>
 			<input
-				className={style.textInput}
+				className={S.textInput}
 				{...register('url')}
 			/>
 			<label
@@ -61,7 +61,7 @@ export default function AddClothe({ userId }: Props) {
 				Categoria
 			</label>
 			<input
-				className={style.textInput}
+				className={S.textInput}
 				type='text'
 				id='category'
 				name='category'

@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
-import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import Image from 'next/image';
 import { ClothePosition } from '@/@types';
+import Draggable, { DraggableEvent, DraggableData } from 'react-draggable';
 
+/* eslint-disable @next/next/no-img-element */
 type Props = {
 	clothe: ClothePosition;
 	updateClothePosition: (id: string, y: number, x: number) => void;

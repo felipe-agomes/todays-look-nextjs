@@ -32,12 +32,6 @@ export default function GridSets() {
 					</SetModal.Content.Root>
 				</SetModal.Root>
 			)}
-			{/* {setModal && (
-				<ModalSet
-					modalId={setModal}
-					setModalId={setMainModal}
-				/>
-			)} */}
 			<ul className={S.boxList}>
 				{filteredSetByCategory.map((set) => {
 					return (

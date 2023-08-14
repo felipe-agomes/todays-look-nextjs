@@ -1,4 +1,4 @@
-import Style from './ProfilePage.module.css';
+import S from './ProfilePage.module.css';
 
 type Props = {
 	userName: string;
@@ -6,7 +6,7 @@ type Props = {
 
 export default function ProfilePage({ userName }: Props) {
 	return (
-		<div className={Style.container}>
+		<div className={S.container}>
 			<h2>{userName}</h2>
 		</div>
 	);

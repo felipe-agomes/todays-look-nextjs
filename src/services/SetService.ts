@@ -1,5 +1,5 @@
 import { FrontController, Response } from '@/controllers/FrontController';
-import { ClotheData, ClothePosition, SetData, SetsProps } from '@/@types';
+import { ClothePosition } from '@/@types';
 import { FetcherAxios } from './Fetcher';
 
 export type CreateSet = {

@@ -1,7 +1,5 @@
 import { ClothePosition } from '@/@types';
 import { Clothe, Set, User } from './Tables';
-import { Model, where } from 'sequelize';
-import ClotheSet from '@/components/ClotheSet';
 
 type CreateSet = {
 	userId: string;

@@ -1,53 +1,41 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
-import { NextApiRequest } from 'next';
-
-import { AddIcon } from '@chakra-ui/icons';
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import { Avatar } from '@chakra-ui/react';
-
-import { ClothesProps, SessionProps, SetsProps } from '@/@types';
+import S from './home.module.css';
 import AddClothe from '@/components/AddClothe';
-import GridClothes from '@/components/GridClothes';
-
-import ProfilePage from '@/components/ProfilePage';
-
-import style from './home.module.css';
-import WorkbenchSet from '@/components/WorkbenchSet';
-import GridSets from '@/components/GridSets';
 import ContainerPage from '@/components/ContainerPage';
-import Head from 'next/head';
+import GridClothes from '@/components/GridClothes';
+import GridSets from '@/components/GridSets';
+import ProfilePage from '@/components/ProfilePage';
+import WorkbenchSet from '@/components/WorkbenchSet';
 import useAppContext from '@/hooks/useAppContext';
-import { Header } from '@/components/Header';
-import { clotheService } from '@/services/ClotheService';
-import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
-import { Response } from '@/controllers/FrontController';
-import { setService } from '@/services/SetService';
 import useSetCltohes from '@/hooks/useSetClothes';
 import useSetSets from '@/hooks/useSetSets';
+import Head from 'next/head';
+import { SessionProps, SetsProps, ClothesProps } from '@/@types';
+import { Header } from '@/components/Header';
+import { categoriesClotheOrSet } from '@/functions/categoriesClotheOrSet';
+import { AddIcon } from '@chakra-ui/icons';
+import {
+	Tabs,
+	TabPanels,
+	TabPanel,
+	TabList,
+	Tab,
+	Avatar,
+} from '@chakra-ui/react';
+import { NextApiRequest } from 'next';
+import { useEffect } from 'react';
 
 type Props = {
 	serverSession: SessionProps;
 };
 
 export default function Home({ serverSession }: Props) {
-	const { setClothes, clothes, sets, setSets } = useAppContext();
+	const { clothes, sets } = useAppContext();
 	const { updateClothes } = useSetCltohes();
 	const { updateSet } = useSetSets();
 	const setsCategories = categoriesClotheOrSet<SetsProps>(sets);
 	const clothesCategories = categoriesClotheOrSet<ClothesProps>(clothes);
-
-	// const updateClothesAndSets = async () => {
-	// 	const clothesResponse: Response = await clotheService.getAllByUserId({
-	// 		userId: serverSession.user.id,
-	// 	});
-	// 	const setsResponse: Response = await setService.getAllByUserId({
-	// 		userId: serverSession.user.id,
-	// 	});
-	// 	setSets(setsResponse.data);
-	// 	setClothes(clothesResponse.data);
-	// };
 
 	useEffect(() => {
 		updateClothes(serverSession.user.id);
@@ -63,11 +51,11 @@ export default function Home({ serverSession }: Props) {
 					href='/favIcon.ico'
 				/>
 			</Head>
-			<div className={style.homePage}>
+			<div className={S.homePage}>
 				<Tabs align='center'>
 					<main>
 						<TabPanels>
-							<TabPanel className={style.page}>
+							<TabPanel className={S.page}>
 								<Header.Root title='Conjuntos'>
 									<Header.Category categories={setsCategories} />
 								</Header.Root>
@@ -75,7 +63,7 @@ export default function Home({ serverSession }: Props) {
 									<GridSets />
 								</ContainerPage>
 							</TabPanel>
-							<TabPanel className={style.page}>
+							<TabPanel className={S.page}>
 								<Header.Root title='Roupas'>
 									<Header.Category
 										categories={clothesCategories}
@@ -86,19 +74,19 @@ export default function Home({ serverSession }: Props) {
 									<GridClothes />
 								</ContainerPage>
 							</TabPanel>
-							<TabPanel className={style.page}>
+							<TabPanel className={S.page}>
 								<Header.Root title='Adicionar Roupa' />
 								<ContainerPage>
 									<AddClothe userId={serverSession.user.id} />
 								</ContainerPage>
 							</TabPanel>
-							<TabPanel className={style.page}>
+							<TabPanel className={S.page}>
 								<Header.Root title='Criar Conjunto' />
 								<ContainerPage>
 									<WorkbenchSet />
 								</ContainerPage>
 							</TabPanel>
-							<TabPanel className={style.page}>
+							<TabPanel className={S.page}>
 								<Header.Root title='Perfil' />
 								<ContainerPage>
 									<ProfilePage userName={serverSession.user.name} />
@@ -107,7 +95,7 @@ export default function Home({ serverSession }: Props) {
 						</TabPanels>
 					</main>
 
-					<TabList className={style.footerPage}>
+					<TabList className={S.footerPage}>
 						<Tab height={10}>
 							<img
 								src='/wedding.png'
@@ -121,8 +109,8 @@ export default function Home({ serverSession }: Props) {
 							/>
 						</Tab>
 						<Tab height={10}>
-							<div className={style.boxAddIcon}>
-								<div className={style.addIcon}>
+							<div className={S.boxAddIcon}>
+								<div className={S.addIcon}>
 									<AddIcon
 										borderRadius={'full'}
 										width={5}

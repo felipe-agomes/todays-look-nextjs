@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { SetsProps } from '@/@types';
-import Image from 'next/image';
 
 type Pops = {
 	set: SetsProps;
