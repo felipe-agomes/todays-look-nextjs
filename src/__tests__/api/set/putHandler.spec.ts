@@ -1,6 +1,6 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
+import { setObj } from '@/__tests__/models/SetRepositoryPostgre.spec';
 import { handlerWrapper } from './test/handlerWrapper';
-import { setObj } from '@/models/Postgre/SetRepositoryPostgre.spec';
 
 describe('putHandler', () => {
 	let res: any;

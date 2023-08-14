@@ -1,6 +1,5 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
 import { handlerWrapper } from './test/handlerWrapper';
-import { clothesObj, setObj } from '@/models/Postgre/SetRepositoryPostgre.spec';
 
 describe('deleteHandler', () => {
 	let req: any;

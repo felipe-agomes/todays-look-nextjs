@@ -1,24 +1,14 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
-import handler from '.';
-import {
-	clothesObj,
-	setObj,
-	userObj,
-} from '@/models/Postgre/SetRepositoryPostgre.spec';
+import { setObj } from '@/__tests__/models/SetRepositoryPostgre.spec';
+import { handler } from './test/handlerWrapper';
 
-describe('postHandler', () => {
-	let res: any;
+describe('getHandler', () => {
 	let req: any;
+	let res: any;
 	beforeEach(() => {
-		jest.resetAllMocks();
+		jest.clearAllMocks();
 		req = {
-			method: 'POST',
-			body: {
-				set: {
-					clothes: clothesObj,
-					category: 'category',
-				},
-			},
+			method: 'GET',
 			query: { userId: '1' },
 		};
 		res = {
@@ -29,17 +19,16 @@ describe('postHandler', () => {
 				return this;
 			}),
 		};
-		setRepository.create = jest.fn().mockResolvedValue({ ...setObj });
+		setRepository.getAllByUserId = jest
+			.fn()
+			.mockResolvedValue([{ ...setObj }, { ...setObj, id: 2 }]);
 	});
-	it('should call setRepository.create()', async () => {
+
+	it('should call setRepository.getAllByUserId()', async () => {
 		await handler(req, res);
 
-		expect(setRepository.create).toHaveBeenCalledTimes(1);
-		expect(setRepository.create).toHaveBeenCalledWith({
-			category: 'category',
-			clothes: clothesObj,
-			userId: userObj.id,
-		});
+		expect(setRepository.getAllByUserId).toHaveBeenCalledTimes(1);
+		expect(setRepository.getAllByUserId).toHaveBeenCalledWith({ userId: '1' });
 	});
 
 	it('should call res.json() and res.status() with a success message', async () => {
@@ -47,14 +36,14 @@ describe('postHandler', () => {
 
 		expect(res.json).toHaveBeenCalledWith({
 			status: 'success',
-			message: 'sucesso ao criar conjunto',
-			data: setObj,
+			message: 'Sucesso ao buscar conjuntos',
+			data: [setObj, { ...setObj, id: 2 }],
 		});
 		expect(res.status).toHaveBeenCalledWith(200);
 	});
 
 	it('should return a error message if the method is not allowed', async () => {
-		req.method = 'PUT';
+		req.method = 'DELETE';
 
 		await handler(req, res);
 
@@ -65,27 +54,29 @@ describe('postHandler', () => {
 		expect(res.status).toHaveBeenCalledWith(400);
 	});
 
-	it('should return a error message if the setRepository.create() return null', async () => {
-		setRepository.create = jest.fn().mockResolvedValueOnce(null);
+	it('should return a error message if the setRepository.getAllByUserId() return null', async () => {
+		setRepository.getAllByUserId = jest.fn().mockResolvedValueOnce(null);
 
 		await handler(req, res);
 
 		expect(res.json).toHaveBeenCalledWith({
 			status: 'error',
-			message: 'Erro ao criar conjunto',
+			message: 'Erro ao buscar conjuntos',
 		});
 		expect(res.status).toHaveBeenCalledWith(400);
 	});
 
 	it('should return a error message if something throw a error', async () => {
-		setRepository.create = jest.fn().mockRejectedValueOnce(new Error('Error'));
+		setRepository.getAllByUserId = jest
+			.fn()
+			.mockRejectedValueOnce(new Error('Error'));
 
 		try {
 			await handler(req, res);
 		} catch (error) {
 			expect(res.json).toHaveBeenCalledWith({
 				status: 'error',
-				message: 'Erro ao criar conjunto',
+				message: 'Erro ao buscar conjuntos',
 			});
 			expect(res.status).toHaveBeenCalledWith(400);
 		}

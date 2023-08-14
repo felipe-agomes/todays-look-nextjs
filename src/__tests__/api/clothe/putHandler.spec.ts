@@ -1,5 +1,5 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
-import { handlerWrapper } from './test/handleWrapper';
+import { handlerWrapper } from './test/handlerWrapper';
 jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
 describe('postHandler', () => {
 	let req: any;
