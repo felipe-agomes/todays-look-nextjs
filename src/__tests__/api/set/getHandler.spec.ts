@@ -1,7 +1,9 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
 import { setObj } from '@/__tests__/models/SetRepositoryPostgre.spec';
 import { handler } from './test/handlerWrapper';
+import { getServerSession } from 'next-auth/next';
 
+jest.mock('next-auth/next');
 describe('getHandler', () => {
 	let req: any;
 	let res: any;
@@ -22,6 +24,7 @@ describe('getHandler', () => {
 		setRepository.getAllByUserId = jest
 			.fn()
 			.mockResolvedValue([{ ...setObj }, { ...setObj, id: 2 }]);
+		(getServerSession as jest.Mock).mockResolvedValue(true);
 	});
 
 	it('should call setRepository.getAllByUserId()', async () => {
@@ -80,5 +83,17 @@ describe('getHandler', () => {
 			});
 			expect(res.status).toHaveBeenCalledWith(400);
 		}
+	});
+
+	it('should call the res.status() and res.json() with a error status if session is undefined', async () => {
+		(getServerSession as jest.Mock).mockResolvedValue(false);
+
+		await handler(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(400);
+		expect(res.json).toHaveBeenCalledWith({
+			status: 'error',
+			message: 'Usuario precisa estar logado',
+		});
 	});
 });

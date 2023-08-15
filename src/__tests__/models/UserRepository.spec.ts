@@ -101,7 +101,7 @@ describe('ClotheRepository', () => {
 
 			const result = await sut.create(userAlreadyExist);
 
-			expect(result).toBeNull();
+			expect(result[1]).toBeFalsy();
 		});
 
 		it('should throw an error message if any error occurs', async () => {
@@ -119,10 +119,10 @@ describe('ClotheRepository', () => {
 
 			const result = await sut.create(userNotExist);
 
-			expect(result).toHaveProperty('id');
-			expect(result).toHaveProperty('email');
-			expect(result).not.toHaveProperty('password');
-			expect(result).toHaveProperty('id');
+			expect(result[0]).toHaveProperty('id');
+			expect(result[0]).toHaveProperty('email');
+			expect(result[0]).not.toHaveProperty('password');
+			expect(result[0]).toHaveProperty('id');
 		});
 
 		it('should call the User.findOrCreate() with a encrypted password', async () => {

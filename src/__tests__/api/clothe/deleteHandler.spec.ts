@@ -1,7 +1,9 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { handlerWrapper } from './test/handlerWrapper';
+import { getServerSession } from 'next-auth/next';
 
 jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
+jest.mock('next-auth/next');
 describe('deleteHandler', () => {
 	let req: any;
 	let res: any;
@@ -22,6 +24,7 @@ describe('deleteHandler', () => {
 				return this;
 			}),
 		};
+		(getServerSession as jest.Mock).mockResolvedValue(true);
 	});
 
 	it('should call the clotheRepository.deleteByClotheId()', async () => {
@@ -70,6 +73,23 @@ describe('deleteHandler', () => {
 		expect(res.json).toHaveBeenCalledWith({
 			status: 'error',
 			message: 'Erro ao deletar roupa',
+		});
+	});
+
+	it('should call the res.status() and res.json() with a error status if session is undefined', async () => {
+		req.method = 'GET';
+		(clotheRepository.getAllByUserId as jest.Mock).mockResolvedValueOnce([
+			{ obj1: 'obj1' },
+			{ obj2: 'obj2' },
+		]);
+		(getServerSession as jest.Mock).mockResolvedValue(false);
+
+		await handlerWrapper(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(400);
+		expect(res.json).toHaveBeenCalledWith({
+			status: 'error',
+			message: 'Usuario precisa estar logado',
 		});
 	});
 });

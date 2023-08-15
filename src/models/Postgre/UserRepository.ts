@@ -3,7 +3,7 @@ import { User } from './Tables';
 import { UserInput, UserData } from '@/@types/models';
 
 interface IUserRepository {
-	create(data: UserInput): Promise<UserData | null>;
+	create(data: UserInput): Promise<[UserData, boolean]>;
 	deleteById(data: { userId: number }): Promise<string>;
 	getAll(): Promise<UserData[]>;
 	login(data: { email: string; password: string }): Promise<UserData>;
@@ -11,7 +11,7 @@ interface IUserRepository {
 
 export class UserRepositoryPostgre implements IUserRepository {
 	constructor() {}
-	async create(data: UserInput): Promise<UserData | null> {
+	async create(data: UserInput): Promise<[UserData, boolean]> {
 		try {
 			data.password = await bcrypt.hash(data.password, 10);
 			const [user, created] = await User.findOrCreate({
@@ -20,10 +20,9 @@ export class UserRepositoryPostgre implements IUserRepository {
 				},
 				defaults: { ...data },
 			});
-			if (!created) return null;
 			const userJSON = user.toJSON();
 			delete userJSON.password;
-			return userJSON as UserData;
+			return [userJSON, created] as [UserData, boolean];
 		} catch (error) {
 			throw new Error('Erro ao buscar usuário: ' + error.message);
 		}

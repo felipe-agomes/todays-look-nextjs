@@ -1,5 +1,6 @@
 import style from './login.module.css';
 import { Button } from '@chakra-ui/react';
+import { signIn } from 'next-auth/react';
 
 export default function Login() {
 	return (
@@ -18,6 +19,9 @@ export default function Login() {
 					fontWeight={'bold'}
 					width={150}
 					height={50}
+					onClick={async () => {
+						await signIn();
+					}}
 				>
 					Login
 				</Button>
