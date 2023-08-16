@@ -15,7 +15,7 @@ export const authOptions: AuthOptions = {
 			clientSecret: process.env.GITHUB_SECRET,
 		}),
 	],
-	secret: process.env.SECRET,
+	// secret: process.env.SECRET,
 	callbacks: {
 		async session({ session }: { session: any }) {
 			const [user] = await userRepository.create({
