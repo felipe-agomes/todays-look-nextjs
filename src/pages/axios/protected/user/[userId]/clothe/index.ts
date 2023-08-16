@@ -1,5 +1,5 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { authOptions } from '@/pages/axios/auth/[...nextauth]';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 
