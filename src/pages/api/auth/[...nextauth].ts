@@ -16,20 +16,20 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	secret: process.env.SECRET,
-	callbacks: {
-		async session({ session }: { session: any }) {
-			const [user] = await userRepository.create({
-				email: session.user.email,
-				password: session.user.email,
-				image: session.user.image,
-			});
-			session.user.id = user.id;
-			return session;
-		},
-		// redirect() {
-		// 	return '/home';
-		// },
-	},
+	// callbacks: {
+	// 	async session({ session }: { session: any }) {
+	// 		const [user] = await userRepository.create({
+	// 			email: session.user.email,
+	// 			password: session.user.email,
+	// 			image: session.user.image,
+	// 		});
+	// 		session.user.id = user.id;
+	// 		return session;
+	// 	},
+	// 	// redirect() {
+	// 	// 	return '/home';
+	// 	// },
+	// },
 };
 
 export default NextAuth(authOptions);
