@@ -1,13 +1,18 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import userRepository from '../../../models/Postgre/UserRepository';
+import GithubProvider from 'next-auth/providers/github';
 import { AuthOptions } from 'next-auth/core/types';
+import userRepository from '../../../models/Postgre/UserRepository';
 
 export const authOptions: AuthOptions = {
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_ID,
 			clientSecret: process.env.GOOGLE_SECRET,
+		}),
+		GithubProvider({
+			clientId: process.env.GITHUB_ID,
+			clientSecret: process.env.GITHUB_SECRET,
 		}),
 	],
 	secret: process.env.NEXT_PUBLIC_SECRET,
