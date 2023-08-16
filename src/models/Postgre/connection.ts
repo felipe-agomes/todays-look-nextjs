@@ -2,18 +2,11 @@ import { Sequelize } from 'sequelize';
 import { config } from 'dotenv';
 config();
 
-const { POSTGRE_PASSWORD, POSTGRE_DATABASE, POSTGRE_USER } = process.env;
+const { DATABASE_CONNECTION } = process.env;
 
-if (!(POSTGRE_PASSWORD && POSTGRE_DATABASE && POSTGRE_USER))
-	throw new Error('Faltam variaveis de ambiente POSTGRE');
+if (!DATABASE_CONNECTION)
+	throw new Error('Faltam variaveis de ambiente DATABASE_CONNECTION');
 
-const sequelize = new Sequelize(
-	POSTGRE_DATABASE,
-	POSTGRE_USER,
-	POSTGRE_PASSWORD,
-	{
-		dialect: 'postgres',
-	},
-);
+const sequelize = new Sequelize(DATABASE_CONNECTION);
 
 export default sequelize;
