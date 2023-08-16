@@ -15,7 +15,7 @@ export const authOptions: AuthOptions = {
 			clientSecret: process.env.GITHUB_SECRET,
 		}),
 	],
-	secret: process.env.NEXT_PUBLIC_SECRET,
+	secret: process.env.SECRET,
 	callbacks: {
 		async session({ session }: { session: any }) {
 			const [user] = await userRepository.create({
@@ -26,9 +26,9 @@ export const authOptions: AuthOptions = {
 			session.user.id = user.id;
 			return session;
 		},
-		redirect() {
-			return '/home';
-		},
+		// redirect() {
+		// 	return '/home';
+		// },
 	},
 };
 
