@@ -1,4 +1,3 @@
-import { ClotheData, SetInput } from '@/@types/models';
 import { SetRepositoryPostgre } from '../../models/Postgre/SetRepositoryPostgre';
 import { Clothe, Set, User } from '../../models/Postgre/Tables';
 

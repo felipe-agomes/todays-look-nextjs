@@ -1,4 +1,3 @@
-import { Op } from 'sequelize';
 import { User } from '../../models/Postgre/Tables';
 import { UserRepositoryPostgre } from '../../models/Postgre/UserRepository';
 import bcrypt from 'bcrypt';

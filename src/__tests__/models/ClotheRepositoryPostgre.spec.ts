@@ -1,9 +1,6 @@
-import { toEditorSettings, transpileModule } from 'typescript';
+import { transpileModule } from 'typescript';
 import { Clothe, User } from '../../models/Postgre/Tables';
-import { userNotExist } from './UserRepository.spec';
 import { ClotheRepositoryPostgre } from '../../models/Postgre/ClotheRepositoryPostgre';
-import { mock } from 'node:test';
-import { threadId } from 'worker_threads';
 
 /* instanceof Clothe {
 	favorite: false,
