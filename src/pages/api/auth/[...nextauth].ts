@@ -11,6 +11,7 @@ export const authOptions: AuthOptions = {
 			clientSecret: process.env.GOOGLE_SECRET,
 		}),
 	],
+	secret: process.env.JWT_SECRET,
 	callbacks: {
 		async session({ session }: { session: any }) {
 			const [user] = await userRepository.create({
