@@ -19,9 +19,9 @@ export default function Login() {
 					fontWeight={'bold'}
 					width={150}
 					height={50}
-					onClick={async (e) => {
+					onClick={(e) => {
 						e.preventDefault();
-						await signIn();
+						signIn();
 					}}
 				>
 					Login
