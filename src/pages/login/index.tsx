@@ -21,7 +21,7 @@ export default function Login() {
 					height={50}
 					onClick={async (e) => {
 						e.preventDefault();
-						await signIn('google', { callbackUrl: '/home' });
+						await signIn('github', { callbackUrl: '/home' });
 					}}
 				>
 					Login
