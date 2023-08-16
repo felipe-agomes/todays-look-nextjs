@@ -19,9 +19,9 @@ export default function Login() {
 					fontWeight={'bold'}
 					width={150}
 					height={50}
-					onClick={(e) => {
+					onClick={async (e) => {
 						e.preventDefault();
-						signIn();
+						await signIn('google', { callbackUrl: '/home' });
 					}}
 				>
 					Login
