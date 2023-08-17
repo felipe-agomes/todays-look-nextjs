@@ -1,8 +1,10 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
+import SequelizeAdapter from '@auth/sequelize-adapter';
+import sequelize from '@/models/Postgre/connection';
 import { AuthOptions } from 'next-auth/core/types';
-import userRepository from '../../../models/Postgre/UserRepository';
+import { User } from '@/models/Postgre/Tables';
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -16,24 +18,7 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	secret: process.env.NEXTAUTH_SECRET,
-	// callbacks: {
-	// 	async jwt({ token, account }: { token: any; account: any }) {
-	// 		// Persist the OAuth access_token to the token right after signin
-	// 		if (account) {
-	// 			token.accessToken = account.access_token;
-	// 		}
-	// 		return token;
-	// 	},
-	// 	async session({ session, token }: { token: any; session: any }) {
-	// 		// Send properties to the client, like an access_token from a provider.
-	// 		session.accessToken = token.accessToken;
-	// 		return session;
-	// 	},
-	// 	redirect() {
-	// 		return '/home';
-	// 	},
-	// },
-	// adapter: SequelizeAdapter
+	adapter: SequelizeAdapter(sequelize, { models: { User: User as any } }) as any,
 	callbacks: {
 		async session({ session, token }: { session: any; token: any }) {
 			session.accessToken = token.accessToken;

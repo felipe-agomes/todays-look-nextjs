@@ -11,6 +11,7 @@
 		"test:watch": "npm run test -- --watch --coverage"
 	},
 	"dependencies": {
+		"@auth/sequelize-adapter": "^1.0.1",
 		"@chakra-ui/icons": "^2.1.0",
 		"@chakra-ui/react": "^2.8.0",
 		"@emotion/react": "^11.11.1",
