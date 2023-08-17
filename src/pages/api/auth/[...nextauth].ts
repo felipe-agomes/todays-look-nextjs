@@ -20,12 +20,12 @@ export const authOptions: AuthOptions = {
 	callbacks: {
 		async session({ session, token }: { session: any; token: any }) {
 			session.accessToken = token.accessToken;
-			const [user] = await userRepository.create({
-				email: session.user.email,
-				password: session.user.email,
-				image: session.user.image,
-			});
-			session.user.id = user.id;
+			// const [user] = await userRepository.create({
+			// 	email: session.user.email,
+			// 	password: session.user.email,
+			// 	image: session.user.image,
+			// });
+			// session.user.id = user.id;
 			return session;
 		},
 		redirect() {
