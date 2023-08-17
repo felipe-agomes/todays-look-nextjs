@@ -14,7 +14,15 @@ export default function Login() {
 				>
 					Você não está logado
 				</h1>
-				<Button
+				<button
+					onClick={(e) => {
+						e.preventDefault();
+						signIn();
+					}}
+				>
+					Login
+				</button>
+				{/* <Button
 					colorScheme='blue'
 					fontWeight={'bold'}
 					width={150}
@@ -25,7 +33,7 @@ export default function Login() {
 					}}
 				>
 					Login
-				</Button>
+				</Button> */}
 			</div>
 		</main>
 	);
