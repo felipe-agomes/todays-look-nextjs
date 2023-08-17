@@ -1,10 +1,17 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
-import SequelizeAdapter from '@auth/sequelize-adapter';
-import sequelize from '@/models/Postgre/connection';
 import { AuthOptions } from 'next-auth/core/types';
+import SequelizeAdapter from '@auth/sequelize-adapter';
+
 import { User } from '@/models/Postgre/Tables';
+import { Sequelize } from 'sequelize';
+
+const sequelize = new Sequelize(process.env.DATABASE_CONNECTION);
+
+const adapter = SequelizeAdapter(sequelize);
+
+sequelize.sync({ force: true });
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -18,7 +25,7 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	secret: process.env.NEXTAUTH_SECRET,
-	adapter: SequelizeAdapter(sequelize, { models: { User: User as any } }) as any,
+	adapter: adapter as any,
 	callbacks: {
 		async session({ session, token }: { session: any; token: any }) {
 			session.accessToken = token.accessToken;
