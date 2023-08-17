@@ -16,6 +16,23 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	secret: process.env.NEXTAUTH_SECRET,
+	callbacks: {
+		async jwt({ token, account }: { token: any; account: any }) {
+			// Persist the OAuth access_token to the token right after signin
+			if (account) {
+				token.accessToken = account.access_token;
+			}
+			return token;
+		},
+		async session({ session, token }: { token: any; session: any }) {
+			// Send properties to the client, like an access_token from a provider.
+			session.accessToken = token.accessToken;
+			return session;
+		},
+		redirect() {
+			return '/home';
+		},
+	},
 	// callbacks: {
 	// 	async session({ session }: { session: any }) {
 	// 		const [user] = await userRepository.create({
