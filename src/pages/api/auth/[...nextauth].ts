@@ -2,16 +2,7 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
 import { AuthOptions } from 'next-auth/core/types';
-import SequelizeAdapter from '@auth/sequelize-adapter';
-
 import { User } from '@/models/Postgre/Tables';
-import { Sequelize } from 'sequelize';
-
-const sequelize = new Sequelize(process.env.DATABASE_CONNECTION);
-
-const adapter = SequelizeAdapter(sequelize);
-
-sequelize.sync({ force: true });
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -25,16 +16,18 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	secret: process.env.NEXTAUTH_SECRET,
-	adapter: adapter as any,
 	callbacks: {
 		async session({ session, token }: { session: any; token: any }) {
 			session.accessToken = token.accessToken;
-			// const [user] = await userRepository.create({
-			// 	email: session.user.email,
-			// 	password: session.user.email,
-			// 	image: session.user.image,
-			// });
-			// session.user.id = user.id;
+			const [user, created] = await User.findOrCreate({
+				where: { email: session.user.email },
+				defaults: {
+					email: session.user.email,
+					password: session.user.email,
+					image: session.user.image,
+				},
+			});
+			session.user.id = (user as any).id;
 			return session;
 		},
 		redirect() {
