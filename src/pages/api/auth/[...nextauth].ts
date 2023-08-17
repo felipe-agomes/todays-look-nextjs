@@ -4,6 +4,8 @@ import GithubProvider from 'next-auth/providers/github';
 import { AuthOptions } from 'next-auth/core/types';
 import { User } from '@/models/Postgre/Tables';
 import userRepository from '@/models/Postgre/UserRepository';
+import SequelizeAdapter from '@auth/sequelize-adapter';
+import sequelize from '@/models/Postgre/connection';
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -17,6 +19,13 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	secret: process.env.NEXTAUTH_SECRET,
+	adapter: SequelizeAdapter(sequelize, {
+		models: {
+			User: sequelize.define('user', {
+				...(sequelize.models.User as any),
+			}),
+		},
+	}) as any,
 	callbacks: {
 		async session({ session, token }: { session: any; token: any }) {
 			session.accessToken = token.accessToken;
