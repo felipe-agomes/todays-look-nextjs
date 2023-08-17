@@ -18,17 +18,21 @@ export const authOptions: AuthOptions = {
 	secret: process.env.NEXTAUTH_SECRET,
 	callbacks: {
 		async session({ session, token }: { session: any; token: any }) {
-			session.accessToken = token.accessToken;
-			const [user, created] = await User.findOrCreate({
-				where: { email: session.user.email },
-				defaults: {
-					email: session.user.email,
-					password: session.user.email,
-					image: session.user.image,
-				},
-			});
-			session.user.id = (user as any).id;
-			return session;
+			try {
+				session.accessToken = token.accessToken;
+				const [user, created] = await User.findOrCreate({
+					where: { email: session.user.email },
+					defaults: {
+						email: session.user.email,
+						password: session.user.email,
+						image: session.user.image,
+					},
+				});
+				session.user.id = (user as any).id;
+				return session;
+			} catch (error) {
+				throw new Error('erro: ', error);
+			}
 		},
 		redirect() {
 			return '/home';
