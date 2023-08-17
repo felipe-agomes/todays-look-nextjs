@@ -33,6 +33,7 @@ export const authOptions: AuthOptions = {
 	// 		return '/home';
 	// 	},
 	// },
+	// adapter: SequelizeAdapter
 	callbacks: {
 		async jwt({ token, account }: { token: any; account: any }) {
 			// Persist the OAuth access_token to the token right after signin
@@ -43,12 +44,12 @@ export const authOptions: AuthOptions = {
 		},
 		async session({ session, token }: { session: any; token: any }) {
 			session.accessToken = token.accessToken;
-			const [user] = await userRepository.create({
-				email: session.user.email,
-				password: session.user.email,
-				image: session.user.image,
-			});
-			session.user.id = user.id;
+			// const [user] = await userRepository.create({
+			// 	email: session.user.email,
+			// 	password: session.user.email,
+			// 	image: session.user.image,
+			// });
+			// session.user.id = user.id;
 			return session;
 		},
 		redirect() {
