@@ -35,13 +35,6 @@ export const authOptions: AuthOptions = {
 	// },
 	// adapter: SequelizeAdapter
 	callbacks: {
-		async jwt({ token, account }: { token: any; account: any }) {
-			// Persist the OAuth access_token to the token right after signin
-			if (account) {
-				token.accessToken = account.access_token;
-			}
-			return token;
-		},
 		async session({ session, token }: { session: any; token: any }) {
 			session.accessToken = token.accessToken;
 			// const [user] = await userRepository.create({
