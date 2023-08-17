@@ -19,8 +19,7 @@ export default function Login() {
 					fontWeight={'bold'}
 					width={150}
 					height={50}
-					onClick={(e) => {
-						e.preventDefault();
+					onClick={() => {
 						signIn();
 					}}
 				>
