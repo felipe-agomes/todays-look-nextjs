@@ -3,6 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
 import { AuthOptions } from 'next-auth/core/types';
 import { User } from '@/models/Postgre/Tables';
+import userRepository from '@/models/Postgre/UserRepository';
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -19,15 +20,12 @@ export const authOptions: AuthOptions = {
 	callbacks: {
 		async session({ session, token }: { session: any; token: any }) {
 			session.accessToken = token.accessToken;
-			// const [user] = await User.findOrCreate({
-			// 	where: { email: session.user.email },
-			// 	defaults: {
-			// 		email: session.user.email,
-			// 		password: session.user.email,
-			// 		image: session.user.image,
-			// 	},
-			// });
-			// session.user.id = (user as any).id;
+			const [user] = await userRepository.create({
+				email: session.user.email,
+				password: session.user.email,
+				image: session.user.image,
+			});
+			session.user.id = user.id;
 			return session;
 		},
 		redirect() {
