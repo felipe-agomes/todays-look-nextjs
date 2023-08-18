@@ -5,11 +5,9 @@ import {
 	doGetSuccessDataResponse,
 	doPostRequestString,
 	doPostSuccessDataResponse,
-	doPutRequest,
 	doPutRequestString,
 	doPutSuccessDataResponse,
 	emptySuccessDataResponse,
-	errorMessage,
 } from '../controllers/FrontController.spec';
 import { FetcherAxios } from '@/services/Fetcher';
 
