@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 
 /* instanceof User {
 	id: 11681,
+	name: 'test_name',
 	email: 'test_user@test.com',
 	password: 'password',
 	image: 'image',

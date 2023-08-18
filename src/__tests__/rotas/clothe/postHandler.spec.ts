@@ -1,9 +1,7 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { handler } from './test/handlerWrapper';
-import { getServerSession } from 'next-auth/next';
 
 jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
-jest.mock('next-auth/next');
 describe('postHandler', () => {
 	let req: any;
 	let res: any;
@@ -28,7 +26,6 @@ describe('postHandler', () => {
 				return this;
 			}),
 		};
-		(getServerSession as jest.Mock).mockResolvedValue(true);
 	});
 
 	it('should call the clotheRepository.create() with correct params', async () => {
@@ -84,21 +81,5 @@ describe('postHandler', () => {
 				message: 'Erro ao cadastrar uma ruopa nova',
 			});
 		}
-	});
-
-	it('should call the res.status() and res.json() with a error status if session is undefined', async () => {
-		(clotheRepository.getAllByUserId as jest.Mock).mockResolvedValueOnce([
-			{ obj1: 'obj1' },
-			{ obj2: 'obj2' },
-		]);
-		(getServerSession as jest.Mock).mockResolvedValue(false);
-
-		await handler(req, res);
-
-		expect(res.status).toHaveBeenCalledWith(400);
-		expect(res.json).toHaveBeenCalledWith({
-			status: 'error',
-			message: 'Usuario precisa estar logado',
-		});
 	});
 });

@@ -1,0 +1,24 @@
+.formContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	min-height: 100vh;
+	width: 100%;
+}
+
+.formModal {
+	padding: 20px;
+	border-radius: 5px;
+	background: red;
+}
+
+.formModal > form {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 30px;
+
+	background: blue;
+}

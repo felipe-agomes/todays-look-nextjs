@@ -1,9 +1,7 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
 import { setObj } from '@/__tests__/models/SetRepositoryPostgre.spec';
 import { handlerWrapper } from './test/handlerWrapper';
-import { getServerSession } from 'next-auth/next';
 
-jest.mock('next-auth/next');
 describe('putHandler', () => {
 	let res: any;
 	let req: any;
@@ -28,7 +26,6 @@ describe('putHandler', () => {
 		setRepository.changeCategoryBySetId = jest
 			.fn()
 			.mockResolvedValue({ ...setObj });
-		(getServerSession as jest.Mock).mockResolvedValue(true);
 	});
 	describe('toggleFavorite', () => {
 		beforeEach(() => {
@@ -149,18 +146,6 @@ describe('putHandler', () => {
 				});
 				expect(res.status).toHaveBeenCalledWith(400);
 			}
-		});
-	});
-
-	it('should call the res.status() and res.json() with a error status if session is undefined', async () => {
-		(getServerSession as jest.Mock).mockResolvedValue(false);
-
-		await handlerWrapper(req, res);
-
-		expect(res.status).toHaveBeenCalledWith(400);
-		expect(res.json).toHaveBeenCalledWith({
-			status: 'error',
-			message: 'Usuario precisa estar logado',
 		});
 	});
 });

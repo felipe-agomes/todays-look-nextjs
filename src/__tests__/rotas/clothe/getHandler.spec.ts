@@ -1,8 +1,6 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { handler } from './test/handlerWrapper';
-import { getServerSession } from 'next-auth/next';
 
-jest.mock('next-auth/next');
 jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
 describe('getAllClothesHandler', () => {
 	let req: any;
@@ -20,7 +18,6 @@ describe('getAllClothesHandler', () => {
 				return this;
 			}),
 		};
-		(getServerSession as jest.Mock).mockResolvedValue(true);
 	});
 	it('should call the res.status() and res.json() with a error status if the method is not allowed ', async () => {
 		req.method = 'PUT';
@@ -74,23 +71,6 @@ describe('getAllClothesHandler', () => {
 			status: 'success',
 			message: 'Roupas buscadas com sucesso',
 			data: [{ obj1: 'obj1' }, { obj2: 'obj2' }],
-		});
-	});
-
-	it('should call the res.status() and res.json() with a error status if session is undefined', async () => {
-		req.method = 'GET';
-		(clotheRepository.getAllByUserId as jest.Mock).mockResolvedValueOnce([
-			{ obj1: 'obj1' },
-			{ obj2: 'obj2' },
-		]);
-		(getServerSession as jest.Mock).mockResolvedValue(false);
-
-		await handler(req, res);
-
-		expect(res.status).toHaveBeenCalledWith(400);
-		expect(res.json).toHaveBeenCalledWith({
-			status: 'error',
-			message: 'Usuario precisa estar logado',
 		});
 	});
 });

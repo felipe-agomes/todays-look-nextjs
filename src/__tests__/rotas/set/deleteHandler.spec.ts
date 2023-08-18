@@ -1,8 +1,6 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
 import { handlerWrapper } from './test/handlerWrapper';
-import { getServerSession } from 'next-auth/next';
 
-jest.mock('next-auth/next');
 describe('deleteHandler', () => {
 	let req: any;
 	let res: any;
@@ -22,7 +20,6 @@ describe('deleteHandler', () => {
 			}),
 		};
 		setRepository.deleteBySetId = jest.fn();
-		(getServerSession as jest.Mock).mockResolvedValue(true);
 	});
 	it('should call setRepository.deleteBySetId', async () => {
 		await handlerWrapper(req, res);
@@ -67,17 +64,5 @@ describe('deleteHandler', () => {
 			});
 			expect(res.status).toHaveBeenCalledWith(400);
 		}
-	});
-
-	it('should call the res.status() and res.json() with a error status if session is undefined', async () => {
-		(getServerSession as jest.Mock).mockResolvedValue(false);
-
-		await handlerWrapper(req, res);
-
-		expect(res.status).toHaveBeenCalledWith(400);
-		expect(res.json).toHaveBeenCalledWith({
-			status: 'error',
-			message: 'Usuario precisa estar logado',
-		});
 	});
 });

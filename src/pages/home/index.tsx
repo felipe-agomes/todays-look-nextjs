@@ -25,128 +25,115 @@ import {
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { ClotheData, SetData } from '@/@types/models';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 
 export default function Home() {
 	const { clothes, sets } = useAppContext();
 	const { updateClothes } = useSetCltohes();
 	const { updateSet } = useSetSets();
-	const { data: session, status: sessionStatus } = useSession() as any;
-	const router = useRouter();
 	const setsCategories = categoriesClotheOrSet<SetData>(sets);
 	const clothesCategories = categoriesClotheOrSet<ClotheData>(clothes);
+	const session = { user: { id: '1', name: 'name', image: 'image' } };
 
 	useEffect(() => {
-		if (sessionStatus === 'unauthenticated') {
-			router.push('/login');
-			return;
-		}
-		if (session) {
-			updateClothes(session.user.id);
-			updateSet(session.user.id);
-		}
-	}, [session]);
+		updateClothes(session.user.id);
+		updateSet(session.user.id);
+	}, []);
 
 	return (
 		<>
-			{session && (
-				<>
-					<Head>
-						<title>{"Today's Look"}</title>
-						<link
-							rel='icon'
-							href='/favIcon.ico'
-						/>
-					</Head>
-					<div className={S.homePage}>
-						<Tabs align='center'>
-							<main>
-								<TabPanels>
-									<TabPanel className={S.page}>
-										<Header.Root title='Conjuntos'>
-											<Header.Category categories={setsCategories} />
-										</Header.Root>
-										<ContainerPage>
-											<GridSets />
-										</ContainerPage>
-									</TabPanel>
-									<TabPanel className={S.page}>
-										<Header.Root title='Roupas'>
-											<Header.Category
-												categories={clothesCategories}
-												isClothe
-											/>
-										</Header.Root>
-										<ContainerPage>
-											<GridClothes />
-										</ContainerPage>
-									</TabPanel>
-									<TabPanel className={S.page}>
-										<Header.Root title='Adicionar Roupa' />
-										<ContainerPage>
-											<AddClothe userId={session.user.id} />
-										</ContainerPage>
-									</TabPanel>
-									<TabPanel className={S.page}>
-										<Header.Root title='Criar Conjunto' />
-										<ContainerPage>
-											<WorkbenchSet />
-										</ContainerPage>
-									</TabPanel>
-									<TabPanel className={S.page}>
-										<Header.Root title='Perfil' />
-										<ContainerPage>
-											<ProfilePage userName={session.user.name} />
-										</ContainerPage>
-									</TabPanel>
-								</TabPanels>
-							</main>
+			<Head>
+				<title>{"Today's Look"}</title>
+				<link
+					rel='icon'
+					href='/favIcon.ico'
+				/>
+			</Head>
+			<div className={S.homePage}>
+				<Tabs align='center'>
+					<main>
+						<TabPanels>
+							<TabPanel className={S.page}>
+								<Header.Root title='Conjuntos'>
+									<Header.Category categories={setsCategories} />
+								</Header.Root>
+								<ContainerPage>
+									<GridSets />
+								</ContainerPage>
+							</TabPanel>
+							<TabPanel className={S.page}>
+								<Header.Root title='Roupas'>
+									<Header.Category
+										categories={clothesCategories}
+										isClothe
+									/>
+								</Header.Root>
+								<ContainerPage>
+									<GridClothes />
+								</ContainerPage>
+							</TabPanel>
+							<TabPanel className={S.page}>
+								<Header.Root title='Adicionar Roupa' />
+								<ContainerPage>
+									<AddClothe userId={session.user.id} />
+								</ContainerPage>
+							</TabPanel>
+							<TabPanel className={S.page}>
+								<Header.Root title='Criar Conjunto' />
+								<ContainerPage>
+									<WorkbenchSet />
+								</ContainerPage>
+							</TabPanel>
+							<TabPanel className={S.page}>
+								<Header.Root title='Perfil' />
+								<ContainerPage>
+									<ProfilePage userName={session.user.name} />
+								</ContainerPage>
+							</TabPanel>
+						</TabPanels>
+					</main>
 
-							<TabList className={S.footerPage}>
-								<Tab height={10}>
-									<img
-										src='/wedding.png'
-										alt='Conjunto'
-									/>
-								</Tab>
-								<Tab height={10}>
-									<img
-										src='/tshirt.png'
-										alt='Roupas'
-									/>
-								</Tab>
-								<Tab height={10}>
-									<div className={S.boxAddIcon}>
-										<div className={S.addIcon}>
-											<AddIcon
-												borderRadius={'full'}
-												width={5}
-												height={5}
-												color={'white'}
-											></AddIcon>
-										</div>
-										<p>Adicionar</p>
-									</div>
-								</Tab>
-								<Tab height={10}>
-									<img
-										src='/fashion.png'
-										alt='Novo conjunto'
-									/>
-								</Tab>
-								<Tab height={10}>
-									<Avatar
-										size={'sm'}
-										name={session.user.name}
-										src={session.user.image}
-									/>
-								</Tab>
-							</TabList>
-						</Tabs>
-					</div>
-				</>
-			)}
+					<TabList className={S.footerPage}>
+						<Tab height={10}>
+							<img
+								src='/wedding.png'
+								alt='Conjunto'
+							/>
+						</Tab>
+						<Tab height={10}>
+							<img
+								src='/tshirt.png'
+								alt='Roupas'
+							/>
+						</Tab>
+						<Tab height={10}>
+							<div className={S.boxAddIcon}>
+								<div className={S.addIcon}>
+									<AddIcon
+										borderRadius={'full'}
+										width={5}
+										height={5}
+										color={'white'}
+									></AddIcon>
+								</div>
+								<p>Adicionar</p>
+							</div>
+						</Tab>
+						<Tab height={10}>
+							<img
+								src='/fashion.png'
+								alt='Novo conjunto'
+							/>
+						</Tab>
+						<Tab height={10}>
+							<Avatar
+								size={'sm'}
+								name={session.user.name}
+								src={session.user.image}
+							/>
+						</Tab>
+					</TabList>
+				</Tabs>
+			</div>
 		</>
 	);
 }
