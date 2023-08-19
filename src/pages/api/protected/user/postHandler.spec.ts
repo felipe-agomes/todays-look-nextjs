@@ -1,23 +1,23 @@
 import userRepository from '@/models/Postgre/UserRepository';
 import handler from '.';
 import jwt from 'jsonwebtoken';
-
-const userResponse = {
-	status: 'success',
-	message: 'Sucesso ao cadastrar novo usuário',
-	data: {
-		id: 11681,
-		email: 'test_user@test.com',
-		name: 'test_name',
-		image: 'image',
-		updatedAt: new Date('2023-08-11T11:59:51.268Z'),
-		createdAt: new Date('2023-08-11T11:59:51.268Z'),
-		token: 'token',
-	},
-};
+import bcrypt from 'bcrypt';
 
 describe('postHandler', () => {
 	describe('operation: "register"', () => {
+		const userResponse = {
+			status: 'success',
+			message: 'Sucesso ao cadastrar novo usuário',
+			data: {
+				id: 11681,
+				email: 'test_user@test.com',
+				name: 'test_name',
+				image: 'image',
+				updatedAt: new Date('2023-08-11T11:59:51.268Z'),
+				createdAt: new Date('2023-08-11T11:59:51.268Z'),
+				token: 'token',
+			},
+		};
 		let req: any;
 		let res: any;
 		beforeEach(() => {
@@ -128,6 +128,96 @@ describe('postHandler', () => {
 			expect(res.json).toHaveBeenCalledWith({
 				status: 'error',
 				message: 'Metodo não permitido',
+			});
+		});
+	});
+
+	describe('operation: "login"', () => {
+		const userResponse = {
+			status: 'success',
+			message: 'Sucesso ao efetuar login',
+			data: {
+				id: 11681,
+				email: 'test_user@test.com',
+				name: 'test_name',
+				image: 'image',
+				updatedAt: new Date('2023-08-11T11:59:51.268Z'),
+				createdAt: new Date('2023-08-11T11:59:51.268Z'),
+				token: 'token',
+			},
+		};
+		let req: any;
+		let res: any;
+		beforeEach(() => {
+			jest.resetAllMocks();
+			req = {
+				method: 'POST',
+				body: {
+					operation: 'login',
+					user: {
+						email: 'user_test@teste.com',
+						password: 'password',
+					},
+				},
+			};
+			res = {
+				json: jest.fn(function () {
+					return this;
+				}),
+				status: jest.fn(function () {
+					return this;
+				}),
+			};
+			userRepository.login = jest.fn().mockResolvedValue({
+				id: 11681,
+				email: 'test_user@test.com',
+				name: 'test_name',
+				image: 'image',
+				updatedAt: new Date('2023-08-11T11:59:51.268Z'),
+				createdAt: new Date('2023-08-11T11:59:51.268Z'),
+			});
+			jwt.sign = jest.fn().mockReturnValue('token');
+		});
+		it('should call the userRepository.login()', async () => {
+			await handler(req, res);
+
+			expect(userRepository.login).toHaveBeenCalledWith({
+				email: 'user_test@teste.com',
+				password: 'password',
+			});
+			expect(userRepository.login).toHaveBeenCalledTimes(1);
+		});
+
+		it('should call res.status() and res.json() with a success params', async () => {
+			await handler(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.json).toHaveBeenCalledWith(userResponse);
+		});
+
+		it('should send a error response if a user is not found', async () => {
+			userRepository.login = jest.fn().mockResolvedValueOnce(null);
+
+			await handler(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+			expect(res.json).toHaveBeenCalledWith({
+				status: 'error',
+				message: 'Usuário não existe',
+			});
+		});
+
+		it('should send a error response if throw a error', async () => {
+			userRepository.login = jest.fn().mockRejectedValueOnce(new Error('Error'));
+
+			try {
+				await handler(req, res);
+			} catch {}
+
+			expect(res.status).toHaveBeenCalledWith(400);
+			expect(res.json).toHaveBeenCalledWith({
+				status: 'error',
+				message: 'Erro ao efetuar login',
 			});
 		});
 	});
