@@ -1,4 +1,4 @@
-import { PutOperation, Response } from '@/@types/controller';
+import { PutOperation, Response } from '../@types/controller';
 import { IFetcher } from '@/services/Fetcher';
 
 export class FrontController {

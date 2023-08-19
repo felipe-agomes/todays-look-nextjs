@@ -1,21 +1,46 @@
+import Link from 'next/link';
 import style from './login.module.css';
+import { useForm } from 'react-hook-form';
+import { userService } from '@/services/UserService';
+import { useRouter } from 'next/router';
+
+type LoginInput = {
+	password: string;
+	email: string;
+};
 
 export default function Login() {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<LoginInput>();
+	const router = useRouter();
+	const onSubmit = async (data: LoginInput) => {
+		const response = await userService.login(data);
+		localStorage.setItem('token', response.data.token);
+		if (response.status === 'success') {
+			router.push('/home');
+		}
+	};
+
 	return (
 		<main id={style.login}>
 			<div className={style.modal}>
-				<form>
+				<form onSubmit={handleSubmit(onSubmit)}>
 					<input
 						type='text'
 						placeholder='email'
+						{...register('email')}
 					/>
 					<input
-						type='text'
+						type='password'
 						placeholder='password'
+						{...register('password')}
 					/>
 					<button type='submit'>Login</button>
 				</form>
-				<a href='/register'>Registrar</a>
+				<Link href='/register'>Registrar</Link>
 			</div>
 		</main>
 	);

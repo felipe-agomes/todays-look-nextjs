@@ -1,5 +1,6 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { handlerWrapper } from './test/handlerWrapper';
+import jwt from 'jsonwebtoken';
 
 jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
 describe('postHandler', () => {
@@ -8,6 +9,9 @@ describe('postHandler', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		req = {
+			headers: {
+				authorization: 'bearer token',
+			},
 			method: 'PUT',
 			query: {
 				clotheId: 'clotheId',
@@ -24,6 +28,7 @@ describe('postHandler', () => {
 				return this;
 			}),
 		};
+		jwt.verify = jest.fn().mockReturnValue({ id: 'user_id' });
 	});
 	it('should call the clotheRepository.toggleFavoriteByClotheId()', async () => {
 		req.body.operation = 'toggleFavorite';
@@ -111,6 +116,18 @@ describe('postHandler', () => {
 			status: 'success',
 			message: 'Propriedade category alterada com sucesso',
 			data: { obj2: 'obj2' },
+		});
+	});
+
+	it('should not execute any code, and return a error message', async () => {
+		jwt.verify = jest.fn().mockReturnValueOnce(false);
+
+		await handlerWrapper(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(400);
+		expect(res.json).toHaveBeenCalledWith({
+			status: 'error',
+			message: 'Usuário não autenticado',
 		});
 	});
 });

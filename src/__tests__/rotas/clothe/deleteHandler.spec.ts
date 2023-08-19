@@ -1,5 +1,6 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { handlerWrapper } from './test/handlerWrapper';
+import jwt from 'jsonwebtoken';
 
 jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
 describe('deleteHandler', () => {
@@ -8,6 +9,9 @@ describe('deleteHandler', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		req = {
+			headers: {
+				authorization: 'bearer token',
+			},
 			method: 'DELETE',
 			query: {
 				clotheId: 'clotheId',
@@ -22,6 +26,7 @@ describe('deleteHandler', () => {
 				return this;
 			}),
 		};
+		jwt.verify = jest.fn().mockReturnValue({ id: 'user_id' });
 	});
 
 	it('should call the clotheRepository.deleteByClotheId()', async () => {

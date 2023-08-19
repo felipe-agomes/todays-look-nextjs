@@ -1,8 +1,6 @@
+import { FrontController } from '@/controllers/FrontController';
 import { FetcherAxios } from '../../services/Fetcher';
-import {
-	FrontController,
-	PutOperation,
-} from '../../controllers/FrontController';
+import { PutOperation } from '@/@types/controller';
 
 export const makeSut = () => {
 	const fetcher = new FetcherAxios();

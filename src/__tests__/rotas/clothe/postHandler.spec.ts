@@ -1,5 +1,6 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { handler } from './test/handlerWrapper';
+import jwt from 'jsonwebtoken';
 
 jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
 describe('postHandler', () => {
@@ -14,6 +15,9 @@ describe('postHandler', () => {
 			key: 'key',
 		};
 		req = {
+			headers: {
+				authorization: 'bearer token',
+			},
 			method: 'POST',
 			body: { clothe },
 			query: { userId: 'userId' },
@@ -26,6 +30,7 @@ describe('postHandler', () => {
 				return this;
 			}),
 		};
+		jwt.verify = jest.fn().mockReturnValue({ id: 'user_id' });
 	});
 
 	it('should call the clotheRepository.create() with correct params', async () => {

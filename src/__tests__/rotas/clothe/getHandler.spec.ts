@@ -1,5 +1,6 @@
 import clotheRepository from '@/models/Postgre/ClotheRepositoryPostgre';
 import { handler } from './test/handlerWrapper';
+import jwt from 'jsonwebtoken';
 
 jest.mock('@/models/Postgre/ClotheRepositoryPostgre');
 describe('getAllClothesHandler', () => {
@@ -8,6 +9,9 @@ describe('getAllClothesHandler', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		req = {
+			headers: {
+				authorization: 'bearer token',
+			},
 			query: { userId: 'userId' },
 		};
 		res = {
@@ -18,7 +22,9 @@ describe('getAllClothesHandler', () => {
 				return this;
 			}),
 		};
+		jwt.verify = jest.fn().mockReturnValue({ id: 'user_id' });
 	});
+
 	it('should call the res.status() and res.json() with a error status if the method is not allowed ', async () => {
 		req.method = 'PUT';
 
@@ -71,6 +77,18 @@ describe('getAllClothesHandler', () => {
 			status: 'success',
 			message: 'Roupas buscadas com sucesso',
 			data: [{ obj1: 'obj1' }, { obj2: 'obj2' }],
+		});
+	});
+
+	it('should not execute any code, and return a error message', async () => {
+		jwt.verify = jest.fn().mockReturnValueOnce(false);
+
+		await handler(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(400);
+		expect(res.json).toHaveBeenCalledWith({
+			status: 'error',
+			message: 'Usuário não autenticado',
 		});
 	});
 });

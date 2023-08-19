@@ -1,6 +1,7 @@
 import { userService } from '@/services/UserService';
 import S from './Register.module.css';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 
 type RegisterInput = {
 	name: string;
@@ -16,8 +17,13 @@ export default function Register() {
 		getValues,
 		formState: { errors },
 	} = useForm<RegisterInput>();
+	const router = useRouter();
 	const onSubmit = async ({ passwordConfirmation, ...data }: RegisterInput) => {
-		console.log(await userService.create(data));
+		const response = await userService.create(data);
+		localStorage.setItem('token', response.data.token);
+		if (response.status === 'success') {
+			router.push('/home');
+		}
 	};
 
 	return (
