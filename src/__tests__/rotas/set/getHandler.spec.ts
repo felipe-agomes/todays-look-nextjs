@@ -1,6 +1,7 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
 import { setObj } from '@/__tests__/models/SetRepositoryPostgre.spec';
 import { handler } from './test/handlerWrapper';
+import jwt from 'jsonwebtoken';
 
 describe('getHandler', () => {
 	let req: any;
@@ -8,6 +9,9 @@ describe('getHandler', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		req = {
+			headers: {
+				authorization: 'bearer token',
+			},
 			method: 'GET',
 			query: { userId: '1' },
 		};
@@ -22,6 +26,7 @@ describe('getHandler', () => {
 		setRepository.getAllByUserId = jest
 			.fn()
 			.mockResolvedValue([{ ...setObj }, { ...setObj, id: 2 }]);
+		jwt.verify = jest.fn().mockReturnValue({ id: 'user_id' });
 	});
 
 	it('should call setRepository.getAllByUserId()', async () => {
@@ -80,5 +85,17 @@ describe('getHandler', () => {
 			});
 			expect(res.status).toHaveBeenCalledWith(400);
 		}
+	});
+
+	it('should not execute any code, and return a error message', async () => {
+		jwt.verify = jest.fn().mockReturnValueOnce(false);
+
+		await handler(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(400);
+		expect(res.json).toHaveBeenCalledWith({
+			status: 'error',
+			message: 'Usuário não autenticado',
+		});
 	});
 });

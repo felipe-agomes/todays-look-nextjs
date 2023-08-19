@@ -5,6 +5,7 @@ import {
 	userObj,
 } from '@/__tests__/models/SetRepositoryPostgre.spec';
 import { handler } from './test/handlerWrapper';
+import jwt from 'jsonwebtoken';
 
 describe('postHandler', () => {
 	let res: any;
@@ -12,6 +13,9 @@ describe('postHandler', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		req = {
+			headers: {
+				authorization: 'bearer token',
+			},
 			method: 'POST',
 			body: {
 				set: {
@@ -30,6 +34,7 @@ describe('postHandler', () => {
 			}),
 		};
 		setRepository.create = jest.fn().mockResolvedValue({ ...setObj });
+		jwt.verify = jest.fn().mockReturnValue({ id: 'user_id' });
 	});
 	it('should call setRepository.create()', async () => {
 		await handler(req, res);
@@ -89,5 +94,17 @@ describe('postHandler', () => {
 			});
 			expect(res.status).toHaveBeenCalledWith(400);
 		}
+	});
+
+	it('should not execute any code, and return a error message', async () => {
+		jwt.verify = jest.fn().mockReturnValueOnce(false);
+
+		await handler(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(400);
+		expect(res.json).toHaveBeenCalledWith({
+			status: 'error',
+			message: 'Usuário não autenticado',
+		});
 	});
 });

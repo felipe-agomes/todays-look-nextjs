@@ -1,6 +1,7 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
 import { setObj } from '@/__tests__/models/SetRepositoryPostgre.spec';
 import { handlerWrapper } from './test/handlerWrapper';
+import jwt from 'jsonwebtoken';
 
 describe('putHandler', () => {
 	let res: any;
@@ -26,6 +27,7 @@ describe('putHandler', () => {
 		setRepository.changeCategoryBySetId = jest
 			.fn()
 			.mockResolvedValue({ ...setObj });
+		jwt.verify = jest.fn().mockReturnValue({ id: 'user_id' });
 	});
 	describe('toggleFavorite', () => {
 		beforeEach(() => {
@@ -146,6 +148,18 @@ describe('putHandler', () => {
 				});
 				expect(res.status).toHaveBeenCalledWith(400);
 			}
+		});
+	});
+
+	it('should not execute any code, and return a error message', async () => {
+		jwt.verify = jest.fn().mockReturnValueOnce(false);
+
+		await handlerWrapper(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(400);
+		expect(res.json).toHaveBeenCalledWith({
+			status: 'error',
+			message: 'Usuário não autenticado',
 		});
 	});
 });

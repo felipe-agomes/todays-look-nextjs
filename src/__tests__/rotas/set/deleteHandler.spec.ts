@@ -1,5 +1,6 @@
 import setRepository from '@/models/Postgre/SetRepositoryPostgre';
 import { handlerWrapper } from './test/handlerWrapper';
+import jwt from 'jsonwebtoken';
 
 describe('deleteHandler', () => {
 	let req: any;
@@ -7,6 +8,9 @@ describe('deleteHandler', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		req = {
+			headers: {
+				authorization: 'bearer token',
+			},
 			method: 'DELETE',
 			body: {},
 			query: { setId: '1' },
@@ -20,6 +24,7 @@ describe('deleteHandler', () => {
 			}),
 		};
 		setRepository.deleteBySetId = jest.fn();
+		jwt.verify = jest.fn().mockReturnValue({ id: 'user_id' });
 	});
 	it('should call setRepository.deleteBySetId', async () => {
 		await handlerWrapper(req, res);
@@ -64,5 +69,17 @@ describe('deleteHandler', () => {
 			});
 			expect(res.status).toHaveBeenCalledWith(400);
 		}
+	});
+
+	it('should not execute any code, and return a error message', async () => {
+		jwt.verify = jest.fn().mockReturnValueOnce(false);
+
+		await handlerWrapper(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(400);
+		expect(res.json).toHaveBeenCalledWith({
+			status: 'error',
+			message: 'Usuário não autenticado',
+		});
 	});
 });
