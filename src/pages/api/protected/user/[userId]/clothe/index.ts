@@ -7,6 +7,7 @@ export default async function handler(
 	res: NextApiResponse,
 ) {
 	const token = req.headers.authorization.split(' ')[1];
+	console.log(req.headers.authorization);
 	const userIdByToken = jwt.verify(token, process.env.JWT_SECRET);
 	if (userIdByToken) {
 		let userId: string;

@@ -22,6 +22,7 @@ export class SetService implements ISetService {
 		try {
 			response = await this.frontController.doGet({
 				url: `/api/protected/user/${userId}/set`,
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -39,6 +40,7 @@ export class SetService implements ISetService {
 		try {
 			response = await this.frontController.doDelete({
 				url: `/api/protected/user/${userId}/set/${set}`,
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -59,6 +61,7 @@ export class SetService implements ISetService {
 			response = await this.frontController.doPut({
 				url: `/api/protected/user/${userId}/set/${set}`,
 				body: { toUpdate, operation: 'changeCategory' },
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -77,6 +80,7 @@ export class SetService implements ISetService {
 			response = await this.frontController.doPut({
 				url: `/api/protected/user/${userId}/set/${set}`,
 				body: { operation: 'toggleFavorite' },
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -89,6 +93,7 @@ export class SetService implements ISetService {
 			response = await this.frontController.doPost({
 				url: `/api/protected/user/${set.userId}/set`,
 				body: { set },
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };

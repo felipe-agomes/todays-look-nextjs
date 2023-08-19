@@ -9,6 +9,9 @@ describe('putHandler', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		req = {
+			headers: {
+				authorization: 'bearer token',
+			},
 			method: 'PUT',
 			body: {},
 			query: { setId: '1' },

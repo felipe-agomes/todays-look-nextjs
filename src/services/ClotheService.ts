@@ -25,6 +25,7 @@ export class ClotheService implements IClotheService {
 		try {
 			response = await this.frontController.doGet({
 				url: `/api/protected/user/${userId}/clothe`,
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -42,6 +43,7 @@ export class ClotheService implements IClotheService {
 		try {
 			response = await this.frontController.doDelete({
 				url: `/api/protected/user/${userId}/clothe/${clothe}`,
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -62,6 +64,7 @@ export class ClotheService implements IClotheService {
 			response = await this.frontController.doPut({
 				url: `/api/protected/user/${userId}/clothe/${clothe}`,
 				body: { toUpdate, operation: 'changeCategory' },
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -80,6 +83,7 @@ export class ClotheService implements IClotheService {
 			response = await this.frontController.doPut({
 				url: `/api/protected/user/${userId}/clothe/${clothe}`,
 				body: { operation: 'toggleFavorite' },
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
@@ -92,6 +96,7 @@ export class ClotheService implements IClotheService {
 			response = await this.frontController.doPost({
 				url: `/api/protected/user/${clothe.userId}/clothe`,
 				body: { clothe },
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			});
 		} catch (error: any) {
 			response = { status: 'error', message: error.message };
