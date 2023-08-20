@@ -20,8 +20,8 @@ export default function Register() {
 	const router = useRouter();
 	const onSubmit = async ({ passwordConfirmation, ...data }: RegisterInput) => {
 		const response = await userService.create(data);
-		localStorage.setItem('token', response.data.token);
 		if (response.status === 'success') {
+			localStorage.setItem('token', response.data.token);
 			router.push('/home');
 		}
 	};

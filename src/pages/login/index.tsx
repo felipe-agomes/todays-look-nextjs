@@ -18,8 +18,9 @@ export default function Login() {
 	const router = useRouter();
 	const onSubmit = async (data: LoginInput) => {
 		const response = await userService.login(data);
-		localStorage.setItem('token', response.data.token);
 		if (response.status === 'success') {
+			console.log(response);
+			localStorage.setItem('token', response.data.token);
 			router.push('/home');
 		}
 	};
