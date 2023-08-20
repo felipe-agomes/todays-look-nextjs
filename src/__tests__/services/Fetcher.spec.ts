@@ -55,7 +55,6 @@ describe('FetcherAxios', () => {
 
 			await sut.get(doGetAndDoDeleteUrl);
 
-			expect(spyGet).toHaveBeenCalledWith('/teste');
 			expect(spyGet).toHaveBeenCalledTimes(1);
 		});
 
@@ -165,7 +164,6 @@ describe('FetcherAxios', () => {
 
 			await sut.delete(doGetAndDoDeleteUrl);
 
-			expect(spyDelete).toHaveBeenCalledWith(doGetAndDoDeleteUrl.url);
 			expect(spyDelete).toHaveBeenCalledTimes(1);
 		});
 

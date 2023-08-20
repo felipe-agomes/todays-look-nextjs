@@ -44,6 +44,17 @@ const createResponse = {
 	data: { ...createRequest, id: '321' },
 };
 
+const mockLocalStorage = (() => {
+	let store = {
+		token: 'token',
+	};
+	return {
+		getItem: (key) => store[key] || null,
+	};
+})();
+
+Object.defineProperty(window, 'localStorage', { value: mockLocalStorage });
+
 const makeSut = () => {
 	const fetcher = new FetcherAxios();
 	const frontController = new FrontController(fetcher);

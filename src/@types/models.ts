@@ -17,6 +17,7 @@ export type SetInput = {
 export type UserData = {
 	id: string;
 	email: string;
+	name: string;
 	image: string;
 	updatedAt: Date;
 	createdAt: Date;

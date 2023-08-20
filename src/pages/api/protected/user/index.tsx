@@ -7,6 +7,32 @@ export default async function handler(
 	res: NextApiResponse,
 ) {
 	switch (req.method) {
+		case 'GET':
+			try {
+				const { id: userId } = jwt.verify(
+					req.headers.authorization.split(' ')[1],
+					process.env.JWT_SECRET,
+				) as { id: number };
+				const user = await userRepository.getUserById({ userId });
+				if (!user) {
+					res.status(400).json({
+						status: 'error',
+						message: 'Erro ao buscar usuário',
+					});
+					return;
+				}
+				res.status(200).json({
+					status: 'success',
+					message: 'Sucesso ao buscar usuário',
+					data: user,
+				});
+			} catch {
+				res.status(400).json({
+					status: 'error',
+					message: 'Erro ao buscar usuário',
+				});
+			}
+			break;
 		case 'POST':
 			const operation = req.body.operation;
 			if (operation === 'register') {
@@ -20,7 +46,7 @@ export default async function handler(
 						});
 						return;
 					}
-					const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+					const token = jwt.sign({ id: createdUser.id }, process.env.JWT_SECRET, {
 						expiresIn: '7d',
 					});
 					res.status(200).json({
@@ -48,7 +74,7 @@ export default async function handler(
 						});
 						return;
 					}
-					const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+					const token = jwt.sign({ id: response.id }, process.env.JWT_SECRET, {
 						expiresIn: '7d',
 					});
 					res.status(200).json({

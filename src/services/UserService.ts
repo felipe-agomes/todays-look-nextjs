@@ -8,6 +8,8 @@ interface IUserService {
 		email: string;
 		password: string;
 	}) => Promise<Response>;
+	getUserData(): Promise<Response>;
+
 	login: (data: { email: string; password: string }) => Promise<Response>;
 }
 
@@ -26,6 +28,17 @@ export class UserService implements IUserService {
 			return response;
 		} catch {
 			return { status: 'error', message: 'Erro ao cadastrar usuário' };
+		}
+	}
+	async getUserData() {
+		try {
+			const response = await this.frontController.doGet({
+				url: '/api/protected/user',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			});
+			return response;
+		} catch {
+			return { status: 'error', message: 'Erro ao buscar usuário' };
 		}
 	}
 	async login(data: { email: string; password: string }): Promise<Response> {

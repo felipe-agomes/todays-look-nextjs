@@ -23,6 +23,17 @@ const userResponse = {
 	},
 };
 
+const mockLocalStorage = (() => {
+	let store = {
+		token: 'token'
+	};
+	return {
+		getItem: (key) => store[key] || null,
+	};
+})();
+
+Object.defineProperty(window, 'localStorage', { value: mockLocalStorage });
+
 describe('UserService', () => {
 	describe('create', () => {
 		beforeEach(() => {
@@ -133,6 +144,17 @@ describe('UserService', () => {
 				status: 'error',
 				message: 'Erro ao logar usuário',
 			});
+		});
+	});
+
+	describe('getUser', () => {
+		it('should frontController.doGet()', async () => {
+			const { userService: sut, frontController } = makeSut();
+			frontController.doGet = jest.fn();
+
+			await sut.getUserData({ token: 'token' });
+
+			expect(frontController.doGet).toHaveBeenCalledTimes(1);
 		});
 	});
 });

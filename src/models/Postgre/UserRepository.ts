@@ -7,6 +7,7 @@ interface IUserRepository {
 	deleteById(data: { userId: number }): Promise<string>;
 	getAll(): Promise<UserData[]>;
 	login(data: { email: string; password: string }): Promise<UserData>;
+	getUserById(data: { userId: number }): Promise<UserData>;
 }
 
 export class UserRepositoryPostgre implements IUserRepository {
@@ -66,6 +67,15 @@ export class UserRepositoryPostgre implements IUserRepository {
 			}
 		} catch (error) {
 			throw new Error('Erro ao fazer login: ' + error.message);
+		}
+	}
+	async getUserById({ userId }: { userId: number }) {
+		try {
+			const user = await User.findByPk(userId);
+			if (!user) return null;
+			return user.toJSON();
+		} catch (error) {
+			throw new Error('Erro ao buscar usuário: ' + error.message);
 		}
 	}
 }

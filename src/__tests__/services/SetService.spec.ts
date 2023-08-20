@@ -17,6 +17,17 @@ const toggleFavoriteByIdResponse = {
 	},
 };
 
+const mockLocalStorage = (() => {
+	let store = {
+		token: 'token'
+	};
+	return {
+		getItem: (key) => store[key] || null,
+	};
+})();
+
+Object.defineProperty(window, 'localStorage', { value: mockLocalStorage });
+
 const changeCategoryByIdRequest = {
 	userId: '123',
 	set: '321',
