@@ -24,7 +24,7 @@ export class FrontController {
 	async doPost({
 		url,
 		body,
-		Authorization
+		Authorization,
 	}: {
 		url: string;
 		body: { [key: string]: any };
@@ -32,8 +32,14 @@ export class FrontController {
 	}): Promise<Response> {
 		let response: Response;
 		try {
-			response = await this.fetcher.post({ url, body: JSON.stringify(body), Authorization });
+			response = await this.fetcher.post({
+				url,
+				body: JSON.stringify(body),
+				Authorization,
+			});
+			console.log({ response });
 		} catch (error: any) {
+			console.log({ error: error.message });
 			response = { message: error.message, status: 'error' };
 		}
 
@@ -42,7 +48,7 @@ export class FrontController {
 	async doPut({
 		url,
 		body,
-		Authorization
+		Authorization,
 	}: {
 		url: string;
 		Authorization?: string;
@@ -67,7 +73,7 @@ export class FrontController {
 	}
 	async doDelete({
 		url,
-		Authorization
+		Authorization,
 	}: {
 		url: string;
 		Authorization?: string;

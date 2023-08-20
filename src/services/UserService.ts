@@ -50,8 +50,10 @@ export class UserService implements IUserService {
 					operation: 'login',
 				},
 			});
+			console.log({ userService: response });
 			return response;
-		} catch {
+		} catch (error) {
+			console.log({ userServiceError: error.message });
 			return {
 				status: 'error',
 				message: 'Erro ao logar usuário',
